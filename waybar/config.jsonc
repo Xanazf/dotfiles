@@ -1,0 +1,149 @@
+{
+  "layer": "top",
+  "position": "top",
+  "height": 28,
+  "modules-left": [
+    "hyprland/workspaces",
+    "backlight",
+    "bluetooth",
+    "network"
+  ],
+  "fixed-center": true,
+  "modules-center": [
+    "custom/updates",
+    "clock",
+    "custom/notifications"
+  ],
+  "modules-right": [
+    "tray",
+    "custom/player",
+    "pulseaudio",
+    "pulseaudio#microphone",
+    "memory",
+    "disk"
+  ],
+  "hyprland/window": {
+    "format": "{}"
+  },
+  "hyprland/workspaces": {
+    "sort-by-name": true,
+    "format": "{id}",
+    "show-special": true,
+    "persistent_workspaces": {
+    "*":0
+    }
+  },
+  "tray": {
+    "icon-size": 15,
+    "spacing": 2
+  },
+  "clock": {
+    "interval": 60,
+    "format": " {:%A, %B %d [%H:%M]}",
+    "tooltip-format": "<tt><small>{calendar}</small></tt>",
+    "calendar": {
+      "mode": "year",
+      "mode-mon-col": 3,
+      "format": {
+        "months": "<span color='#e6e1cf'><b>{}</b></span>",
+        "days": "<span color='#cad3f5'><b>{}</b></span>",
+        "weekdays": "<span color='#ff3333'><b>{}</b></span>",
+        "today": "<span color='#f5a97f'><b><u>{}</u></b></span>"
+      }
+    }
+  },
+  "backlight": {
+    "device": "intel_backlight",
+    "format": "{icon} {percent}%",
+    "format-icons": [
+      "",
+      "",
+      ""
+    ]
+  },
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "tooltip": false,
+    "format-muted": " Muted",
+    "on-click": "pavucontrol",
+    "on-scroll-up": "wpctl set-volume @DEFAULT_SINK@ 3%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_SINK@ 3%-",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "default": [
+        "",
+        "",
+        ""
+      ]
+    }
+  },
+  "pulseaudio#microphone": {
+    "format": "{format_source}",
+    "format-source": " {volume}%",
+    "format-source-muted": " Muted",
+    "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
+    "on-scroll-up": "wpctl set-volume @DEFAULT_SOURCE@ 3%+",
+    "on-scroll-down": "wpctl set-volume @DEFAULT_SOURCE@ 3%-"
+  },
+  "network": {
+    "format-disconnected": "Disconnected",
+    "format-wifi": "  {essid}",
+    "tooltip-format": " {signalStrength}",
+    "on-click": "wifimenu"
+  },
+  "bluetooth": {
+    "format": " {status}",
+    "format-disabled": " {status}",
+    "format-connected": " {num_connections}",
+    "tooltip-format": "{device_alias}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "on-click": "btblock"
+  },
+  "memory": {
+    "interval": 300,
+    "format": "  {used}G ",
+    "tooltip-format": "{used} / {total} G"
+  },
+  "disk": {
+    "interval": 600,
+    "format": "  {percentage_used}%",
+    "tooltip-format": "{used} used out of {total} on {path} "
+  },
+  "custom/updates": {
+    "format": "{}",
+    "interval": 7200,
+    "exec": "~/.config/waybar/bin/updatecheck",
+    "return-type": "json",
+    "exec-if": "exit 0",
+    "signal": 8
+  },
+  "custom/notifications": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "",
+      "none": "",
+      "dnd-notification": "",
+      "dnd-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
+  },
+  "custom/player": {
+    "format": "󰎆 {}",
+    "interval": 10,
+    "exec": "~/.config/waybar/bin/playerinfo",
+    "max-length": 35,
+    "tooltip": true
+  }
+}
