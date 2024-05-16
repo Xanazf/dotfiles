@@ -1,7 +1,7 @@
 
 [
   {
-  "output": [ "HDMI-A-2" ],
+  "output": [ "DP-3" ],
     "include": [
       "~/.config/waybar/config.jsonc",
     ],

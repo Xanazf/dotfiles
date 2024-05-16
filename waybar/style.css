@@ -1,56 +1,58 @@
 * {
-    border: none;
-    border-radius: 7px;
-    font-family: "JetBrainsMono Nerd Font";
-    font-weight: bold;
-    font-size: 13px;
-    min-height: 0;
+  border: none;
+  border-radius: 12px;
+  font-family: "Hack Nerd Font";
+  font-weight: bold;
+  font-size: 12px;
+  min-height: 0;
 }
 
 window#waybar {
-    background: rgba(21, 18, 27, 0);
-    color: #cdd6f4;
+  border: none;
+  background: rgba(255, 155, 155, 0.15);
+  color: #cdd6f4;
+  padding-right: 6px;
+  padding-left: 6px;
 }
 
 tooltip {
-    background: #000000;
-    border-radius: 7px;
-    border-width: 2.5px;
-    border-style: solid;
-    border-color: #8aadf4;
-    padding-right: 5px;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  background: rgba(7, 7, 7, 0.6);
+  border-width: 1px;
+  border-style: solid;
+  border-color: #a0bcf8;
+  padding: 5px;
 }
 
 #workspaces button {
-    color: #313244;
-    margin-right: 5px;
-    padding-right: 0px;
-    padding-left: 0px;
+  color: rgb(25, 25, 25);
+  padding-right: 6px;
+  padding-left: 6px;
+  margin-left: 3px;
+  transition:
+    background 0.3s linear,
+    color 0.3s linear;
+}
+#workspaces button:last-child {
+  margin-right: 3px;
 }
 
 #workspaces button.active {
-    color: #f5a97f;
+  color: rgb(75, 75, 75);
 }
 
 #workspaces button.focused {
-    color: #a6adc8;
-    background: #eba0ac;
-    border-radius: 7px;
+  color: rgb(75, 75, 75);
+  background: #fff700;
 }
 
 #workspaces button.urgent {
-    color: #11111b;
-    background: #a6e3a1;
-    border-radius: 7px;
+  color: rgb(75, 75, 75);
+  background: #fff700;
 }
 
 #workspaces button:hover {
-    background: #11111b;
-    color: #cdd6f4;
-    border-radius: 7px;
+  background: #fff700;
+  color: rgb(75, 75, 75);
 }
 
 #window,
@@ -63,126 +65,147 @@ tooltip {
 #custom-notifications,
 #custom-updates,
 #custom-player,
+#custom-shutdown,
 #workspaces,
 #tray,
 #memory,
 #disk,
 #backlight,
-
 #backlight {
-    background: #000000;
-    opacity: 1.0;
-    padding: 1.5px 7px 1.5px 7px;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    border-radius: 7px 7px 7px 7px;
-    margin-right: 5px;
-    margin-left: 5px;
+  opacity: 1;
+  margin: 6px;
+  transition:
+    background 0.15s linear,
+    color 0.15s linear;
 }
 
 #tray {
-    border-radius: 7px;
-    margin-right: 7px;
+  background: rgba(128, 164, 244, 0.6);
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 6px;
 }
 
 #workspaces {
-    background: #000000;
-    border-radius: 7px;
-    margin-left: 5px;
-    padding-right: 0px;
-}
-
-#window {
-    border-radius: 7px;
-    margin-left: 60px;
-    margin-right: 60px;
+  background: rgba(255, 247, 130, 0.6);
+  border-radius: 6px;
 }
 
 #clock {
-    color: #a6e3a1;
-    border-radius: 7px 7px 7px 7px;
-    margin-right: 3px;
-    margin-left: 3px;
+  color: #0f1729;
+  background: rgba(172, 251, 243, 0.6);
+  border-radius: 6px;
+  padding-left: 6px;
+  padding-right: 6px;
+  margin-right: 3px;
+  margin-left: 3px;
 }
 
 #network {
-    color: #f9e2af;
-    border-radius: 7px 7px 7px 7px;
-    margin-right: 5px;
+  color: #dee4f3;
+  background: rgba(118, 0, 214, 0.3);
+  padding-left: 6px;
+  padding-right: 6px;
 }
 
 #custom-notifications {
-    color: #f9e2af;
-    border-radius: 7px 7px 7px 7px;
-    padding-left: 9px;
-    padding-right: 15px;
-    margin-left:  2px;
-    margin-right: 2px;
-
+  color: #0f1729;
+  background: rgba(245, 221, 97, 0.6);
+  border-radius: 6px 12px 12px 6px;
+  padding-left: 9px;
+  padding-right: 15px;
 }
 
 #custom-updates {
-    color: #89b4fa;
-    border-radius: 7px 7px 7px 7px;
-    border-left:  0px;
-    border-right: 0px;
-    margin-left:  2px;
-    margin-right: 2px;
+  color: #a0bcf8;
+  background: rgba(244, 83, 138, 0.6);
+  border-radius: 12px 6px 6px 12px;
+  padding-left: 9px;
+  padding-right: 9px;
 }
 
 #custom-player {
- color: #cba6f7;
- border-radius: 7px 7px 7px 7px;
- padding-left: 4px;
- margin-left:  5px;
- margin-right: 5px;
+  color: #a0bcf8;
+  background: rgba(255, 13, 66, 0.3);
+  padding-left: 6px;
+  padding-right: 6px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+#custom-shutdown {
+  color: #dee4f3;
+  background: rgba(0, 135, 255, 0.6);
+  padding-left: 9px;
+  padding-right: 13px;
+  margin-left: 3px;
+  margin-right: 3px;
+}
+#custom-shutdown:hover {
+  background: #80a4f4;
+  color: #161f33;
 }
 
 #memory {
-    color: #89b4fa;
-    border-radius: 7px 7px 7px 7px;
-    margin-left: 5px;
+  color: #161f33;
+  background: rgba(151, 234, 255, 0.6);
+  border-radius: 7px 7px 7px 7px;
+  margin-left: 6px;
 }
 
 #disk {
-    color: #a6e3a1;
-    border-radius: 7px 7px 7px 7px;
-    margin-left: 5px;
-}
-
-
-#bluetooth {
-  color: #89b4fa;
+  color: #400082;
   border-radius: 7px 7px 7px 7px;
   margin-left: 5px;
+}
+
+#disk.disk2 {
+  background: rgba(148, 128, 238, 0.6);
+  color: #9df8ef;
+  border-radius: 7px 7px 7px 7px;
+  margin-left: 6px;
+  padding-right: 6px;
+}
+
+#bluetooth {
+  color: #9df8ef;
+  background: rgba(148, 128, 238, 0.3);
+  padding-left: 6px;
+  padding-right: 6px;
   margin-right: 5px;
-} 
+}
 
 #pulseaudio {
-  color: #89b4fa;
-  border-radius: 7px 0px 0px 7px;
-  margin-right: 0px;
+  color: #f3aaff;
+  background: rgba(68, 0, 255, 0.3);
+  border-radius: 12px 6px 6px 12px;
+  margin-right: 3px;
+  padding-left: 6px;
+  padding-right: 3px;
 }
 
 #pulseaudio.microphone {
-    color: #cba6f7;
-    border-radius: 0px 7px 7px 0px;
-    margin-left: 0px;
+  color: #abccff;
+  background: rgba(45, 75, 172, 0.3);
+  border-radius: 6px 12px 12px 6px;
+  margin-left: 0px;
+  padding-left: 3px;
+  padding-right: 6px;
 }
 
 #battery {
-    color: #a6e3a1;
-    border-radius: 7px 7px 7px 7px;
-    margin-right: 5px;
-    margin-left: 5px;
+  color: #a6e3a1;
+  border-radius: 7px 7px 7px 7px;
+  margin-right: 5px;
+  margin-left: 5px;
 }
 
 #battery.critical:not(.charging) {
-  background-color:           #F53C3C;
-  color:                      #EEEEEE;
-  animation-name:             blink;
-  animation-duration:         0.5s;
-  animation-timing-function:  linear;
-  animation-iteration-count:  infinite;
-  animation-direction:        alternate;
+  background-color: #f53c3c;
+  color: #eeeeee;
+  animation-name: blink;
+  animation-duration: 0.5s;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
 }

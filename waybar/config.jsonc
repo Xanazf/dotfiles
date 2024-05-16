@@ -1,41 +1,37 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 28,
-  "modules-left": [
-    "hyprland/workspaces",
-    "backlight",
-    "bluetooth",
-    "network"
-  ],
+  "interval": 600,
+  "margin-left": 30,
+  "margin-right": 30,
+  "margin-top": 6,
+  "margin-bottom": 0,
+  "height": 42,
+  "modules-left": ["hyprland/workspaces", "custom/player"],
   "fixed-center": true,
-  "modules-center": [
-    "custom/updates",
-    "clock",
-    "custom/notifications"
-  ],
+  "modules-center": ["custom/updates", "clock", "custom/notifications"],
   "modules-right": [
     "tray",
-    "custom/player",
     "pulseaudio",
     "pulseaudio#microphone",
     "memory",
-    "disk"
+    "disk#disk2",
+    "custom/shutdown",
   ],
   "hyprland/window": {
-    "format": "{}"
+    "format": "{}",
   },
   "hyprland/workspaces": {
     "sort-by-name": true,
     "format": "{id}",
     "show-special": true,
-    "persistent_workspaces": {
-    "*":0
-    }
+    "persistent-workspaces": {
+      "*": 0,
+    },
   },
   "tray": {
     "icon-size": 15,
-    "spacing": 2
+    "spacing": 2,
   },
   "clock": {
     "interval": 60,
@@ -48,18 +44,14 @@
         "months": "<span color='#e6e1cf'><b>{}</b></span>",
         "days": "<span color='#cad3f5'><b>{}</b></span>",
         "weekdays": "<span color='#ff3333'><b>{}</b></span>",
-        "today": "<span color='#f5a97f'><b><u>{}</u></b></span>"
-      }
-    }
+        "today": "<span color='#f5a97f'><b><u>{}</u></b></span>",
+      },
+    },
   },
   "backlight": {
     "device": "intel_backlight",
     "format": "{icon} {percent}%",
-    "format-icons": [
-      "",
-      "",
-      ""
-    ]
+    "format-icons": ["", "", ""],
   },
   "pulseaudio": {
     "format": "{icon} {volume}%",
@@ -75,12 +67,8 @@
       "phone": "",
       "portable": "",
       "car": "",
-      "default": [
-        "",
-        "",
-        ""
-      ]
-    }
+      "default": ["", "", ""],
+    },
   },
   "pulseaudio#microphone": {
     "format": "{format_source}",
@@ -88,13 +76,13 @@
     "format-source-muted": " Muted",
     "on-click": "wpctl set-mute @DEFAULT_SOURCE@ toggle",
     "on-scroll-up": "wpctl set-volume @DEFAULT_SOURCE@ 3%+",
-    "on-scroll-down": "wpctl set-volume @DEFAULT_SOURCE@ 3%-"
+    "on-scroll-down": "wpctl set-volume @DEFAULT_SOURCE@ 3%-",
   },
   "network": {
     "format-disconnected": "Disconnected",
     "format-wifi": "  {essid}",
     "tooltip-format": " {signalStrength}",
-    "on-click": "wifimenu"
+    "on-click": "wifimenu",
   },
   "bluetooth": {
     "format": " {status}",
@@ -103,17 +91,23 @@
     "tooltip-format": "{device_alias}",
     "format-connected-battery": " {device_alias} {device_battery_percentage}%",
     "tooltip-format-enumerate-connected": "{device_alias}",
-    "on-click": "btblock"
+    "on-click": "btblock",
   },
   "memory": {
     "interval": 300,
     "format": "  {used}G ",
-    "tooltip-format": "{used} / {total} G"
+    "tooltip-format": "{used} / {total} G",
   },
   "disk": {
     "interval": 600,
     "format": "  {percentage_used}%",
-    "tooltip-format": "{used} used out of {total} on {path} "
+    "tooltip-format": "{used} used out of {total} on {path} ",
+  },
+  "disk#disk2": {
+    "interval": 600,
+    "format": "  {percentage_used}%",
+    "tooltip-format": "{used} used out of {total} on {path} ",
+    "path": "/home/xnzf/",
   },
   "custom/updates": {
     "format": "{}",
@@ -121,7 +115,7 @@
     "exec": "~/.config/waybar/bin/updatecheck",
     "return-type": "json",
     "exec-if": "exit 0",
-    "signal": 8
+    "signal": 8,
   },
   "custom/notifications": {
     "tooltip": false,
@@ -130,20 +124,25 @@
       "notification": "",
       "none": "",
       "dnd-notification": "",
-      "dnd-none": ""
+      "dnd-none": "",
     },
     "return-type": "json",
     "exec-if": "which swaync-client",
     "exec": "swaync-client -swb",
     "on-click": "swaync-client -t -sw",
     "on-click-right": "swaync-client -d -sw",
-    "escape": true
+    "escape": true,
   },
   "custom/player": {
     "format": "󰎆 {}",
     "interval": 10,
     "exec": "~/.config/waybar/bin/playerinfo",
     "max-length": 35,
-    "tooltip": true
-  }
+    "tooltip": true,
+  },
+  "custom/shutdown": {
+    "tooltip": false,
+    "format": "",
+    "on-click": "wlogout",
+  },
 }
