@@ -11,7 +11,9 @@
   "fixed-center": true,
   "modules-center": ["custom/updates", "clock", "custom/notifications"],
   "modules-right": [
+    "custom/clipboard",
     "tray",
+    "hyprland/language",
     "pulseaudio",
     "pulseaudio#microphone",
     "memory",
@@ -28,6 +30,13 @@
     "persistent-workspaces": {
       "*": 0,
     },
+  },
+  "hyprland/language": {
+    "format": "{}",
+    "format-en": "EN",
+    "format-en-dvorak": "DV",
+    "format-uk": "UA",
+    "keyboard-name": "keychron-keychron-k2",
   },
   "tray": {
     "icon-size": 15,
@@ -106,8 +115,10 @@
   "disk#disk2": {
     "interval": 600,
     "format": "  {percentage_used}%",
-    "tooltip-format": "{used} used out of {total} on {path} ",
+    "tooltip-format": "{used}/{total} on {path}",
     "path": "/home/xnzf/",
+    "path_sdb": "/home/xnzf/Documents/sdb/",
+    "path_sdc": "/home/xnzf/Documents/sdc/",
   },
   "custom/updates": {
     "format": "{}",
@@ -144,5 +155,12 @@
     "tooltip": false,
     "format": "",
     "on-click": "wlogout",
+  },
+  "custom/clipboard": {
+    "format": " 󰨸 ",
+    "interval": "once",
+    "return-type": "json",
+    "on-click": "cliphist list | wofi --dmenu | cliphist decode | wl-copy",
+    "exec": "printf '{\"tooltip\":\"%s\"}' $(cliphist list | wc -l)",
   },
 }
