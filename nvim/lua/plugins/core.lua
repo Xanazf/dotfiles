@@ -9,11 +9,11 @@ local function import_colorscheme(colorscheme_name)
 end
 
 return {
-  import_colorscheme("cyberdream"),
+  import_colorscheme("eldritch"),
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "cyberdream",
+      colorscheme = "eldritch",
       defaults = {
         autocmds = true,
         keymaps = true,
@@ -48,5 +48,25 @@ return {
         NextParagraph = { text = "}", prio = 8 },
       },
     },
+  },
+  {
+    "m4xshen/hardtime.nvim",
+    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+    opts = {},
+  },
+  {
+    "windwp/nvim-ts-autotag",
+    config = function(_, opts)
+      require("nvim-ts-autotag").setup(opts)
+    end,
+  },
+  {
+    "j-hui/fidget.nvim",
+    opts = {},
+    event = "VeryLazy",
+  },
+  {
+    "folke/trouble.nvim",
+    enabled = true,
   },
 }

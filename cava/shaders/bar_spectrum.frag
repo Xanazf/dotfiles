@@ -33,10 +33,26 @@ void main()
     int bar = int(bars_count * fragCoord.x);
 
     //calculate a bar size
-    float bar_size = u_resolution.x / bars_count;
+    float bar_size = bar_width * x;
+    float threshold = 0.5;
+
 
     //the y coordinate and bar values are the same
     float y =  bars[bar];
+
+    if (y > threshold) {
+        float free_space = (y - threshold) / (1.0 - threshold);
+        float expansion = 1.0 + free_space * 2.0;
+
+        // expand the bar when y is more than threshold
+        float center = (float(bar) + 0.5) * bar_size;
+        float distance = abs(x - center);
+        if (distance < (bar_size / 0.25) * expansion) {
+          bar_size *= free_space;
+        }
+      }
+
+
 
     // make sure there is a thin line at bottom
     if (y * u_resolution.y < 1.0)

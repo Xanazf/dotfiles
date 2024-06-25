@@ -1,18 +1,19 @@
 * {
   border: none;
   border-radius: 12px;
-  font-family: "Hack Nerd Font";
-  font-weight: bold;
-  font-size: 12px;
+  font-family: Roboto, "Hack Nerd Font";
+  font-size: 13px;
   min-height: 0;
 }
 
 window#waybar {
-  border: none;
-  background: rgba(255, 155, 155, 0.15);
+  /* border: 1px solid rgba(255, 200, 200, 0.5); */
+  /* background: rgba(255, 155, 155, 0.15);*/
+  background-color: transparent;
   color: #cdd6f4;
   padding-right: 6px;
   padding-left: 6px;
+  transition: background-color 0.5s;
 }
 
 tooltip {
@@ -25,34 +26,64 @@ tooltip {
 
 #workspaces button {
   color: rgb(25, 25, 25);
-  padding-right: 6px;
-  padding-left: 6px;
-  margin-left: 3px;
-  transition:
-    background 0.3s linear,
-    color 0.3s linear;
+  background-color: rgba(120, 145, 255, 0.75);
+  background-image: linear-gradient(
+    -72deg,
+    #4a7bff 20%,
+    #56bbf1 50%,
+    #00dfa2 90%
+  );
+  padding: 0px 12px;
+  margin-left: 6px;
+  border-radius: 20px;
+  transition: all 0.3s linear;
+  color: #ffffff;
 }
+#workspaces button:hover {
+  /* border-bottom: 3px solid #0acaff; */
+  background: #afafff;
+  color: black;
+  background-image: linear-gradient(
+    -15deg,
+    #4a7bff 20%,
+    #56bbf1 50%,
+    #00dfa2 90%
+  );
+}
+
 #workspaces button:last-child {
-  margin-right: 3px;
+  margin-right: 6px;
 }
 
 #workspaces button.active {
   color: rgb(75, 75, 75);
+  background-color: #9c6fff;
+  background-image: linear-gradient(
+    -15deg,
+    #00ff8d 20%,
+    #46fccd 70%,
+    #56bbf1 96%
+  );
+}
+#workspaces button.active:hover {
+  color: #ffffff;
+  background-color: #ab9eff;
+  background-image: linear-gradient(
+    -15deg,
+    #00ff8d 10%,
+    #46fccd 30%,
+    #56bbf1 96%
+  );
 }
 
 #workspaces button.focused {
   color: rgb(75, 75, 75);
-  background: #fff700;
+  border: 2px solid #f2fa5a;
 }
 
 #workspaces button.urgent {
   color: rgb(75, 75, 75);
-  background: #fff700;
-}
-
-#workspaces button:hover {
-  background: #fff700;
-  color: rgb(75, 75, 75);
+  border: 2px solid #faa300;
 }
 
 #window,
@@ -73,32 +104,69 @@ tooltip {
 #backlight,
 #backlight {
   opacity: 1;
-  margin: 6px;
-  transition:
-    background 0.15s linear,
-    color 0.15s linear;
+  margin: 6px 4px;
+  padding: 0px 4px;
+  transition: all 0.15s ease-out;
 }
 
 #tray {
-  background: rgba(128, 164, 244, 0.6);
+  background-image: linear-gradient(
+    120deg,
+    #4a6bff 10%,
+    #56b9f1 70%,
+    #faa300 90%
+  );
+  background-color: rgba(128, 164, 244, 0.6);
   padding-left: 6px;
   padding-right: 6px;
-  border-radius: 6px;
+  border-radius: 20px;
+}
+#cava {
+  padding: 3px 3px;
+  margin: 6px 0px;
+  background-color: rgba(75, 75, 75, 0.45);
+  border-radius: 20px;
+  background-image: linear-gradient(
+    150deg,
+    #4a6bff 10%,
+    #46fccd 50%,
+    #e0aaff 90%
+  );
 }
 
+#window,
 #workspaces {
-  background: rgba(255, 247, 130, 0.6);
-  border-radius: 6px;
+  border-radius: 20px;
+  margin: 6px 0px;
+}
+#window {
+  background-color: #8ec5fc;
+  background-image: linear-gradient(
+    -45deg,
+    #4aabff 10%,
+    #3012ab 40%,
+    #213099 90%
+  );
+  color: #aeceff;
+  font-size: 14px;
+  border-radius: 20px;
+  margin-right: 5px;
+  padding: 0px 12px;
 }
 
 #clock {
+  background-color: #fa8bff;
+  background-image: linear-gradient(
+    -12deg,
+    #faa300 5%,
+    #fa8bff 52%,
+    #2bd2ff 90%
+  );
+
   color: #0f1729;
-  background: rgba(172, 251, 243, 0.6);
-  border-radius: 6px;
-  padding-left: 6px;
-  padding-right: 6px;
-  margin-right: 3px;
-  margin-left: 3px;
+  border-radius: 20px;
+  padding: 0px 12px;
+  margin: 6px 3px;
 }
 
 #network {
@@ -110,23 +178,55 @@ tooltip {
 
 #custom-notifications {
   color: #0f1729;
-  background: rgba(245, 221, 97, 0.6);
-  border-radius: 6px 12px 12px 6px;
-  padding-left: 9px;
+  background-color: rgba(245, 221, 97, 0.6);
+  background-image: linear-gradient(
+    -75deg,
+    #fac29a 5%,
+    #acfbf3 52%,
+    #80a4f4 90%
+  );
+  border-radius: 6px 20px 20px 6px;
   padding-right: 15px;
+  padding-left: 9px;
 }
 
 #custom-updates {
-  color: #a0bcf8;
-  background: rgba(244, 83, 138, 0.6);
-  border-radius: 12px 6px 6px 12px;
+  color: #161f33;
+  background-color: rgba(244, 83, 138, 0.6);
+  background-image: linear-gradient(
+    24deg,
+    #ff4949 10%,
+    #faa300 52%,
+    #f2fa5a 90%
+  );
+  border-radius: 20px 6px 6px 20px;
   padding-left: 9px;
-  padding-right: 9px;
+  padding-right: 6px;
+}
+
+#language {
+  background-color: #fa8bff;
+  background-image: linear-gradient(
+    -90deg,
+    #56bbf1 10%,
+    #c2ffd9 52%,
+    #97fff4 90%
+  );
+  color: black;
+  min-width: 16px;
+  padding: 0px 9px;
+  margin: 6px 3px;
 }
 
 #custom-player {
-  color: #a0bcf8;
-  background: rgba(255, 13, 66, 0.3);
+  color: black;
+  background-color: rgba(255, 13, 66, 0.3);
+  background-image: linear-gradient(
+    15deg,
+    #ffa9cc 0%,
+    #ff66cf 52%,
+    #ff1260 90%
+  );
   padding-left: 6px;
   padding-right: 6px;
   margin-left: 3px;
@@ -134,60 +234,127 @@ tooltip {
 }
 
 #custom-shutdown {
-  color: #dee4f3;
-  background: rgba(0, 135, 255, 0.6);
+  background-image: linear-gradient(
+    -6deg,
+    #faa300 5%,
+    #fa8bff 52%,
+    #2bd2ff 90%
+  );
+  color: #161f33;
+  background-color: rgba(0, 135, 255, 0.6);
+  border-radius: 20px;
   padding-left: 9px;
   padding-right: 13px;
   margin-left: 3px;
-  margin-right: 3px;
+  margin-right: 12px;
 }
 #custom-shutdown:hover {
-  background: #80a4f4;
+  background-image: linear-gradient(
+    -6deg,
+    #faa300 60%,
+    #fa8bff 80%,
+    #2bd2ff 90%
+  );
+  background-color: #80a4f4;
   color: #161f33;
+}
+#custom-launcher {
+  background-color: #fa8bff;
+  background-image: linear-gradient(
+    -120deg,
+    #4a7bff 40%,
+    #7572f4 60%,
+    #fff3a3 90%
+  );
+  color: #161f33;
+  font-size: 18px;
+  border-radius: 20px;
+  margin: 6px 6px;
+  margin-left: 12px;
+  padding-left: 8px;
+  padding-right: 3px;
+}
+#custom-clipboard {
+  background-color: #fa8bff;
+  background-image: linear-gradient(
+    -21deg,
+    #faa300 12%,
+    #fa8bff 20%,
+    #2bd2ff 90%
+  );
+  color: black;
+  margin: 6px 3px;
+  padding: 0px 6px;
 }
 
 #memory {
   color: #161f33;
   background: rgba(151, 234, 255, 0.6);
-  border-radius: 7px 7px 7px 7px;
+  border-radius: 20px;
   margin-left: 6px;
+  background-image: linear-gradient(
+    -12deg,
+    #faa300 20%,
+    #fa8bff 40%,
+    #2bd2ff 90%
+  );
 }
 
-#disk {
+#disk.diskroot {
   color: #400082;
-  border-radius: 7px 7px 7px 7px;
+  border-radius: 20px;
   margin-left: 5px;
 }
 
-#disk.disk2 {
-  background: rgba(148, 128, 238, 0.6);
-  color: #9df8ef;
-  border-radius: 7px 7px 7px 7px;
+#disk {
+  background-image: linear-gradient(
+    -12deg,
+    #faa300 15%,
+    #fa8bff 50%,
+    #2bd2ff 90%
+  );
+  color: #161f33;
+  border-radius: 20px;
   margin-left: 6px;
   padding-right: 6px;
 }
 
 #bluetooth {
   color: #9df8ef;
-  background: rgba(148, 128, 238, 0.3);
+  background-image: linear-gradient(
+    -12deg,
+    #faa300 15%,
+    #fa8bff 50%,
+    #2bd2ff 90%
+  );
   padding-left: 6px;
   padding-right: 6px;
   margin-right: 5px;
 }
 
 #pulseaudio {
-  color: #f3aaff;
-  background: rgba(68, 0, 255, 0.3);
-  border-radius: 12px 6px 6px 12px;
+  color: #161f33;
+  background-image: linear-gradient(
+    -81deg,
+    #00ff8d 20%,
+    #46fccd 50%,
+    #56bbf1 96%
+  );
+  border-radius: 20px 6px 6px 20px;
   margin-right: 3px;
   padding-left: 6px;
   padding-right: 3px;
 }
 
 #pulseaudio.microphone {
-  color: #abccff;
-  background: rgba(45, 75, 172, 0.3);
-  border-radius: 6px 12px 12px 6px;
+  color: #161f33;
+  background-image: linear-gradient(
+    102deg,
+    #00ff8d 20%,
+    #46fccd 40%,
+    #56bbf1 96%
+  );
+  border-radius: 6px 20px 20px 6px;
   margin-left: 0px;
   padding-left: 3px;
   padding-right: 6px;

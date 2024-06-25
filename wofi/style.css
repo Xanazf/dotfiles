@@ -1,50 +1,88 @@
 window {
+  font-family: Roboto, "Hack Nerd Font";
+  font-weight: bold;
   margin: 0px;
-  background-color: rgba(25, 25, 42, 0.7);
-  border-radius: 30px;
-  border: 2px solid #b3005e;
+  background-image: linear-gradient(
+    45deg,
+    rgba(74, 123, 255, 0.3) 20%,
+    rgba(86, 187, 241, 0.6) 50%,
+    rgba(70, 252, 205, 0.333) 90%
+  );
+  background-color: rgba(17, 17, 60, 0.45);
+  border-radius: 20px;
+  border: 3px solid #46fccd;
+  transition: all 0.1s ease;
 }
 
 #input {
   margin: 5px;
-  border: none;
-  color: #ffffff;
+  border: 1px solid #80a4f4;
+  color: #acfbf3;
   background-color: rgba(25, 25, 42, 0.9);
-  border-radius: 30px;
+  border-radius: 20px;
 }
 
 #inner-box {
-  margin: 5px;
+  margin: 0px 5px;
+  margin-top: 5px;
   border: none;
   background-color: transparent;
-  border-radius: 30px;
+  border-radius: 20px;
 }
 
 #outer-box {
-  margin: 15px;
+  margin: 3px 15px;
+  margin-top: 15px;
   border: none;
   background-color: transparent;
 }
 
 #scroll {
   margin: 0px;
-  border: none;
 }
 
 #text {
   margin: 5px;
   border: none;
-  color: #bd93f9;
+  color: #fdfdff;
+}
+
+#entry {
+  background-color: rgba(25, 25, 42, 0.3);
+  border-radius: 20px;
+  padding: 9px;
+  margin-bottom: 6px;
+  transition: all 0.3s ease;
 }
 
 #entry:selected {
-  background-color: #44475a;
-  border-radius: 20px;
-  outline: none;
+  border: 1px solid #4a7bff;
+  background-color: rgba(27, 27, 27, 0.6);
 }
 
 #entry:selected * {
-  background-color: #44475a;
+  background-color: transparent;
   border-radius: 20px;
   outline: none;
+}
+#entry:selected #text {
+  color: #00eaff;
+}
+
+#expander-box {
+  transition: all 0.066s ease;
+  margin: 0px 15px;
+  margin-top: 9px;
+  background-color: transparent;
+}
+
+#expander-box #entry {
+  border-radius: 20px;
+  border: 1px solid #56bbf1;
+}
+#expander-box #entry:selected {
+  border: 1px solid #4a7bff;
+}
+#expander-box #entry:selected #text {
+  color: #4a7bff;
 }
