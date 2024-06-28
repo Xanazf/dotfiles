@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+~/.config/waybar/scripts/dynamic &
+while true; do
+	# echo ""
+	out=$(cat ~/.config/waybar/store/dynamic_out.txt)
+	echo "$out" | jq --unbuffered --compact-output
+	# cat ~/.config/hypr/scripts/tools/dynamic_out.txt
+	sleep 0.5
+done
