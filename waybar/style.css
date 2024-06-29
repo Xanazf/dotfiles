@@ -259,11 +259,13 @@ tooltip {
 }
 
 #backlight {
-  color: #90b1b1;
+  background-color: #f1bcec;
+  color: #591352;
 }
 
 #network {
-  color: #000;
+  background-color: #c5c1d7;
+  color: #2d293f;
 }
 #network.disabled {
   background-color: #45475a;

@@ -8,7 +8,7 @@
   // "margin-top": 6,
   "margin-bottom": -11,
   "height": 50,
-  "modules-left": ["hyprland/workspaces"],
+  "modules-left": ["backlight", "network", "hyprland/workspaces"],
   "fixed-center": true,
   "modules-center": ["custom/dynamic_pill"],
   "modules-right": [
