@@ -1,4 +1,4 @@
-nitch
+uwufetch -i ~/.config/uwufetch/arch.png
 if status is-interactive
     # Commands to run in interactive sessions can go here
 end
