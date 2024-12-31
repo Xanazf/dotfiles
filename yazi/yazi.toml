@@ -1,0 +1,29 @@
+[manager]
+ratio=[1, 3, 5]
+sort_by = "alphabetical"
+sort_dir_first = true
+show_hidden = true
+show_symlink = true
+linemode = "mtime"
+
+[preview]
+wrap="yes"
+tab_size=2
+max_width=1280
+max_height=720
+
+[plugin]
+prepend_previewers = [
+  # Media previewer
+  { mime = "{image,audio,video}/*", run = "mediainfo" },
+  { mime = "application/x-subrip", run = "mediainfo" },
+  # Archive previewer
+  { mime = "application/*zip", run = "ouch" },
+  { mime = "application/x-tar", run = "ouch" },
+  { mime = "application/x-bzip2", run = "ouch" },
+  { mime = "application/x-7z-compressed", run = "ouch" },
+  { mime = "application/x-rar", run = "ouch" },
+  { mime = "application/x-xz", run = "ouch" },
+  # Torrent previewer
+  { mime = "application/x-bittorrent", run = "torrent-preview" },
+]

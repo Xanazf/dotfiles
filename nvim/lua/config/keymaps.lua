@@ -4,13 +4,18 @@
 local keymap = vim.keymap
 local opts = { noremap = true, silent = true }
 
+--- Plugins
+local LSPkeys = require("lazyvim.plugins.lsp.keymaps").get()
+-- change a keymap
+LSPkeys[#LSPkeys + 1] = { "K", "<cmd>Lspsaga hover_doc<cr>" }
+
 --- Increment/decrement
 
 keymap.set("n", "+", "<C-a>")
 keymap.set("n", "-", "<C-x>")
 
 --- Delete a word backwads
-keymap.set("n", "dw", 'vb"_d')
+--keymap.set("n", "dw", 'vb"_d')
 
 --- Select all
 keymap.set("n", "<C-a>", "gg<S-v>G")

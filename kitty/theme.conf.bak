@@ -1,0 +1,67 @@
+
+#: The basic colors
+
+foreground                      #E0AAFF
+background                      #000000
+selection_foreground            none
+selection_background            #523999
+
+
+#: Cursor colors
+
+cursor                          #ACFBF3
+cursor_text_color               background
+
+
+#: URL underline color when hovering with mouse
+
+url_color                       #FAB795
+
+
+#: kitty window border colors and terminal bell colors
+
+active_border_color             #FF4797
+inactive_border_color           #101116
+bell_border_color               #FF4797
+visual_bell_color               none
+
+
+#: Tab bar colors
+
+active_tab_foreground           #161f33
+active_tab_background           #A0BCF8
+inactive_tab_foreground         #A0BCF8
+inactive_tab_background         #171717
+tab_bar_background              #140007
+tab_bar_margin_color            #140007
+#: black
+color0 #171717
+color8 #6c6c6c
+
+#: red
+color1 #ff3e6d
+color9 #E95678
+
+#: green
+color2  #64dd5a
+color10 #00ff8d
+
+#: yellow
+color3  #f2fa5a
+color11 #faa300
+
+#: blue
+color4  #4a7bff
+color12 #56bbf1
+
+#: magenta
+color5  #ee0690
+color13 #ff0c8a
+
+#: cyan
+color6  #00dfa2
+color14 #46fCcD
+
+#: white
+color7  #cecece
+color15 #FFFFFF
