@@ -26,6 +26,7 @@ return {
       astro = {
         settings = {},
       },
+      marksman = {},
       qmlls = {
         settings = {},
         init_options = {

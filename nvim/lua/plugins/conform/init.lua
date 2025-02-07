@@ -16,6 +16,8 @@ return {
       astro = { "biome" },
       css = { "biome" },
       qml = { "qmlformat" },
+      ["markdown"] = { "markdownlint-cli2", "markdown-toc" },
+      ["markdown.mdx"] = { "markdownlint-cli2", "markdown-toc" },
     },
     -- You can also define any custom formatters here.
     ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
