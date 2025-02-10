@@ -1,0 +1,21 @@
+/* @import url(chrome/autohide_bookmarks_and_main_toolbars.css); */
+/* @import url(styles/autohide_main_toolbar.css); */
+/* @import url(styles/autohide_menubar.css); */
+@import url(styles/autohide_sidebar.css);
+@import url(styles/sideberry.css);
+/* @import url(styles/autohide_bookmarks_toolbar.css); */
+@import url(styles/iconized_main_menu.css);
+@import url(styles/linux_gtk_window_control_patch.css);
+@import url(styles/autohide_tabstoolbar.css);
+/* @import url(styles/non_floating_sharp_tabs.css);
+@import url(styles/tabs_animated_gradient_border.css); */
+
+/* Apply your custom modifications after imports */
+:root {
+	/* --toolbar-bgcolor: rgb(36, 44, 59); */
+	/* --uc-menu-bkgnd: var(--toolbar-bgcolor); */
+	/* --arrowpanel-background: var(--toolbar-bgcolor); */
+	/* --autocomplete-popup-background: var(--toolbar-bgcolor); */
+	/* --uc-menu-disabled: rgb(90, 90, 90); */
+	/* --lwt-toolbar-field-focus: rgb(36, 44, 59); */
+}

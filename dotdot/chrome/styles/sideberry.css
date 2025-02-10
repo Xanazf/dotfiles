@@ -1,0 +1,169 @@
+/* Sidebery */
+
+#root.root {
+	/* main colors */
+	--accent: hsl(225 100 72);
+	--selected-border: var(--accent);
+	--selected-bg: var(--toolbar-bg);
+	--active-border: var(--accent);
+	--active-bg: var(--toolbar-bg);
+	--active-fg: hsl(341 100 69);
+	--clicked-bg: hsla(0 0 100 / 0.35);
+	--hover-bg: hsla(0 0 100 / 0.25);
+	--active-shadow: inset 0 0 0 1px hsla(0 0 100 / 0.071), 0 1px 3px 0
+		hsla(225 100 72 / 0.21);
+	--active-el-shadow: 0 1px 4px -1px hsla(225 100 72 / 0.282), inset 0 0 0 1px
+		hsla(0 0 100 / 0.031);
+
+	--status-notice: #00e9fb;
+	--status-active: #47cfff;
+	--status-err: #df6464;
+	--status-ok: #64df64;
+	--windows-popup-window-border: hsla(0 0 100 / 0.08);
+	--active-el-overlay-clicked-bg: var(--clicked-bg);
+	--active-el-overlay-hover-bg: var(--hover-bg);
+	--active-el-fg: var(--active-fg);
+	--active-el-bg: var(--active-bg);
+	--border: hsla(4 4 4 / 0.392);
+
+	/* general */
+	--general-border-radius: 18px;
+	--general-margin: 2px;
+
+	--bottom-bar-height: 30px;
+
+	/* toolbar */
+	--toolbar-scrollbar-color: hsla(225 100 88 / 0.27);
+	--toolbar-fg: hsla(10 15 51 / 1);
+	--toolbar-bg: hsl(266 88 4);
+	--toolbar-el-overlay-selected-border: var(--selected-border);
+	--toolbar-el-overlay-selected-bg: var(--selected-bg);
+	--toolbar-el-overlay-active-border: var(--active-border);
+	--toolbar-el-overlay-active-bg: var(--active-bg);
+	--toolbar-el-overlay-clicked-bg: var(--clicked-bg);
+	--toolbar-el-overlay-hover-bg: var(--hover-bg);
+
+	/* frame (?) */
+	--frame-el-overlay-selected-border: var(--selected-border);
+	--frame-el-overlay-selected-bg: var(--selected-bg);
+	/*--frame-el-overlay-clicked-bg: var(--clicked-bg);*/
+	--frame-el-overlay-hover-bg: var(--hover-bg);
+	--frame-fg: var(--toolbar-fg);
+	--frame-bg: var(--toolbar-bg);
+
+	/* nav bar */
+	--nav-hidden-panels-popup-margin: 3px;
+	--nav-hidden-btn-border-radius: var(--general-border-radius);
+	--nav-btn-border-radius: var(--general-border-radius);
+	--nav-btn-len-margin: 0px;
+	--nav-delimiter-size: 16px;
+	--nav-btn-margin: 2px;
+	--nav-btn-height: 30px;
+	--nav-btn-width: 30px;
+	--nav-btn-accent: var(--accent);
+	--nav-btn-fg: var(--toolbar-fg);
+	--nav-btn-active-shadow: var(--active-el-shadow);
+
+	/* tabs */
+	--tabs-lvl-opacity: 0.16;
+	--tabs-activated-color-layer-opacity: 0.3;
+	--tabs-color-layer-opacity: 0.2;
+	--tabs-audio-btn-width: 22px;
+	--tabs-close-btn-margin: 2px;
+	--tabs-inner-gap: 6px;
+	--tabs-border-radius: var(--general-border-radius);
+	--tabs-count-font: 0.5625rem "Hack Nerd Font";
+	--tabs-font: 0.9375rem Rubik;
+	--tabs-indent: 10px;
+	--tabs-margin: 2px;
+	--tabs-height: 30px;
+	--tabs-pinned-width: 30px;
+	--tabs-pinned-height: 30px;
+	--tabs-progress-bg: hsla(0 0 100 / 0.08);
+	--tabs-activated-fg: var(--active-fg);
+	--tabs-activated-bg: hsla(0 0 94 / 0.14);
+	--tabs-normal-fg: hsl(0 0 75);
+	--tabs-normal-bg: transparent;
+	--tabs-activated-shadow: var(--active-el-shadow);
+
+	/* bookmarks */
+
+	/* history */
+
+	/* popup */
+
+	/* ctx menu */
+
+	/* sub list style */
+
+	/* search bar */
+
+	/* new-tab bar */
+
+	/* notification */
+	--notification-margin: 4px;
+	--notification-border-radius: 4px;
+	--notification-fg: var(--toolbar-fg);
+	--notification-bg: var(--toolbar-bg);
+
+	/* btns */
+	--btn-border-radius: 4px;
+
+	/* scroll */
+	--scroll-progress-height: 1px;
+	--scroll-color: hsla(0 0 100 / 0.22);
+	--scroll-progress-bg: var(--accent);
+}
+
+#main-window[titlepreface*="�����"] .tabbrowser-tab {
+	visibility: collapse;
+}
+
+#main-window[titlepreface*="�����"] .titlebar-button {
+	height: 40px;
+}
+
+#main-window[titlepreface*="�����"] #nav-bar {
+	margin-top: -40px;
+}
+#main-window[titlepreface*="�����"][tabsintitlebar="true"] #nav-bar {
+	margin-right: 137px;
+}
+#main-window[titlepreface*="�����"] #titlebar-spacer {
+	background-color: var(--chrome-secondary-background-color);
+}
+
+#main-window[titlepreface*="�����"] #titlebar-buttonbox-container {
+	background-color: var(--chrome-secondary-background-color);
+}
+
+#main-window[titlepreface*="�����"] .titlebar-color {
+	background-color: var(--toolbar-bgcolor);
+}
+
+#sidebar-box #sidebar-header {
+	visibility: collapse;
+}
+
+#sidebar-box {
+	z-index: 3 !important;
+}
+
+@media screen and (max-width: 125px) {
+	#root.root {
+		--tabs-indent: 0;
+	}
+
+	.Tab[data-audible="true"] .audio,
+	.Tab[data-muted="true"] .audio,
+	.Tab[data-paused="true"] .audio {
+		top: 6px;
+		left: calc(6px + var(--tabs-inner-gap));
+	}
+}
+
+.Tab[data-audible="true"] .audio,
+.Tab[data-muted="true"] .audio,
+.Tab[data-paused="true"] .audio {
+	transition: transform var(--d-fast), top var(--d-fast), left var(--d-fast);
+}
