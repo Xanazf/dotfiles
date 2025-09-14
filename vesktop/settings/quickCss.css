@@ -1,3 +1,5 @@
+
 :root {
-    --background-color: none !important;
+    --background-color: transparent !important;
+    --background-image: transparent !important;
 }

@@ -4,7 +4,6 @@
 
 ```txt
 hyprland
-pipewire
 kitty
 fish
 qt6-declarative

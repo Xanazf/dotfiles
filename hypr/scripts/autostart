@@ -6,23 +6,22 @@ quickshell_config=$HOME/.config/quickshell
 hypr_scripts=$hypr_config/scripts
 quickshell_scripts=$quickshell_config/scripts
 
+/usr/lib/hyprpolkitagent &
 # quickshell
 quickshell &
 # $quickshell_scripts/tools/dynamic &
-
+/usr/lib/xdg-desktop-portal-hyprland &
 # other
-/usr/lib/polkit-kde-authentication-agent-1 &
 # hyprpaper &
-firefox &
+zen-twilight &
 steam &
 
 # for XDPH
-dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
+dbus-update-activation-environment --systemd --all &
 systemctl --user import-environment XDG_SESSION_TYPE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME &
 wl-clip-persist --clipboard regular &
 wl-paste --type text -pw cliphist store &      # only text from primary
 wl-paste --type text --watch cliphist store &  # only text
 wl-paste --type image --watch cliphist store & # only image
 
-# dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &
 # notify-send -a aurora "hello $(whoami)" &

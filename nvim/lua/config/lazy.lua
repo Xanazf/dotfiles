@@ -18,45 +18,6 @@ require("lazy").setup({
   spec = {
     -- add LazyVim and import its plugins
     { "LazyVim/LazyVim", import = "lazyvim.plugins" },
-    -- import any extras modules here
-    -- -- coding
-    { import = "lazyvim.plugins.extras.coding.mini-comment" },
-
-    -- -- editor
-    { import = "lazyvim.plugins.extras.editor.aerial" },
-    { import = "lazyvim.plugins.extras.editor.fzf" },
-    { import = "lazyvim.plugins.extras.editor.inc-rename" },
-    { import = "lazyvim.plugins.extras.editor.navic" },
-    { import = "lazyvim.plugins.extras.editor.refactoring" },
-    { import = "lazyvim.plugins.extras.editor.outline", enabled = false },
-    { import = "lazyvim.plugins.extras.editor.telescope", enabled = false },
-
-    -- -- lsp
-    { import = "lazyvim.plugins.extras.lsp.none-ls" },
-
-    -- -- ui
-    { import = "lazyvim.plugins.extras.ui.mini-animate" },
-    { import = "lazyvim.plugins.extras.ui.mini-indentscope" },
-    { import = "lazyvim.plugins.extras.ui.treesitter-context" },
-
-    -- -- util
-    { import = "lazyvim.plugins.extras.util.dot" },
-    { import = "lazyvim.plugins.extras.util.mini-hipatterns" },
-    { import = "lazyvim.plugins.extras.util.project" },
-
-    -- -- lang
-    { import = "lazyvim.plugins.extras.lang.astro" },
-    { import = "lazyvim.plugins.extras.lang.git" },
-    { import = "lazyvim.plugins.extras.lang.json" },
-    { import = "lazyvim.plugins.extras.lang.markdown" },
-    { import = "lazyvim.plugins.extras.lang.rust" },
-    { import = "lazyvim.plugins.extras.lang.tailwind" },
-    { import = "lazyvim.plugins.extras.lang.toml" },
-    { import = "lazyvim.plugins.extras.lang.typescript" },
-
-    -- formatting
-    { import = "lazyvim.plugins.extras.formatting.biome" },
-
     -- import/override with your plugins
     { import = "plugins" },
   },
@@ -69,10 +30,23 @@ require("lazy").setup({
     version = false, -- always use the latest git commit
     -- version = "*", -- try installing the latest stable version for plugins that support semver
   },
-  install = { colorscheme = { "tokyonight", "fluoromachine" } },
+  install = {
+    colorscheme = { "tokyonight", "fluoromachine" },
+    missing = true,
+  },
+  ui = {
+    wrap = true,
+    backdrop = 80,
+    pills = false,
+    browser = "zen-twilight",
+    diff = {
+      --- @return "browser"|"git"|"terminal_git"|"diffview.nvim"
+      cmd = "terminal_git",
+    },
+  },
   checker = {
     enabled = true, -- check for plugin updates periodically
-    notify = false, -- notify on update
+    notify = true, -- notify on update
   }, -- automatically check for plugin updates
   performance = {
     rtp = {
@@ -88,5 +62,12 @@ require("lazy").setup({
         "zipPlugin",
       },
     },
+  },
+  profiling = {
+    -- Enables extra stats on the debug tab related to the loader cache.
+    -- Additionally gathers stats about all package.loaders
+    loader = false,
+    -- Track each new require in the Lazy profiling tab
+    require = false,
   },
 })

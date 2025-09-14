@@ -38,7 +38,6 @@ function check_node_version
     end
 end
 
-
 function fish_greeting
     set -f cat "$fish_path/cat.txt"
     set -f cat2 "$fish_path/cat2.txt"
@@ -49,10 +48,10 @@ function fish_greeting
     cat $bongocat
     echo $separator$separator
     check_node_version
+    echo [(date +%x_%H:%M\(%Z\))]
 end
 
 set -g fish_greeting
-
 
 function blur_terminal_background
     if test $DISPLAY
@@ -68,5 +67,15 @@ blur_terminal_background
 
 # Created by `pipx` on 2024-06-30 20:00:14
 set PATH $PATH /home/xnzf/.local/bin
+#set -
+
+set -Ux EMAIL hotdamnsucka@gmail.com
+set -Ux GIT_AUTHOR_NAME Oleksandr
+set -Ux GIT_AUTHOR_EMAIL hotdamnsucka@gmail.com
+set -Ux GIT_AUTHOR_DATE [(date +%x_%H:%M\(%Z\))]
+set -Ux GIT_COMMITTER_NAME Oleksandr
+set -Ux GIT_COMMITTER_EMAIL hotdamnsucka@gmail.com
+set -Ux GIT_COMMITTER_DATE [(date +%x_%H:%M\(%Z\))]
+set -Ux GIT_CURL_VERBOSE true
 
 fish_add_path /home/xnzf/.millennium/ext/bin

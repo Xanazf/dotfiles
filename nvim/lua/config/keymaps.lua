@@ -7,7 +7,8 @@ local opts = { noremap = true, silent = true }
 --- Plugins
 local LSPkeys = require("lazyvim.plugins.lsp.keymaps").get()
 -- change a keymap
-LSPkeys[#LSPkeys + 1] = { "K", "<cmd>Lspsaga hover_doc<cr>" }
+-- LSPkeys[#LSPkeys + 1] = { "K", "<cmd>Lspsaga hover_doc<cr>" }
+-- LSPkeys[#LSPkeys + 1] = { "K", "<cmd>Inspect<cr>" }
 
 --- Increment/decrement
 

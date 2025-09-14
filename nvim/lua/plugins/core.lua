@@ -1,53 +1,149 @@
 return {
+  { "folke/lazy.nvim", version = false },
+  { "LazyVim/LazyVim", version = false },
   {
-    "LazyVim/LazyVim",
-    opts = {
-      colorscheme = "fluoromachine",
-      kind_filter = false,
-      defaults = {
-        autocmds = true,
-        keymaps = true,
-      },
-    },
-  },
-  { "nvim-tree/nvim-web-devicons" },
-  { "echasnovski/mini.icons", version = false },
-  { "HiPhish/rainbow-delimiters.nvim" },
-  {
-    "tris203/precognition.nvim",
-    event = "VeryLazy",
-    opts = {
-      startVisible = true,
-      showBlankVirtLine = true,
-      highlightColor = { link = "Comment" },
-      hints = {
-        Caret = { text = "^", prio = 2 },
-        Dollar = { text = "$", prio = 1 },
-        MatchingPair = { text = "%", prio = 5 },
-        Zero = { text = "0", prio = 1 },
-        w = { text = "w", prio = 10 },
-        b = { text = "b", prio = 9 },
-        e = { text = "e", prio = 8 },
-        W = { text = "W", prio = 7 },
-        B = { text = "B", prio = 6 },
-        E = { text = "E", prio = 5 },
-      },
-      gutterHints = {
-        G = { text = "G", prio = 10 },
-        gg = { text = "gg", prio = 9 },
-        PrevParagraph = { text = "{", prio = 8 },
-        NextParagraph = { text = "}", prio = 8 },
+    "rafamadriz/friendly-snippets",
+    version = false,
+    -- add blink.compat to dependencies
+    dependencies = {
+      {
+        "saghen/blink.compat",
+        optional = true, -- make optional so it's only enabled if any extras need it
+        opts = {},
+        version = not vim.g.lazyvim_blink_main and "*",
       },
     },
   },
   {
-    "wuelnerdotexe/vim-astro",
-    lazy = true,
+    "nvim-mini/mini.snippets",
+    enable = false,
+    version = false,
+    dependencies = { "rafamadriz/friendly-snippets" },
+    event = "InsertEnter",
+    config = function()
+      local snippets = require("mini.snippets")
+      snippets.gen_loader.from_lang()
+    end,
   },
   {
-    "ahmedkhalf/project.nvim",
+    "nvim-mini/mini.doc",
+    version = false,
+    config = function()
+      local mdoc = require("mini.doc")
+      mdoc.setup()
+    end,
+  },
+  {
+    "maxmx03/fluoromachine.nvim",
+    lazy = false,
+    priority = 1000,
+    ---@type function|fluoromachine
+    config = function()
+      local fm = require("fluoromachine")
+      --- @module "fluoromachine"
+      fm.setup({
+        theme = "fluoromachine",
+        glow = false,
+        brightness = 0.01,
+        transparent = true,
+        terminal_colors = true,
+        plugins = {
+          bufferline = true,
+          cmp = false,
+          dashboard = true,
+          editor = true,
+          gitsign = true,
+          hop = true,
+          ibl = true,
+          illuminate = true,
+          lazy = true,
+          minicursor = true,
+          ministarter = true,
+          minitabline = true,
+          ministatusline = true,
+          navic = true,
+          neogit = true,
+          neotree = true,
+          snacks = true,
+          noice = true,
+          notify = true,
+          lspconfig = true,
+          syntax = true,
+          telescope = false,
+          treesitter = true,
+          tree = true,
+          wk = true,
+        },
+      })
+      vim.cmd([[colorscheme fluoromachine]])
+    end,
+  },
+  {
+    "saghen/blink.cmp",
+    version = "1.*",
+    event = "InsertEnter",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    keymap = { preset = "default" },
+    ---@module 'blink.cmp'
+    ---@type blink.cmp.Config
     opts = {
-      manual_mode = true,
+      snippets = {
+        expand = function(snippet)
+          return LazyVim.cmp.expand(snippet)
+        end,
+      },
+      appearance = {
+        use_nvim_cmp_as_default = false,
+        nerd_font_variant = "mono",
+      },
+      completion = {
+        accept = {
+          -- experimental auto-brackets support
+          auto_brackets = {
+            enabled = true,
+          },
+        },
+        menu = {
+          draw = {
+            treesitter = { "lsp" },
+          },
+        },
+        documentation = {
+          auto_show = true,
+          auto_show_delay_ms = 200,
+        },
+        ghost_text = {
+          enabled = vim.g.ai_cmp,
+        },
+      },
+      signature = {
+        enabled = true,
+      },
+      sources = {
+        compat = {},
+        -- add lazydev to your completion providers
+        default = { "lsp", "path", "snippets", "buffer", "omni", "lazydev" },
+        providers = {
+          lazydev = {
+            name = "LazyDev",
+            module = "lazydev.integrations.blink",
+            -- make lazydev completions top priority (see `:h blink.cmp`)
+            score_offset = 100,
+          },
+        },
+      },
+      cmdline = {
+        enabled = false,
+      },
+      keymap = {
+        preset = "enter",
+        ["<C-y>"] = { "select_and_accept" },
+      },
+    },
+    opts_extend = {
+      "sources.completion.enabled_providers",
+      "sources.compat",
+      "sources.default",
     },
   },
 }

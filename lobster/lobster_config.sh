@@ -1,9 +1,9 @@
 # This is an example configuration file for lobster. This configuration includes all of the defaults, which you can change to you likings. The script will behave the exact same if you remove all of the values present here.
 
 # lobster_editor=${VISUAL:-${EDITOR:-nvim}}
-player=vlc
+player=mpv
 download_dir="$HOME/Movies"
-provider="Vidcloud" # Vidcloud, UpCloud
+provider="UpCloud" # Vidcloud, UpCloud
 history=false
 subs_language="english"
 histfile="$HOME/.local/share/lobster/lobster_history.txt"

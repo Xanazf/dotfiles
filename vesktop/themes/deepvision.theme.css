@@ -1,0 +1,92 @@
+/**
+ * @name DeepVision
+ * @author ClearVision Team
+ * @version 6.9.0
+ * @description Highly customizable and beautiful theme for BetterDiscord.
+ * @source https://github.com/ClearVision/ClearVision-v6
+ * @website https://clearvision.github.io
+ * @invite dHaSxn3
+ * @BDEditor Clear Vision
+*/
+
+@import url('https://fonts.googleapis.com/css2?family=Hack+Nerd+Font:wght@100;300;400;500;700&display=swap');
+@import url('https://clearvision.github.io/ClearVision-v6/main.css');
+@import url('https://nyri4.github.io/Discolored/main.css');
+
+:root {
+  --main-color: #7827E6;
+  --hover-color: #6F1EB3;
+  --success-color: #49E15E;
+  --danger-color: #C5245F;
+  --url-color: #2196F3;
+  --background-image: transparent;
+  --background-shading: 100%;
+  --background-position: center;
+  --background-size: cover;
+  --background-repeat: no-repeat;
+  --background-attachment: fixed;
+  --background-brightness: 100%;
+  --background-contrast: 100%;
+  --background-saturation: 100%;
+  --background-grayscale: 0%;
+  --background-invert: 0%;
+  --background-blur: 0px;
+  --background-overlay: rgba(0,0,0,0.6);
+  --user-popout-image: url('https://clearvision.github.io/images/sapphire.jpg');
+  --user-popout-position: center;
+  --user-popout-size: cover;
+  --user-popout-repeat: no-repeat;
+  --user-popout-attachment: fixed;
+  --user-popout-brightness: 100%;
+  --user-popout-contrast: 100%;
+  --user-popout-saturation: 100%;
+  --user-popout-grayscale: 0%;
+  --user-popout-invert: 0%;
+  --user-popout-blur: 3px;
+  --user-modal-image: url('https://clearvision.github.io/images/sapphire.jpg');
+  --user-modal-position: center;
+  --user-modal-size: cover;
+  --user-modal-repeat: no-repeat;
+  --user-modal-attachment: fixed;
+  --user-modal-brightness: 100%;
+  --user-modal-contrast: 100%;
+  --user-modal-saturation: 100%;
+  --user-modal-grayscale: 0%;
+  --user-modal-invert: 0%;
+  --user-modal-blur: 3px;
+  --home-icon: url('data:image/png;base64,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');
+  --home-position: center;
+  --home-size: 40px;
+  --channel-unread: var(--main-color);
+  --channel-color: rgba(255,255,255,0.3);
+  --muted-color: rgba(255,255,255,0.1);
+  --online-color: #43b581;
+  --idle-color: #faa61a;
+  --dnd-color: #982929;
+  --streaming-color: #593695;
+  --offline-color: #808080;
+  --main-font: Rubik;
+  --code-font: Hack Nerd Font;
+  --channels-width: 220px;
+  --members-width: 240px;
+  --backdrop-overlay: rgba(0,0,0,0.8);
+  --backdrop-image: var(--background-image);
+  --backdrop-position: var(--background-position);
+  --backdrop-size: var(--background-size);
+  --backdrop-repeat: var(--background-repeat);
+  --backdrop-attachment: var(--background-attachment);
+  --backdrop-brightness: var(--background-brightness);
+  --backdrop-contrast: var(--background-contrast);
+  --backdrop-saturation: var(--background-saturation);
+  --backdrop-invert: var(--background-invert);
+  --backdrop-grayscale: var(--background-grayscale);
+  --backdrop-sepia: var(--background-sepia);
+  --backdrop-blur: var(--background-blur);
+  --bd-blue: var(--main-color);
+  --bd-blue-hover: var(--hover-color);
+  --bd-blue-active: var(--hover-color);
+}
+
+/* Any custom CSS below here */
+
+
