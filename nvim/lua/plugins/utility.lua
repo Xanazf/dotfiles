@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     "nvim-mini/mini.move",
@@ -90,7 +91,7 @@ return {
   {
     "nvim-mini/mini-git",
     version = false,
-    main = "mini.git",
+    name = "mini.git",
     config = function()
       local mgit = require("mini.git")
       mgit.setup()
@@ -164,4 +165,5 @@ return {
       scope = { enabled = false },
     },
   },
+  { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
 }

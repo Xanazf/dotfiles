@@ -1,3 +1,4 @@
+---@type LazySpec
 return {
   {
     "mfussenegger/nvim-lint",
@@ -12,7 +13,7 @@ return {
         cpp = { "clangd" },
         md = { "remark" },
         js = { "biome" },
-        qml = { "qmllint" },
+        qml = { "/usr/lib/qt6/bin/" },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ["*"] = { "todo_comments" },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.

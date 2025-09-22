@@ -1,6 +1,33 @@
+---@type LazySpec
 return {
   { "folke/lazy.nvim", version = false },
-  { "LazyVim/LazyVim", version = false },
+  {
+    "nvim-tree/nvim-web-devicons",
+    version = false,
+    lazy = true,
+  },
+  ---@module "mini.icons"
+  {
+    "nvim-mini/mini.icons",
+    lazy = false,
+    priority = 1000,
+    version = false,
+    ---@return table
+    config = function()
+      local micons = require("mini.icons")
+      micons.setup()
+      micons.mock_nvim_web_devicons()
+      micons.tweak_lsp_kind()
+      _G.MiniIcons = micons
+    end,
+  },
+  ---@module "lazyvim"
+  {
+    "LazyVim/LazyVim",
+    version = false,
+    ---@type LazyVimOptions
+    opts = {},
+  },
   {
     "rafamadriz/friendly-snippets",
     version = false,
@@ -16,7 +43,7 @@ return {
   },
   {
     "nvim-mini/mini.snippets",
-    enable = false,
+    enabled = false,
     version = false,
     dependencies = { "rafamadriz/friendly-snippets" },
     event = "InsertEnter",
@@ -25,14 +52,17 @@ return {
       snippets.gen_loader.from_lang()
     end,
   },
+  ---@module "mini.doc"
   {
     "nvim-mini/mini.doc",
     version = false,
+    lazy = false,
     config = function()
       local mdoc = require("mini.doc")
       mdoc.setup()
     end,
   },
+  ---@module "fluoromachine"
   {
     "maxmx03/fluoromachine.nvim",
     lazy = false,
@@ -40,7 +70,6 @@ return {
     ---@type function|fluoromachine
     config = function()
       local fm = require("fluoromachine")
-      --- @module "fluoromachine"
       fm.setup({
         theme = "fluoromachine",
         glow = false,
@@ -79,71 +108,10 @@ return {
     end,
   },
   {
-    "saghen/blink.cmp",
-    version = "1.*",
-    event = "InsertEnter",
-    dependencies = { "rafamadriz/friendly-snippets" },
-    keymap = { preset = "default" },
-    ---@module 'blink.cmp'
-    ---@type blink.cmp.Config
-    opts = {
-      snippets = {
-        expand = function(snippet)
-          return LazyVim.cmp.expand(snippet)
-        end,
-      },
-      appearance = {
-        use_nvim_cmp_as_default = false,
-        nerd_font_variant = "mono",
-      },
-      completion = {
-        accept = {
-          -- experimental auto-brackets support
-          auto_brackets = {
-            enabled = true,
-          },
-        },
-        menu = {
-          draw = {
-            treesitter = { "lsp" },
-          },
-        },
-        documentation = {
-          auto_show = true,
-          auto_show_delay_ms = 200,
-        },
-        ghost_text = {
-          enabled = vim.g.ai_cmp,
-        },
-      },
-      signature = {
-        enabled = true,
-      },
-      sources = {
-        compat = {},
-        -- add lazydev to your completion providers
-        default = { "lsp", "path", "snippets", "buffer", "omni", "lazydev" },
-        providers = {
-          lazydev = {
-            name = "LazyDev",
-            module = "lazydev.integrations.blink",
-            -- make lazydev completions top priority (see `:h blink.cmp`)
-            score_offset = 100,
-          },
-        },
-      },
-      cmdline = {
-        enabled = false,
-      },
-      keymap = {
-        preset = "enter",
-        ["<C-y>"] = { "select_and_accept" },
-      },
-    },
-    opts_extend = {
-      "sources.completion.enabled_providers",
-      "sources.compat",
-      "sources.default",
-    },
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = { "nvim-treesitter/nvim-treesitter", "nvim-mini/mini.icons" }, -- if you use standalone mini plugins
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
   },
 }
