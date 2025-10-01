@@ -1,0 +1,116 @@
+# fish completion for qodo command
+# Generated from `qodo -h`
+
+function __qodo_global_flags
+    printf "%s\n" \
+        "-h\tShow help and exit" \
+        "--help\tShow help and exit" \
+        "-v\tShow version and exit" \
+        "--version\tShow version and exit" \
+        "-l\tRedirect console output to a file | stdout | stderr" \
+        "--log\tRedirect console output to a file | stdout | stderr" \
+        "-y\tConfirm all prompts automatically (useful for CI)" \
+        "--yes\tConfirm all prompts automatically (useful for CI)" \
+        "-q\tSuppress output except final result" \
+        "--silent\tSuppress output except final result" \
+        "-d\tEnable debug mode" \
+        "--debug\tEnable debug mode" \
+        "--dir\tSpecify project root directories (repeatable)" \
+        "--ci\tRun commands in CI mode" \
+        "--mcp\tRun commands as tools from agent config in MCP-server-like mode" \
+        "--ui\tOpen Qodo with web interface" \
+        "--webhook\tRun commands from agent config in webhook mode" \
+        "--slack\tRun as Slack bot (HTTP webhook by default)" \
+        "-p\tSpecify custom port for server modes" \
+        "--port\tSpecify custom port for server modes" \
+        "-m\tSpecify a custom model to use" \
+        "--model\tSpecify a custom model to use" \
+        "--agent-file\tPath to agent configuration file" \
+        "--mcp-file\tPath to mcp.json" \
+        "-r\tResume a task with the given session ID" \
+        "--resume\tResume a task with the given session ID" \
+        "--set\tSet custom key=value (repeatable)" \
+        "--no-builtin\tDisable built-in MCP servers" \
+        "-t\tSpecify authorized tools (comma-separated)" \
+        "--tools\tSpecify authorized tools (comma-separated)" \
+        "--tool\tSpecify authorized tool (repeatable)" \
+        "--permissions\tSet permissions level (r, rw, rwx, -)" \
+        "--with\tPreload context with a previous session summarization"
+end
+
+function __qodo_commands
+    printf "%s\n" \
+        "run\tExecute a specific agent command" \
+        "login\tLog in to Qodo" \
+        "models\tGet available models" \
+        "chat\tStart an interactive chat session" \
+        "key\tManage API keys" \
+        "create-agent\tCreate a new agent from requirements" \
+        "list-agents\tList available agents" \
+        "list-mcp\tList available local and remote tools" \
+        "self-review\tAnalyze git changes (opens web UI)" \
+        "update\tManage auto-updates" \
+        "chain\tRun multiple agents sequentially"
+end
+
+# Determine if first non-flag token is a command
+function __qodo_needs_command
+    set -l tokens (commandline -opc)
+    for t in $tokens
+        switch $t
+            case '-*'
+                continue
+            case run login models chat key create-agent list-agents list-mcp self-review update chain
+                # already have a subcommand; don't show the list
+                return 1
+            case '*'
+                # first non-flag token isn't a known subcommand; still show the subcommand list
+                return 0
+        end
+    end
+    # no non-flag tokens yet; need a subcommand
+    return 0
+end
+
+# remove any previous completions as they're handled here
+complete -c qodo -e
+# Do not force file completion; allow normal argument completion
+complete -c qodo -f
+
+# Offer commands (provide name and description with tabs so fish shows descriptions)
+# complete -c qodo -n __qodo_needs_command -a '(__qodo_commands)'
+
+# Global flags (available always)
+for f in (__qodo_global_flags)
+    set -l flag (string split "\t" -- $f)[1]
+    set -l desc (string split "\t" -- $f)[2]
+        switch $t
+            case (string match -rq '^--' -- $flag)
+                set -l longflag (string replace -r '^--' '' -- $flag)
+                complete -c qodo -l $longflag -r -d $desc
+                continue
+            case (string match -rq '^-' -- $flag)
+                set -l short (string replace -r '^-(.) ' '$1' -- $flag)
+                complete -c qodo -s $short -r -d $desc 2>/dev/null
+                continue
+        end
+end
+
+# run subcommand args
+complete -c qodo -n '__fish_seen_subcommand_from run' -x -a '(__fish_use_subcommand)' -d 'Agent command to run'
+# run accepts extra free-form instructions; no specific flags beyond global
+
+# key subcommands
+complete -c qodo -n '__fish_seen_subcommand_from key' -a 'list create revoke' -d 'Key operations'
+complete -c qodo -n '__fish_seen_subcommand_from key; and __fish_seen_subcommand_from create' -x -a NAME -d 'API key name'
+complete -c qodo -n '__fish_seen_subcommand_from key; and __fish_seen_subcommand_from revoke' -x -a '(qodo key list | awk "{print \$1}")' -d 'API key name'
+
+# update flags
+complete -c qodo -n '__fish_seen_subcommand_from update' -l check -d 'Check for updates'
+complete -c qodo -n '__fish_seen_subcommand_from update' -l install -d 'Install updates'
+complete -c qodo -n '__fish_seen_subcommand_from update' -l configure -d 'Configure auto-updates'
+
+# chain examples: provide placeholder
+complete -c qodo -n '__fish_seen_subcommand_from chain' -x -a '"improve > review > open-pr"' -d 'Agent chain (quoted)'
+
+# Positional prompt suggestions: none (free-form text)

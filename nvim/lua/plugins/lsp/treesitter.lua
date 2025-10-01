@@ -3,7 +3,6 @@ local helpers = require("plugins.lsp.helpers")
 local h_ts = helpers.treesitter
 local h_parsers = h_ts.parsers
 
----@type LazySpec
 return {
   {
     "nvim-treesitter/nvim-treesitter",
@@ -365,6 +364,7 @@ return {
           "lua",
           "javascript",
           "typescript",
+          "astro",
           "tsx",
           "jsx",
           "python",
@@ -400,6 +400,7 @@ return {
           "typescript",
           "tsx",
           "jsx",
+          "astro",
           "html",
           "css",
           "json",

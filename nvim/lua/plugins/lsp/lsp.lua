@@ -37,13 +37,11 @@ return {
         },
       })
 
-      -- Merge inlay hints with LazyVim defaults (Neovim 11.0+ enhanced)
       opts.inlay_hints = vim.tbl_deep_extend("force", opts.inlay_hints or {}, {
         enabled = true,
         exclude = { "vue" }, -- exclude vue due to performance issues
       })
 
-      -- Enhanced capabilities for Neovim 11.0+
       opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, {
         textDocument = {
           foldingRange = {
@@ -75,7 +73,7 @@ return {
       -- Merge servers with LazyVim defaults
       opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, h_servers)
 
-      -- Enhanced setup functions for Neovim 11.0+
+      ---@type table <string, function<vim.lsp.Config|boolean>>
       local custom_setup = {
         tsserver = function()
           -- disable tsserver
@@ -85,8 +83,8 @@ return {
           -- disable ts_ls
           return true
         end,
+        ---@param server_opts vim.lsp.Config
         vtsls = function(_, server_opts)
-          -- Enhanced vtsls setup for Neovim 11.0+
           server_opts.settings = server_opts.settings or {}
 
           -- Copy typescript settings to javascript
@@ -97,7 +95,6 @@ return {
             server_opts.settings.javascript or {}
           )
 
-          -- Enhanced capabilities for Neovim 11.0+
           server_opts.capabilities = vim.tbl_deep_extend("force", server_opts.capabilities or {}, {
             textDocument = {
               completion = {
@@ -108,6 +105,7 @@ return {
             },
           })
         end,
+        ---@param server_opts vim.lsp.Config
         qmlls = function(_, server_opts)
           server_opts.on_attach = function(client, bufnr)
             -- Disable formatting to avoid conflicts with conform.nvim
@@ -116,14 +114,14 @@ return {
 
             if client.server_capabilities.semanticTokensProvider then
               vim.lsp.semantic_tokens.enable(true, {
-                bufnr = bufnr,
+                -- bufnr = bufnr,
                 client_id = client.id,
               })
             end
           end
         end,
+        ---@param server_opts vim.lsp.Config
         clangd = function(_, server_opts)
-          -- Enhanced clangd setup for Neovim 11.0+
           server_opts.capabilities = vim.tbl_deep_extend("force", server_opts.capabilities or {}, {
             offsetEncoding = { "utf-16" },
             textDocument = {
@@ -137,7 +135,6 @@ return {
           require("clangd_extensions").setup(vim.tbl_deep_extend("force", clangd_ext_opts or {}, {
             server = server_opts,
             extensions = {
-              -- Enhanced for Neovim 11.0+
               autoSetHints = true,
               inlay_hints = {
                 inline = vim.fn.has("nvim-0.10") == 1,
@@ -157,23 +154,23 @@ return {
           }))
           return false
         end,
+        ---@param server_opts vim.lsp.Config
         gopls = function(_, server_opts)
-          -- Enhanced gopls setup for Neovim 11.0+
           server_opts.on_attach = function(client, bufnr)
-            -- Enhanced semantic tokens support for Neovim 11.0+
             if not client.server_capabilities.semanticTokensProvider then
               local semantic = client.config.capabilities.textDocument.semanticTokens
-              client.server_capabilities.semanticTokensProvider = {
-                full = true,
-                legend = {
-                  tokenTypes = semantic.tokenTypes,
-                  tokenModifiers = semantic.tokenModifiers,
-                },
-                range = true,
-              }
+              if semantic then
+                client.server_capabilities.semanticTokensProvider = {
+                  full = true,
+                  legend = {
+                    tokenTypes = semantic.tokenTypes,
+                    tokenModifiers = semantic.tokenModifiers,
+                  },
+                  range = true,
+                }
+              end
             end
 
-            -- Enable semantic tokens for Neovim 11.0+
             -- if client.server_capabilities.semanticTokensProvider then
             -- end
           end
@@ -189,7 +186,9 @@ return {
             },
           })
         end,
+        ---@param server_opts vim.lsp.Config
         lua_ls = function(_, server_opts) end,
+        ---@param server_opts vim.lsp.Config
         tailwindcss = function(_, server_opts)
           server_opts.filetypes = server_opts.filetypes or {}
           server_opts.filetypes_exclude = server_opts.filetypes_exclude or {}
@@ -254,6 +253,7 @@ return {
             },
           })
         end,
+        ---@param server_opts vim.lsp.Config
         jsonls = function(_, server_opts)
           server_opts.on_attach = function(client, bufnr)
             if client.server_capabilities.semanticTokensProvider then
@@ -264,6 +264,7 @@ return {
             end
           end
         end,
+        ---@param server_opts vim.lsp.Config
         yamlls = function(_, server_opts)
           -- Enhanced YAML-LS setup for Neovim 11.0+
           server_opts.capabilities = vim.tbl_deep_extend("force", server_opts.capabilities or {}, {

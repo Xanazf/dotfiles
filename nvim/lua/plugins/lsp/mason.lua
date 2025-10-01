@@ -86,6 +86,8 @@ return {
   },
 
   -- Mason-LSPConfig v2.x configuration for LazyVim 15.x
+  ---@module "mason-lspconfig"
+  ---@type MasonLspconfigSettings
   {
     "mason-org/mason-lspconfig.nvim",
     dependencies = { "mason-org/mason.nvim" },
@@ -232,9 +234,9 @@ return {
       -- Add formatters and linters
       local additional_tools = {
         -- Formatters
-        "prettier",
-        "prettierd",
-        "eslint_d",
+        -- "prettier",
+        -- "prettierd",
+        -- "eslint_d",
         "stylua",
         "shfmt",
         "black",

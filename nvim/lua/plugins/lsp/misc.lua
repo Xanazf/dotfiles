@@ -5,14 +5,14 @@ return {
     lazy = true,
     version = false, -- last release is way too old
   },
-  
+
   -- Add Astro support
   {
     "wuelnerdotexe/vim-astro",
     lazy = true,
     ft = "astro",
   },
-  
+
   -- Extend LazyVim's VimTeX configuration
   {
     "lervag/vimtex",
@@ -27,7 +27,7 @@ return {
       { "<localleader>l", "", desc = "+vimtex", ft = "tex" },
     },
   },
-  
+
   -- Extend LazyVim's clangd_extensions configuration
   {
     "p00f/clangd_extensions.nvim",
@@ -60,7 +60,7 @@ return {
       })
     end,
   },
-  
+
   -- Extend none-ls configuration (if LazyVim uses it)
   {
     "nvimtools/none-ls.nvim",
@@ -73,7 +73,7 @@ return {
       local nls = require("null-ls")
       opts.root_dir = opts.root_dir
         or require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git")
-      
+
       -- Merge our sources with existing ones
       local custom_sources = {
         nls.builtins.code_actions.gomodifytags,
@@ -99,12 +99,12 @@ return {
         nls.builtins.formatting.shfmt,
         nls.builtins.formatting.qmlformat,
       }
-      
+
       opts.sources = vim.list_extend(opts.sources or {}, custom_sources)
       return opts
     end,
   },
-  
+
   -- Extend LazyVim's lazydev configuration
   {
     "folke/lazydev.nvim",
@@ -122,3 +122,4 @@ return {
     end,
   },
 }
+

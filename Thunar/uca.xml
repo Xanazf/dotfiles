@@ -5,7 +5,7 @@
 	<name>Відкрити термінал тут</name>
 	<submenu></submenu>
 	<unique-id>1710175174451468-1</unique-id>
-	<command>exo-open --working-directory %f --launch TerminalEmulator</command>
+	<command>kitty -d %f</command>
 	<description>Приклад особливої дії</description>
 	<range></range>
 	<patterns>*</patterns>

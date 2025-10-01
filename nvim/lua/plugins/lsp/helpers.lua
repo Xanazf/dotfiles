@@ -29,6 +29,7 @@ end
 -- Parsers are now installed directly with require('nvim-treesitter').install()
 
 -- Conditional server setup for lsp
+---@type table <string, vim.lsp.Config>
 M.lsp.servers = {
   bashls = {
     enabled = true,
@@ -263,7 +264,7 @@ M.lsp.servers = {
   -- Web servers
   html = { settings = {} },
   cssls = { settings = {} },
-  
+
   -- YAML
   yamlls = {
     settings = {

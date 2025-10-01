@@ -8,7 +8,7 @@ quickshell_scripts=$quickshell_config/scripts
 
 /usr/lib/hyprpolkitagent &
 # quickshell
-quickshell &
+caelestia shell -d &
 # $quickshell_scripts/tools/dynamic &
 /usr/lib/xdg-desktop-portal-hyprland &
 # other
@@ -19,6 +19,7 @@ steam &
 # for XDPH
 dbus-update-activation-environment --systemd --all &
 systemctl --user import-environment XDG_SESSION_TYPE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME &
+
 wl-clip-persist --clipboard regular &
 wl-paste --type text -pw cliphist store &      # only text from primary
 wl-paste --type text --watch cliphist store &  # only text

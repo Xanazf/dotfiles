@@ -6,16 +6,40 @@ return {
     version = false,
     lazy = true,
   },
+  {
+    "onsails/lspkind.nvim",
+    lazy = true,
+    version = false,
+  },
   ---@module "mini.icons"
   {
     "nvim-mini/mini.icons",
     lazy = false,
     priority = 1000,
     version = false,
+    ---@class MiniIcons.ConfigPartial
     ---@return table
     config = function()
       local micons = require("mini.icons")
-      micons.setup()
+      micons.setup({
+        style = "glyph",
+        extension = {
+          ["ts"] = { glyph = "󰛦", hl = "MiniIconsAzure" },
+        },
+        file = {
+          ["tsconfig.json"] = { glyph = "󰛦", hl = "MiniIconsAzure" },
+          ["package.json"] = { glyph = "󰌞", hl = "MiniIconsYellow" },
+        },
+        use_file_extension = function(ext, file)
+          local ignore = {
+            [".json"] = ".json",
+            [".toml"] = ".toml",
+            [".yml"] = ".yml",
+            [".yaml"] = ".yaml",
+          }
+          return ignore[ext] == nil
+        end,
+      })
       micons.mock_nvim_web_devicons()
       micons.tweak_lsp_kind()
       _G.MiniIcons = micons
@@ -67,7 +91,6 @@ return {
     "maxmx03/fluoromachine.nvim",
     lazy = false,
     priority = 1000,
-    ---@type function|fluoromachine
     config = function()
       local fm = require("fluoromachine")
       fm.setup({
@@ -76,9 +99,19 @@ return {
         brightness = 0.01,
         transparent = true,
         terminal_colors = true,
+        colors = function(c, color)
+          local darken = color.darken
+          local lighten = color.lighten
+          local blend = color.blend
+          local shade = color.shade
+          local tint = color.tint
+          return {
+            bg = nil,
+          }
+        end,
         plugins = {
           bufferline = true,
-          cmp = false,
+          cmp = true,
           dashboard = true,
           editor = true,
           gitsign = true,
@@ -93,18 +126,18 @@ return {
           navic = true,
           neogit = true,
           neotree = true,
-          snacks = true,
+          -- snacks = true,
           noice = true,
           notify = true,
           lspconfig = true,
           syntax = true,
-          telescope = false,
+          telescope = true,
           treesitter = true,
           tree = true,
           wk = true,
         },
       })
-      vim.cmd([[colorscheme fluoromachine]])
+      vim.cmd.colorscheme("fluoromachine")
     end,
   },
   {

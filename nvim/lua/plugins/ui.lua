@@ -244,17 +244,16 @@ return {
           .. (diag.warning and icons.Warn .. diag.warning or "")
         return vim.trim(ret)
       end,
-      ---@type bufferline.Highlights
+      ---@type bufferline.Highlighrts
       highlights = {
         fill = {
-          fg = "NONE",
-          bg = "NONE",
-          hl_group = "Normal",
+          fg = nil,
+          bg = nil,
         },
         background = {
-          fg = "NONE",
-          bg = "NONE",
-          hl_group = "Normal",
+          fg = nil,
+          bg = nil,
+          hl_group = "NormalFloat",
         },
       },
       offsets = {
@@ -314,7 +313,7 @@ return {
         options = {
           theme = "fluoromachine",
           component_separators = { left = "", right = "" },
-          section_separators = { left = "", right = "" },
+          section_separators = { left = ":", right = ":" },
           globalstatus = vim.o.laststatus == 3,
           disabled_filetypes = {
             statusline = {
@@ -331,19 +330,23 @@ return {
             },
           },
         },
+        on_colors = function(colors)
+          colors.bg_statusline = "NONE"
+        end,
         sections = {
           lualine_a = { "mode" },
           lualine_b = { "branch" },
           lualine_c = {
             LazyVim.lualine.root_dir(),
             {
-              "diagnostics",
+              "Diagnostics",
               symbols = {
                 error = icons.diagnostics.Error,
                 warn = icons.diagnostics.Warn,
                 info = icons.diagnostics.Info,
                 hint = icons.diagnostics.Hint,
               },
+              color = { bg_statusline = nil, hl_group = "Normal" },
             },
             {
               "filetype",
@@ -414,7 +417,7 @@ return {
           },
           lualine_z = {
             function()
-              return " " .. os.date("%R")
+              return " " .. os.date("%a|%R")
             end,
           },
         },
@@ -452,14 +455,36 @@ return {
       bigfile = { enabled = true },
       debug = { enabled = true },
       picker = {
+        prompt = " ",
         enabled = true,
-        icons = MiniIcons,
         ui_select = true,
+        ---@type snacks.picker.matcher.Config
+        matcher = {
+          fuzzy = true, -- use fuzzy matching
+          smartcase = true, -- use smartcase
+          ignorecase = true, -- use ignorecase
+          sort_empty = false, -- sort results when the search string is empty
+          filename_bonus = true, -- give bonus for matching file names (last part of the path)
+          file_pos = true, -- support patterns like `file:line:col` and `file:line`
+          -- the bonusses below, possibly require string concatenation and path normalization,
+          -- so this can have a performance impact for large lists and increase memory usage
+          cwd_bonus = false, -- give bonus for matching files in the cwd
+          frecency = false, -- frecency bonus
+          history_bonus = false, -- give more weight to chronological order
+        },
+        formatters = {
+          file = {
+            icon_width = 2,
+          },
+        },
         explorer = {
           supports_live = true,
           tree = true,
           watch = true,
           diagnostics = true,
+        },
+        db = {
+          sqlite3_path = "/usr/bin/sqlite3",
         },
       },
       scratch = { enabled = true },
@@ -548,6 +573,15 @@ return {
       styles = {
         notification = {
           wo = { wrap = true, winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" } },
+        },
+      },
+      keys = {
+        {
+          "<leader><space>",
+          function()
+            Snacks.picker.smart()
+          end,
+          desc = "Smart Find Files",
         },
       },
     },

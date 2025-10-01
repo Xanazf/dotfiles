@@ -14,49 +14,59 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     local colors = {
       bg = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg"),
       fg = vim.fn.synIDattr(vim.fn.hlID("Normal"), "fg"),
+      tsblue = "#3178C6",
       blue = "#61afef",
       green = "#98c379",
       purple = "#c678dd",
       cyan = "#56b6c2",
       red = "#e06c75",
-      yellow = "#e5c07b",
+      yellow = "#ffcc00",
       orange = "#d19a66",
       gray = "#5c6370",
+      light = "#8ba7a7",
     }
+    -- lualine_a_insert xxx cterm=bold gui=bold,nocombine guifg=#ffcc00 guibg=#262335
+    vim.api.nvim_set_hl(0, "MiniIconsYellow", { fg = colors.yellow, bg = colors.bg })
+    vim.api.nvim_set_hl(0, "MiniIconsAzure", { fg = colors.tsblue, bg = colors.bg })
 
-    -- Set lualine highlights with proper backgrounds
-    vim.api.nvim_set_hl(0, "lualine_a_normal", { fg = colors.bg or "#282c34", bg = colors.blue, bold = true })
-    vim.api.nvim_set_hl(0, "lualine_a_insert", { fg = colors.bg or "#282c34", bg = colors.green, bold = true })
-    vim.api.nvim_set_hl(0, "lualine_a_visual", { fg = colors.bg or "#282c34", bg = colors.purple, bold = true })
-    vim.api.nvim_set_hl(0, "lualine_a_replace", { fg = colors.bg or "#282c34", bg = colors.red, bold = true })
-    vim.api.nvim_set_hl(0, "lualine_a_command", { fg = colors.bg or "#282c34", bg = colors.yellow, bold = true })
+    -- statusline
+    vim.api.nvim_set_hl(0, "StatusLine", { fg = colors.fg or colors.light, bg = nil })
+    vim.api.nvim_set_hl(0, "StatusLineNC", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_insert", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_visual", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_replace", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_command", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_terminal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_inactive", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_c_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_normal_to_lualine_c_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_b_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(
+      0,
+      "lualine_transitional_lualine_a_normal_to_lualine_c_filetype_MiniIconsAzure_normal",
+      { fg = colors.fg, bg = nil }
+    )
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_c_13_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_b_normal", { fg = colors.fg, bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_normal_to_lualine_x_5_normal", { fg = colors.fg, bg = nil })
 
-    vim.api.nvim_set_hl(0, "lualine_b_normal", { fg = colors.fg or "#abb2bf", bg = colors.gray })
-    vim.api.nvim_set_hl(0, "lualine_c_normal", { fg = colors.fg or "#abb2bf", bg = "NONE" })
+    vim.api.nvim_set_hl(0, "TabLine", { link = "NormalFloat" })
+    vim.api.nvim_set_hl(0, "TabLineFill", { bg = nil })
+    vim.api.nvim_set_hl(0, "TabLineSel", { bg = nil })
+    vim.api.nvim_set_hl(0, "BufferLineFill", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_normal", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_insert", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_visual", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_replace", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_command", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_terminal", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_inactive", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_command_to_lualine_c_13_command", { bg = nil })
+    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_command_to_lualine_x_8_command", { bg = nil })
 
-    -- Fix bufferline transparency issues
-    --vim.api.nvim_set_hl(0, "BufferLineFill", { bg = "NONE" })
-    -- vim.api.nvim_set_hl(0, "BufferLineBackground", { fg = colors.gray, bg = "Normal" })
-    --vim.api.nvim_set_hl(0, "BufferLineTab", { fg = colors.fg or "#abb2bf", bg = colors.gray })
-    --vim.api.nvim_set_hl(0, "BufferLineTabSelected", { fg = colors.blue, bg = "NONE", bold = true })
-    --vim.api.nvim_set_hl(0, "BufferLineTabClose", { fg = colors.red, bg = colors.gray })
-    --vim.api.nvim_set_hl(0, "BufferLineBuffer", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineBufferSelected", { fg = colors.fg or "#abb2bf", bg = "NONE", bold = true })
-    --vim.api.nvim_set_hl(0, "BufferLineBufferVisible", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineCloseButton", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineCloseButtonSelected", { fg = colors.red, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineCloseButtonVisible", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineSeparator", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineSeparatorSelected", { fg = colors.blue, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineSeparatorVisible", { fg = colors.gray, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineIndicatorSelected", { fg = colors.blue, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineModified", { fg = colors.yellow, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineModifiedSelected", { fg = colors.yellow, bg = "NONE" })
-    --vim.api.nvim_set_hl(0, "BufferLineModifiedVisible", { fg = colors.yellow, bg = "NONE" })
+    -- symbolsline
+    vim.api.nvim_set_hl(0, "NavicText", { link = "String" })
   end,
 })
-
--- Apply immediately on startup as well
---vim.schedule(function()
---  pcall(vim.api.nvim_exec2, "doautocmd ColorScheme", {})
---end)

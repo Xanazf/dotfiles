@@ -14,10 +14,4 @@ local misc = require("plugins.lsp.misc")
 
 -- Return all LSP-related plugin configurations
 -- These will be merged with LazyVim's existing plugin configurations
-return vim.list_extend(
-  vim.list_extend(
-    vim.list_extend(lsp, treesitter),
-    mason
-  ),
-  misc
-)
+return vim.list_extend(vim.list_extend(vim.list_extend(lsp, treesitter), mason), misc)

@@ -1,16 +1,18 @@
-[manager]
-ratio=[1, 3, 5]
+[mgr]
+ratio = [1, 4, 3]
 sort_by = "alphabetical"
 sort_dir_first = true
 show_hidden = true
 show_symlink = true
-linemode = "mtime"
+linemode = "size_and_mtime"
+scrolloff = 5
 
 [preview]
-wrap="yes"
-tab_size=2
-max_width=1280
-max_height=720
+wrap = "yes"
+tab_size = 2
+max_width = 1280
+max_height = 720
+image_delay = 30
 
 [plugin]
 prepend_previewers = [
@@ -26,4 +28,44 @@ prepend_previewers = [
   { mime = "application/x-xz", run = "ouch" },
   # Torrent previewer
   { mime = "application/x-bittorrent", run = "torrent-preview" },
+]
+
+# Task management
+[tasks]
+micro_workers = 10
+macro_workers = 25
+bizarre_retry = 5
+suppress_preload = false
+
+# Input configuration
+[input]
+cursor_blink = true
+
+# Opener configuration for development files
+[opener]
+edit = [
+  { run = '$EDITOR "$@"', desc = "Edit", block = true, for = "unix" },
+  { run = 'code "$@"', desc = "VS Code", for = "unix" },
+  { run = 'nvim "$@"', desc = "Neovim", block = true, for = "unix" },
+]
+open = [
+  { run = 'xdg-open "$@"', desc = "Open", for = "unix" },
+]
+reveal = [
+  { run = 'open -R "$@"', desc = "Reveal", for = "macos" },
+  { run = 'nautilus --select "$@"', desc = "Reveal", for = "linux" },
+]
+
+# File type associations
+[open]
+rules = [
+  { name = "*.{js,ts,jsx,tsx,vue,svelte}", use = ["edit", "open"] },
+  { name = "*.{py,rb,go,rs,c,cpp,h,hpp}", use = ["edit", "open"] },
+  { name = "*.{json,yaml,yml,toml,xml}", use = ["edit", "open"] },
+  { name = "*.{md,txt,log}", use = ["edit", "open"] },
+  { name = "*.{jpg,jpeg,png,gif,bmp,webp,svg}", use = "open" },
+  { name = "*.{mp4,mkv,avi,mov,wmv,flv,webm}", use = "open" },
+  { name = "*.{mp3,flac,wav,aac,ogg}", use = "open" },
+  { name = "*.{zip,tar,gz,bz2,xz,7z,rar}", use = "open" },
+  { name = "*.pdf", use = "open" },
 ]

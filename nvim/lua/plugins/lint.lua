@@ -13,28 +13,24 @@ return {
         cpp = { "clangd" },
         md = { "remark" },
         js = { "biome" },
-        qml = { "/usr/lib/qt6/bin/" },
+        ts = { "biome" },
+        -- qml = { "qmllint" },
         -- Use the "*" filetype to run linters on all filetypes.
         -- ["*"] = { "todo_comments" },
         -- Use the "_" filetype to run linters on filetypes that don't have other linters configured.
         -- ['_'] = { 'fallback linter' },
         -- ["*"] = { "typos" },
       },
-      -- LazyVim extension to easily override linter options
-      -- or add custom linters.
       ---@type table<string,table>
       linters = {
-        -- -- Example of using selene only when a selene.toml file is present
-        -- selene = {
-        --   -- `condition` is another LazyVim extension that allows you to
-        --   -- dynamically enable/disable linters based on the context.
-        --   condition = function(ctx)
-        --     return vim.fs.find({ "selene.toml" }, { path = ctx.filename, upward = true })[1]
-        --   end,
+        -- qmllint = {
+        --   cmd = "/usr/lib/qt6/bin/qmllint",
+        --   stdin = true,
+        --   condition = function(ctx) return vim.fs.find({ ".qmlls.ini" }, { path = ctx.filename, upward = true })[1] end,
         -- },
         biome = {
           condition = function(ctx)
-            return vim.fs.find({ "biome.json" }, { path = ctx.filename, upward = true })[1]
+            return vim.fs.find({ "biome.jsonc" }, { path = ctx.filename, upward = true })[1]
           end,
         },
       },

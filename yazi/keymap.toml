@@ -1,0 +1,45 @@
+# Yazi keymap configuration
+# Software development and productivity focused keybindings
+
+[manager]
+prepend_keymap = [
+  # Git operations
+  { on = ["g", "s"], run = "plugin git --args=status", desc = "Git status" },
+  { on = ["g", "l"], run = "plugin git --args=log", desc = "Git log" },
+  { on = ["g", "d"], run = "plugin diff", desc = "Git diff" },
+  { on = ["g", "f"], run = "plugin vcs-files", desc = "Git changed files" },
+  
+  # Smart operations
+  { on = ["<Enter>"], run = "plugin smart-enter", desc = "Smart enter" },
+  { on = ["/"], run = "plugin smart-filter", desc = "Smart filter" },
+  { on = ["p"], run = "plugin smart-paste", desc = "Smart paste" },
+  
+  # Quick navigation
+  { on = ["f"], run = "plugin jump-to-char", desc = "Jump to char" },
+  
+  # File operations
+  { on = ["c", "h"], run = "plugin chmod", desc = "Change permissions" },
+  
+  # UI toggles
+  { on = ["T", "b"], run = "plugin full-border", desc = "Toggle full border" },
+  { on = ["T", "p"], run = "plugin toggle-pane", desc = "Toggle pane" },
+  
+  # Archive operations
+  { on = ["C"], run = "plugin ouch --args=zip", desc = "Compress with ouch" },
+  
+  # Development shortcuts
+  { on = ["<C-g>"], run = "shell 'git status' --block", desc = "Git status in shell" },
+  { on = ["<C-t>"], run = "shell 'tig' --block", desc = "Open tig" },
+  { on = ["<C-e>"], run = "shell '$EDITOR .' --block", desc = "Edit current directory" },
+]
+
+[input]
+prepend_keymap = [
+  { on = ["<Esc>"], run = ["close", "mgr:escape --filter"], desc = "Close input and cancel filter" },
+]
+
+[completion]
+prepend_keymap = [
+  { on = ["<C-k>"], run = "arrow -1", desc = "Move cursor up" },
+  { on = ["<C-j>"], run = "arrow 1", desc = "Move cursor down" },
+]

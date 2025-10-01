@@ -1,5 +1,34 @@
 [plugin]
-deps = [{ use = "Ape/mediainfo", commit = "c69314e" }]
+deps = [
+  # Media plugins
+  { use = "boydaihungst/mediainfo.yazi" },
+  
+  # Archive plugins
+  { use = "ndtoan96/ouch.yazi" },
+  
+  # Torrent preview
+  { use = "kirasok/torrent-preview.yazi" },
+  
+  # Software development plugins
+  { use = "yazi-rs/plugins:git.yazi" },
+  { use = "yazi-rs/plugins:diff.yazi" },
+  { use = "yazi-rs/plugins:chmod.yazi" },
+  { use = "yazi-rs/plugins:smart-enter.yazi" },
+  { use = "yazi-rs/plugins:smart-filter.yazi" },
+  { use = "yazi-rs/plugins:smart-paste.yazi" },
+  { use = "yazi-rs/plugins:jump-to-char.yazi" },
+  { use = "yazi-rs/plugins:vcs-files.yazi" },
+  
+  # UI enhancements
+  { use = "yazi-rs/plugins:full-border.yazi" },
+  { use = "yazi-rs/plugins:toggle-pane.yazi" },
+  
+  # Development tools
+  { use = "yazi-rs/plugins:types.yazi" },
+]
 
 [flavor]
-deps = []
+deps = [
+  # Custom Fluoromachine flavor (local)
+  # { use = "fluoromachine.yazi" },
+]

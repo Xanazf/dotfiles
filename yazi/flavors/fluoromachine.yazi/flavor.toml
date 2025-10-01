@@ -1,0 +1,221 @@
+# Fluoromachine flavor for Yazi
+# Based on the Fluoromachine Neovim colorscheme by maxmx03
+# https://github.com/maxmx03/fluoromachine.nvim
+
+[mgr]
+cwd = { fg = "#61E2FF", bold = true }
+hovered = { fg = "#8BA7A7", bg = "#463465" }
+preview_hovered = { fg = "#8BA7A7", bg = "#463465" }
+find_keyword = { fg = "#FC199A", bg = "#463465", bold = true }
+find_position = { fg = "#FFCC00", italic = true }
+
+marker_copied = { fg = "#72F1B8", bg = "#72F1B8" }
+marker_cut = { fg = "#FE4450", bg = "#FE4450" }
+marker_marked = { fg = "#AF6DF9", bg = "#AF6DF9" }
+marker_selected = { fg = "#61E2FF", bg = "#61E2FF" }
+
+count_copied = { fg = "#262335", bg = "#72F1B8", bold = true }
+count_cut = { fg = "#262335", bg = "#FE4450", bold = true }
+count_selected = { fg = "#262335", bg = "#61E2FF", bold = true }
+
+border_symbol = "│"
+border_style = { fg = "#8C57C7" }
+
+[tabs]
+active = { fg = "#262335", bg = "#AF6DF9", bold = true }
+inactive = { fg = "#8BA7A7", bg = "#241B2F" }
+sep_inner = { open = "[", close = "]" }
+sep_outer = { open = "", close = "" }
+
+[mode]
+normal_main = { fg = "#262335", bg = "#61E2FF", bold = true }
+normal_alt = { fg = "#61E2FF", bg = "#241B2F" }
+select_main = { fg = "#262335", bg = "#FC199A", bold = true }
+select_alt = { fg = "#FC199A", bg = "#241B2F" }
+unset_main = { fg = "#262335", bg = "#FFCC00", bold = true }
+unset_alt = { fg = "#FFCC00", bg = "#241B2F" }
+
+[status]
+overall = { bg = "#241B2F" }
+sep_left = { open = "", close = "" }
+sep_right = { open = "", close = "" }
+
+perm_type = { fg = "#AF6DF9" }
+perm_read = { fg = "#72F1B8" }
+perm_write = { fg = "#FFCC00" }
+perm_exec = { fg = "#FE4450" }
+perm_sep = { fg = "#495495" }
+
+progress_label = { fg = "#8BA7A7", bold = true }
+progress_normal = { fg = "#61E2FF", bg = "#241B2F" }
+progress_error = { fg = "#FE4450", bg = "#241B2F" }
+
+[which]
+cols = 3
+mask = { bg = "#241B2F" }
+cand = { fg = "#61E2FF", bold = true }
+rest = { fg = "#8BA7A7" }
+desc = { fg = "#495495" }
+separator = " -> "
+separator_style = { fg = "#8C57C7" }
+
+[confirm]
+border = { fg = "#8C57C7" }
+title = { fg = "#FC199A", bold = true }
+content = { fg = "#8BA7A7" }
+list = { fg = "#8BA7A7" }
+btn_yes = { fg = "#262335", bg = "#72F1B8", bold = true }
+btn_no = { fg = "#262335", bg = "#FE4450", bold = true }
+btn_labels = ["Yes", "No"]
+
+[spot]
+border = { fg = "#8C57C7" }
+title = { fg = "#AF6DF9", bold = true }
+tbl_col = { fg = "#61E2FF", bg = "#463465" }
+tbl_cell = { fg = "#8BA7A7", bg = "#463465" }
+
+[notify]
+title_info = { fg = "#61E2FF", bold = true }
+title_warn = { fg = "#FFCC00", bold = true }
+title_error = { fg = "#FE4450", bold = true }
+
+[pick]
+border = { fg = "#8C57C7" }
+active = { fg = "#8BA7A7", bg = "#463465" }
+inactive = { fg = "#8BA7A7" }
+
+[input]
+border = { fg = "#8C57C7" }
+title = { fg = "#AF6DF9", bold = true }
+value = { fg = "#8BA7A7" }
+selected = { fg = "#8BA7A7", bg = "#463465" }
+
+[cmp]
+border = { fg = "#8C57C7" }
+active = { fg = "#8BA7A7", bg = "#463465" }
+inactive = { fg = "#8BA7A7" }
+icon_file = ""
+icon_folder = ""
+icon_command = ""
+
+[tasks]
+border = { fg = "#8C57C7" }
+title = { fg = "#AF6DF9", bold = true }
+hovered = { fg = "#8BA7A7", bg = "#463465" }
+
+[help]
+on = { fg = "#61E2FF", bold = true }
+run = { fg = "#72F1B8" }
+desc = { fg = "#8BA7A7" }
+hovered = { fg = "#8BA7A7", bg = "#463465" }
+footer = { fg = "#495495" }
+icon_info = ""
+icon_warn = ""
+icon_error = ""
+
+[filetype]
+rules = [
+  # Images
+  { mime = "image/*", fg = "#FFCC00" },
+  
+  # Videos
+  { mime = "video/*", fg = "#FC199A" },
+  { mime = "audio/*", fg = "#FC199A" },
+  
+  # Archives
+  { mime = "application/*zip", fg = "#FF8B39" },
+  { mime = "application/x-tar", fg = "#FF8B39" },
+  { mime = "application/x-bzip2", fg = "#FF8B39" },
+  { mime = "application/x-7z-compressed", fg = "#FF8B39" },
+  { mime = "application/x-rar", fg = "#FF8B39" },
+  { mime = "application/x-xz", fg = "#FF8B39" },
+  
+  # Documents
+  { mime = "application/pdf", fg = "#FE4450" },
+  { mime = "text/*", fg = "#8BA7A7" },
+  
+  # Code files
+  { name = "*.{js,ts,jsx,tsx}", fg = "#FFCC00" },
+  { name = "*.{py,rb}", fg = "#72F1B8" },
+  { name = "*.{go,rs,c,cpp,h,hpp}", fg = "#61E2FF" },
+  { name = "*.{json,yaml,yml,toml,xml}", fg = "#AF6DF9" },
+  { name = "*.{md,txt}", fg = "#8BA7A7" },
+  
+  # Empty files
+  { mime = "inode/empty", fg = "#495495" },
+  
+  # Orphan symbolic links
+  { name = "*", is = "orphan", fg = "#FE4450" },
+  
+  # Fallback
+  { name = "*/", fg = "#61E2FF" }
+]
+
+[icon]
+prepend_dirs = [
+  { name = ".git", text = "", fg = "#FE4450" },
+  { name = "node_modules", text = "", fg = "#72F1B8" },
+  { name = ".vscode", text = "", fg = "#61E2FF" },
+  { name = "src", text = "", fg = "#AF6DF9" },
+  { name = "docs", text = "", fg = "#FFCC00" },
+  { name = "test", text = "", fg = "#FF8B39" },
+  { name = "tests", text = "", fg = "#FF8B39" },
+]
+
+prepend_files = [
+  { name = ".gitignore", text = "", fg = "#FE4450" },
+  { name = "package.json", text = "", fg = "#72F1B8" },
+  { name = "Cargo.toml", text = "", fg = "#FF8B39" },
+  { name = "go.mod", text = "", fg = "#61E2FF" },
+  { name = "requirements.txt", text = "", fg = "#FFCC00" },
+  { name = "Dockerfile", text = "", fg = "#61E2FF" },
+  { name = "docker-compose.yml", text = "", fg = "#61E2FF" },
+  { name = "README.md", text = "", fg = "#8BA7A7" },
+  { name = "LICENSE", text = "", fg = "#495495" },
+]
+
+prepend_exts = [
+  { name = "js", text = "", fg = "#FFCC00" },
+  { name = "ts", text = "", fg = "#61E2FF" },
+  { name = "jsx", text = "", fg = "#61E2FF" },
+  { name = "tsx", text = "", fg = "#61E2FF" },
+  { name = "py", text = "", fg = "#FFCC00" },
+  { name = "rs", text = "", fg = "#FF8B39" },
+  { name = "go", text = "", fg = "#61E2FF" },
+  { name = "rb", text = "", fg = "#FE4450" },
+  { name = "php", text = "", fg = "#AF6DF9" },
+  { name = "java", text = "", fg = "#FF8B39" },
+  { name = "c", text = "", fg = "#61E2FF" },
+  { name = "cpp", text = "", fg = "#61E2FF" },
+  { name = "h", text = "", fg = "#AF6DF9" },
+  { name = "hpp", text = "", fg = "#AF6DF9" },
+  { name = "json", text = "", fg = "#FFCC00" },
+  { name = "yaml", text = "", fg = "#AF6DF9" },
+  { name = "yml", text = "", fg = "#AF6DF9" },
+  { name = "toml", text = "", fg = "#AF6DF9" },
+  { name = "xml", text = "", fg = "#FF8B39" },
+  { name = "html", text = "", fg = "#FF8B39" },
+  { name = "css", text = "", fg = "#61E2FF" },
+  { name = "scss", text = "", fg = "#FC199A" },
+  { name = "sass", text = "", fg = "#FC199A" },
+  { name = "md", text = "", fg = "#8BA7A7" },
+  { name = "txt", text = "", fg = "#8BA7A7" },
+  { name = "log", text = "", fg = "#495495" },
+  { name = "zip", text = "", fg = "#FF8B39" },
+  { name = "tar", text = "", fg = "#FF8B39" },
+  { name = "gz", text = "", fg = "#FF8B39" },
+  { name = "7z", text = "", fg = "#FF8B39" },
+  { name = "rar", text = "", fg = "#FF8B39" },
+  { name = "pdf", text = "", fg = "#FE4450" },
+  { name = "jpg", text = "", fg = "#FC199A" },
+  { name = "jpeg", text = "", fg = "#FC199A" },
+  { name = "png", text = "", fg = "#FC199A" },
+  { name = "gif", text = "", fg = "#FC199A" },
+  { name = "svg", text = "", fg = "#FF8B39" },
+  { name = "mp4", text = "", fg = "#FC199A" },
+  { name = "mkv", text = "", fg = "#FC199A" },
+  { name = "avi", text = "", fg = "#FC199A" },
+  { name = "mp3", text = "", fg = "#FC199A" },
+  { name = "flac", text = "", fg = "#FC199A" },
+  { name = "wav", text = "", fg = "#FC199A" },
+]

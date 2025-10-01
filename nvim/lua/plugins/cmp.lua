@@ -40,6 +40,11 @@ return {
       completion_item_lifetime = 60, -- in seconds
     },
   },
+  {
+    "saghen/blink.compat",
+    lazy = true,
+    opts = {},
+  },
 
   -- Enhanced blink.cmp configuration with all sources
   ---@module 'blink.cmp'
@@ -51,24 +56,18 @@ return {
     event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
-      -- Optional: for better LSP integration
-      {
-        "saghen/blink.compat",
-        optional = true,
-        opts = {},
-      },
       { "bydlw98/blink-cmp-env", lazy = true },
-      { "moyiz/blink-emoji.nvim", lazy = true, optional = true },
+      { "moyiz/blink-emoji.nvim", lazy = true },
       "MahanRahmati/blink-nerdfont.nvim",
       { "alexandre-abrioux/blink-cmp-npm.nvim", lazy = true },
       { "phanen/blink-cmp-register", lazy = true },
       { "Kaiser-Yang/blink-cmp-git", lazy = true },
-      { "disrupted/blink-cmp-conventional-commits", lazy = true, optional = true },
+      { "disrupted/blink-cmp-conventional-commits", lazy = true },
       -- Dictionary completion for writing
       {
         "Kaiser-Yang/blink-cmp-dictionary",
+        enabled = false,
         lazy = true,
-        optional = true,
         ft = { "markdown", "text", "tex", "rst", "org" },
         dependencies = { "nvim-lua/plenary.nvim" },
         opts = {
@@ -77,19 +76,12 @@ return {
           },
         },
       },
-      { "ribru17/blink-cmp-spell", lazy = true, optional = true },
+      { "ribru17/blink-cmp-spell", lazy = true },
       {
         "mgalliou/blink-cmp-tmux",
         lazy = true,
         cond = function()
           return vim.env.TMUX ~= nil
-        end,
-      },
-      {
-        "junkblocker/blink-cmp-wezterm",
-        lazy = true,
-        cond = function()
-          return vim.env.WEZTERM_EXECUTABLE ~= nil
         end,
       },
       {
@@ -132,6 +124,10 @@ return {
         dependencies = {
           "tpope/vim-dadbod",
         },
+      },
+      -- Copilot
+      {
+        "giuxtaposition/blink-cmp-copilot",
       },
     },
     ---@type blink.cmp.KeymapConfig
@@ -228,12 +224,22 @@ return {
             kind_icon = {
               ellipsis = false,
               text = function(ctx)
-                local kind_icon, _, _ = require("mini.icons").get("lsp", ctx.kind)
-                return kind_icon
+                local mini_icon, _, _ = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                if mini_icon then
+                  return mini_icon .. ctx.icon_gap
+                end
+
+                local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
+                return icon .. ctx.icon_gap
               end,
               highlight = function(ctx)
-                local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                return hl
+                if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                  local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                  if mini_icon then
+                    return mini_hl
+                  end
+                end
+                return ctx.kind_hl
               end,
             },
             kind = {
@@ -243,8 +249,13 @@ return {
                 return ctx.kind
               end,
               highlight = function(ctx)
-                local _, hl, _ = require("mini.icons").get("lsp", ctx.kind)
-                return hl
+                if vim.tbl_contains({ "Path" }, ctx.source_name) then
+                  local mini_icon, mini_hl = require("mini.icons").get_icon(ctx.item.data.type, ctx.label)
+                  if mini_icon then
+                    return mini_hl
+                  end
+                end
+                return ctx.kind_hl
               end,
             },
             label = {
@@ -345,19 +356,19 @@ return {
       default = function(ctx)
         local success, node = pcall(vim.treesitter.get_node)
         if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
-          return { "buffer", "snippets" }
+          return { "buffer", "copilot", "snippets" }
         elseif vim.bo.filetype == "lua" then
-          return { "lazydev", "lsp", "path", "snippets", "buffer" }
+          return { "lazydev", "lsp", "path", "buffer", "copilot", "snippets" }
         elseif vim.bo.filetype == "gitcommit" then
           return { "buffer" }
         else
-          return { "lsp", "path", "snippets", "buffer" }
+          return { "lsp", "path", "buffer", "copilot", "snippets" }
         end
       end,
       per_filetype = {
-        lua = { "lazydev", "lsp", "path", "snippets", "buffer" },
+        lua = { "lazydev", "lsp", "path", "buffer", "snippets" },
         gitcommit = { "buffer" },
-        markdown = { "buffer", "snippets" },
+        markdown = { "buffer" },
       },
 
       providers = {
@@ -449,6 +460,19 @@ return {
             priority = 500,
           },
         },
+        copilot = {
+          name = "copilot",
+          module = "blink-cmp-copilot",
+          score_offset = 100,
+          async = true,
+          transform_items = function(ctx, items)
+            for _, item in ipairs(items) do
+              item.kind_icon = ""
+              item.kind_name = "Copilot"
+            end
+            return items
+          end,
+        },
       },
     },
 
@@ -510,19 +534,19 @@ return {
       "sources.compat",
       "sources.default",
     },
-
-    opts = function(_, opts) ---@type blink.cmp.Config|function
+    ---@param opts blink.cmp.Config
+    opts = function(_, opts)
       local enhanced_sources = {
         default = function(ctx)
           local success, node = pcall(vim.treesitter.get_node)
           if success and node and vim.tbl_contains({ "comment", "line_comment", "block_comment" }, node:type()) then
-            return { "buffer", "snippets", "spell", "dictionary" }
+            return { "buffer", "snippets", "spell" }
           elseif vim.bo.filetype == "lua" then
             return { "lazydev", "lsp", "path", "snippets", "buffer" }
           elseif vim.bo.filetype == "gitcommit" then
             return { "git", "conventional_commits", "buffer", "spell", "emoji" }
           elseif vim.tbl_contains({ "markdown", "text", "tex", "rst", "org" }, vim.bo.filetype) then
-            return { "lsp", "path", "snippets", "buffer", "spell", "dictionary", "latex", "emoji" }
+            return { "lsp", "path", "snippets", "buffer", "spell", "latex", "emoji" }
           elseif vim.tbl_contains({ "javascript", "typescript", "json" }, vim.bo.filetype) then
             return { "lsp", "path", "snippets", "buffer", "npm" }
           elseif vim.tbl_contains({ "css", "scss", "sass", "less", "vue", "svelte", "html" }, vim.bo.filetype) then
@@ -539,11 +563,11 @@ return {
           gitcommit = { "git", "conventional_commits", "buffer", "spell", "emoji" },
           gitrebase = { "git", "buffer" },
           gitconfig = { "git", "buffer" },
-          markdown = { "lsp", "path", "snippets", "buffer", "spell", "dictionary", "latex", "emoji" },
-          text = { "buffer", "spell", "dictionary", "emoji" },
-          tex = { "lsp", "path", "snippets", "buffer", "latex", "spell", "dictionary" },
-          rst = { "lsp", "path", "snippets", "buffer", "spell", "dictionary" },
-          org = { "lsp", "path", "snippets", "buffer", "spell", "dictionary" },
+          markdown = { "lsp", "path", "snippets", "buffer", "spell", "latex", "emoji" },
+          text = { "buffer", "spell", "emoji" },
+          tex = { "lsp", "path", "snippets", "buffer", "latex", "spell" },
+          rst = { "lsp", "path", "snippets", "buffer", "spell" },
+          org = { "lsp", "path", "snippets", "buffer", "spell" },
           javascript = { "lsp", "path", "snippets", "buffer", "npm" },
           typescript = { "lsp", "path", "snippets", "buffer", "npm" },
           json = { "lsp", "path", "buffer", "npm" },
@@ -598,16 +622,16 @@ return {
             score_offset = -3,
           },
 
-          dictionary = {
-            name = "Dictionary",
-            module = "blink-cmp-dictionary",
-            score_offset = -8,
-            opts = {
-              dictionaries = {
-                ["en"] = "/usr/share/dict/words",
-              },
-            },
-          },
+          -- dictionary = {
+          --   name = "Dictionary",
+          --   module = "blink-cmp-dictionary",
+          --   score_offset = -8,
+          --   opts = {
+          --     dictionaries = {
+          --       ["en"] = "/usr/share/dict/words",
+          --     },
+          --   },
+          -- },
 
           spell = {
             name = "Spell",
@@ -623,9 +647,12 @@ return {
           },
 
           css_vars = {
-            name = "CSS Variables",
-            module = "css-vars",
+            name = "css-vars",
+            module = "css-vars.blink",
             score_offset = 2,
+            opts = {
+              search_extensions = { ".js", ".ts", ".jsx", ".tsx" },
+            },
           },
 
           latex = {
@@ -668,15 +695,6 @@ return {
             score_offset = -1,
             enabled = function()
               return vim.env.TMUX ~= nil
-            end,
-          },
-
-          wezterm = {
-            name = "WezTerm",
-            module = "blink-cmp-wezterm",
-            score_offset = -1,
-            enabled = function()
-              return vim.env.WEZTERM_EXECUTABLE ~= nil
             end,
           },
 
