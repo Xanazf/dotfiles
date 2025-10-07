@@ -36,8 +36,10 @@ return {
         "regex",
         "json",
         "jsonc",
+        "gotmpl",
         "yaml",
         "toml",
+        "helm",
         "diff",
         "git_config",
         "git_rebase",
@@ -239,6 +241,7 @@ return {
         "yaml",
         "toml",
         "xml",
+        "helm", -- added via autocmd
         -- Programming languages
         "python",
         "rust",
