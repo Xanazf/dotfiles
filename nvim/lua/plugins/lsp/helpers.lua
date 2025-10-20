@@ -1,6 +1,7 @@
 -- helper functions for LSP, Mason, and Treesitter
 ---@class LSPHelpers
 ---@field checkexec function<boolean>
+---@field tbl_toString function<string>
 local M = {}
 
 ---@alias LSPHelpers.treesitter table
@@ -130,7 +131,22 @@ M.lsp.servers = {
           "--function-arg-placeholders",
           "--fallback-style=llvm",
         },
-        capabilities = { offsetEncoding = { "utf-16" } },
+        capabilities = {
+          offsetEncoding = { "utf-16" },
+          textDocument = {
+            completion = {
+              editsNearCursor = true,
+            },
+          },
+        },
+        extensions = {
+          autoSetHints = false,
+        },
+        on_attach = function(client, bufnr)
+          if client.server_capabilities.inlayHintProvider then
+            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+          end
+        end,
         init_options = {
           usePlaceholders = true,
           completeUnimported = true,
@@ -160,43 +176,72 @@ M.lsp.servers = {
     or nil,
 
   -- Go (only if gopls is available)
-  gopls = M.checkexec("gopls") and {
-    settings = {
-      gopls = {
-        gofumpt = true,
-        codelenses = {
-          gc_details = false,
-          generate = true,
-          regenerate_cgo = true,
-          run_govulncheck = true,
-          test = true,
-          tidy = true,
-          upgrade_dependency = true,
-          vendor = true,
+  gopls = M.checkexec("gopls")
+      and {
+        settings = {
+          gofumpt = true,
+          codelenses = {
+            gc_details = false,
+            generate = true,
+            regenerate_cgo = true,
+            run_govulncheck = true,
+            test = true,
+            tidy = true,
+            upgrade_dependency = true,
+            vendor = true,
+          },
+          hints = {
+            assignVariableTypes = true,
+            compositeLiteralFields = true,
+            compositeLiteralTypes = true,
+            constantValues = true,
+            functionTypeParameters = true,
+            parameterNames = true,
+            rangeVariableTypes = true,
+          },
+          analyses = {
+            nilness = true,
+            unusedparams = true,
+            unusedwrite = true,
+            useany = true,
+          },
+          usePlaceholders = true,
+          completeUnimported = true,
+          staticcheck = true,
+          directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+          semanticTokens = true,
         },
-        hints = {
-          assignVariableTypes = true,
-          compositeLiteralFields = true,
-          compositeLiteralTypes = true,
-          constantValues = true,
-          functionTypeParameters = true,
-          parameterNames = true,
-          rangeVariableTypes = true,
+        capabilities = {
+          textDocument = {
+            completion = {
+              completionItem = {
+                snippetSupport = true,
+              },
+            },
+          },
         },
-        analyses = {
-          nilness = true,
-          unusedparams = true,
-          unusedwrite = true,
-          useany = true,
-        },
-        usePlaceholders = true,
-        completeUnimported = true,
-        staticcheck = true,
-        directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-        semanticTokens = true,
-      },
-    },
-  } or nil,
+        ---@param client vim.lsp.Client
+        ---@param bufnr number
+        on_attach = function(client, bufnr)
+          if client.server_capabilities.semanticTokensProvider then
+            vim.lsp.semantic_tokens.start(bufnr, client.id)
+          else
+            local semantic = client.config.capabilities.textDocument.semanticTokens
+            if semantic then
+              client.server_capabilities.semanticTokensProvider = {
+                full = true,
+                legend = {
+                  tokenTypes = semantic.tokenTypes,
+                  tokenModifiers = semantic.tokenModifiers,
+                },
+                range = true,
+              }
+            end
+          end
+        end,
+      }
+    or nil,
+
   qmlls = {
     settings = {
       hint = {
@@ -214,6 +259,17 @@ M.lsp.servers = {
         save = { includeText = true },
       },
     },
+    ---@param client vim.lsp.Client
+    ---@param bufnr number
+    on_attach = function(client, bufnr)
+      -- Disable formatting to avoid conflicts with conform.nvim
+      client.server_capabilities.documentFormattingProvider = false
+      client.server_capabilities.documentRangeFormattingProvider = false
+
+      if client.server_capabilities.semanticTokensProvider then
+        vim.lsp.semantic_tokens.start(bufnr, client.id)
+      end
+    end,
   },
 
   -- Lua
@@ -259,6 +315,13 @@ M.lsp.servers = {
         validate = { enable = true },
       },
     },
+    ---@param client vim.lsp.Client
+    ---@param bufnr number
+    on_attach = function(client, bufnr)
+      if client.server_capabilities.semanticTokensProvider then
+        vim.lsp.semantic_tokens.start(bufnr, client.id)
+      end
+    end,
   },
 
   -- Web servers
@@ -280,13 +343,63 @@ M.lsp.servers = {
         },
       },
     },
+    capabilities = {
+      textDocument = {
+        foldingRange = {
+          dynamicRegistration = false,
+          lineFoldingOnly = true,
+        },
+      },
+    },
   },
 
   -- web_extra
   astro = { settings = {} },
   tailwindcss = {
     filetypes_exclude = { "markdown" },
-    filetypes_include = {},
+    filetypes_include = {
+      "css",
+      "scss",
+      "sass",
+      "postcss",
+      "html",
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "svelte",
+      "astro",
+    },
+    includeLanguages = {
+      elixir = "html-eex",
+      eelixir = "html-eex",
+      heex = "html-eex",
+      astro = "html",
+      vue = "html",
+      svelte = "html",
+    },
+    experimental = {
+      classRegex = {
+        "tw`([^`]*)",
+        'tw="([^"]*)',
+        'tw={"([^"}]*)',
+        "tw\\.\\w+`([^`]*)",
+        "tw\\(.*?\\)`([^`]*)",
+      },
+    },
+    capabilities = {
+      textDocument = {
+        completion = {
+          completionItem = {
+            snippetSupport = true,
+          },
+        },
+        colorProvider = {
+          dynamicRegistration = true,
+        },
+      },
+    },
   },
 
   -- markdown
@@ -426,6 +539,33 @@ vim.filetype.add({
     ["%.env%.[%w_.-]+"] = "sh",
   },
 })
+
+-- Convert a lua table into a lua syntactically correct string
+---@param tbl table
+M.tbl_toString = function(tbl)
+  local result = "{"
+  for k, v in pairs(tbl) do
+    -- Check the key type (ignore any numerical keys - assume its an array)
+    if type(k) == "string" then
+      result = result .. '["' .. k .. '"]' .. "="
+    end
+
+    -- Check the value type
+    if type(v) == "table" then
+      result = result .. M.tbl_toString(v)
+    elseif type(v) == "boolean" then
+      result = result .. tostring(v)
+    else
+      result = result .. '"' .. v .. '"'
+    end
+    result = result .. ","
+  end
+  -- Remove leading commas from the result
+  if result ~= "" then
+    result = result:sub(1, result:len() - 1)
+  end
+  return result .. "}"
+end
 
 -- Register language mappings
 vim.treesitter.language.register("bash", "kitty")

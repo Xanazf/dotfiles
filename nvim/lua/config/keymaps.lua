@@ -2,7 +2,6 @@
 -- Default keymaps that are always set: https://github.com/LazyVim/LazyVim/blob/main/lua/lazyvim/config/keymaps.lua
 -- Add any additional keymaps here
 
----@type vim.keymap
 local keymap = vim.keymap
 ---@type vim.keymap.set.Opts
 local opts = { noremap = true, silent = true }

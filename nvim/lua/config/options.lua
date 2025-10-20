@@ -2,6 +2,7 @@
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
+vim.opt.termguicolors = true
 
 vim.g.snacks_animate = false
 vim.g.lazyvim_picker = "fzf"

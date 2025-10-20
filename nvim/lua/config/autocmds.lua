@@ -4,70 +4,58 @@ vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("transparent_fixes", { clear = true }),
   ---@param args {buf: number, event: string, file: string, group: number, id: number, match: string}
   callback = function(args)
-    -- Link NormalFloat to Normal and FloatBorder to DiagnosticInfo (visible border)
-    vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal", default = false })
-    vim.api.nvim_set_hl(0, "FloatBorder", { link = "DiagnosticInfo", default = false })
-
-    -- Fix lualine transparency issues
-    -- Get colors for proper contrast
     ---@type table<string, string>
     local colors = {
       bg = vim.fn.synIDattr(vim.fn.hlID("Normal"), "bg"),
       fg = vim.fn.synIDattr(vim.fn.hlID("Normal"), "fg"),
+
+      hint = "#7f6600",
+      hint_bg = "#2f4053", -- TODO: make prefer transparent
       tsblue = "#3178C6",
+
       blue = "#61afef",
-      green = "#98c379",
-      purple = "#c678dd",
-      cyan = "#56b6c2",
-      red = "#e06c75",
+      green = "#72f1b8",
+      purple = "#af6df9",
+      cyan = "#61e2ff",
+      l_red = "#e06c75",
+      red = "#fe4450",
       yellow = "#ffcc00",
-      orange = "#d19a66",
+      orange = "#ff8b39",
+      orange_bg = "#473336",
       gray = "#5c6370",
       light = "#8ba7a7",
     }
-    -- lualine_a_insert xxx cterm=bold gui=bold,nocombine guifg=#ffcc00 guibg=#262335
+    -- e.g.: cterm=bold gui=bold,nocombine guifg=#ffcc00 guibg=#262335
+
+    -- vim.api.nvim_set_hl(0, "NormalFloat", { link = "Normal", default = false })
+    --
+    -- vim.api.nvim_set_hl(0, "DiagnosticInfo", { fg = colors.blue, bg = colors.bg })
+    -- vim.api.nvim_set_hl(0, "DiagnosticHint", { fg = colors.cyan, bg = colors.bg })
+    vim.api.nvim_set_hl(0, "FloatBorder", { fg = colors.cyan, bg = colors.bg, bold = true })
+    vim.api.nvim_set_hl(0, "Pmenu", { link = "Normal", bold = true })
+    vim.api.nvim_set_hl(0, "BlinkCmpMenuBorder", { link = "FloatBorder" })
+    vim.api.nvim_set_hl(0, "PmenuExtra", { link = "Function", default = false })
+
+    -- mini.icons
+    vim.api.nvim_set_hl(0, "MiniIconsOrange", { fg = colors.orange, bg = colors.bg })
     vim.api.nvim_set_hl(0, "MiniIconsYellow", { fg = colors.yellow, bg = colors.bg })
     vim.api.nvim_set_hl(0, "MiniIconsAzure", { fg = colors.tsblue, bg = colors.bg })
+    vim.api.nvim_set_hl(0, "MiniIconsBlue", { fg = colors.blue, bg = colors.bg })
+    vim.api.nvim_set_hl(0, "MiniIconsCyan", { fg = colors.cyan, bg = colors.bg })
+    -- vim.api.nvim_set_hl(0, "MiniIconsRed", { fg = colors.red, bg = colors.bg })
 
-    -- statusline
-    vim.api.nvim_set_hl(0, "StatusLine", { fg = colors.fg or colors.light, bg = nil })
-    vim.api.nvim_set_hl(0, "StatusLineNC", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_insert", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_visual", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_replace", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_command", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_terminal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_diagnostics_inactive", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_c_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_normal_to_lualine_c_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_b_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(
-      0,
-      "lualine_transitional_lualine_a_normal_to_lualine_c_filetype_MiniIconsAzure_normal",
-      { fg = colors.fg, bg = nil }
-    )
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_c_13_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_normal_to_lualine_b_normal", { fg = colors.fg, bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_normal_to_lualine_x_5_normal", { fg = colors.fg, bg = nil })
+    -- mini.hipatterns
+    vim.api.nvim_set_hl(0, "MiniHipatternsNote", { fg = colors.fg, bg = colors.blue })
+    vim.api.nvim_set_hl(0, "MiniHipatternsTodo", { fg = colors.fg, bg = colors.cyan })
+    vim.api.nvim_set_hl(0, "MiniHipatternsHack", { fg = colors.fg, bg = colors.orange })
+    vim.api.nvim_set_hl(0, "MiniHipatternsFixme", { fg = colors.fg, bg = colors.l_red })
+    vim.api.nvim_set_hl(0, "MiniHipatternsBug", { fg = colors.fg, bg = colors.red })
 
-    vim.api.nvim_set_hl(0, "TabLine", { link = "NormalFloat" })
-    vim.api.nvim_set_hl(0, "TabLineFill", { bg = nil })
-    vim.api.nvim_set_hl(0, "TabLineSel", { bg = nil })
-    vim.api.nvim_set_hl(0, "BufferLineFill", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_normal", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_insert", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_visual", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_replace", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_command", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_terminal", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_c_16_LV_Bold_inactive", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_a_command_to_lualine_c_13_command", { bg = nil })
-    vim.api.nvim_set_hl(0, "lualine_transitional_lualine_b_command_to_lualine_x_8_command", { bg = nil })
+    -- render-mark
+    vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { link = "DiagnosticVirtualTextOk", default = false })
 
     -- symbolsline
-    vim.api.nvim_set_hl(0, "NavicText", { link = "String" })
+    -- vim.api.nvim_set_hl(0, "NavicText", { link = "String" })
   end,
 })
 
@@ -80,4 +68,16 @@ vim.filetype.add({
     [".*/templates/.*%.ya?ml"] = "helm",
     ["helmfile.*%.ya?ml"] = "helm",
   },
+})
+
+vim.filetype.add({ extension = { mdx = "mdx" } })
+vim.treesitter.language.register("markdown", { "md", "mdx" })
+
+-- disable spell for markdown and mdx at a global level (redundant safeguard)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "mdx" },
+  callback = function(_)
+    vim.wo.spell = false
+  end,
+  group = vim.api.nvim_create_augroup("MarkdownGlobalNoSpell", { clear = true }),
 })

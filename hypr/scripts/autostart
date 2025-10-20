@@ -5,8 +5,8 @@ hypr_config=$HOME/.config/hypr
 quickshell_config=$HOME/.config/quickshell
 hypr_scripts=$hypr_config/scripts
 quickshell_scripts=$quickshell_config/scripts
-
 /usr/lib/hyprpolkitagent &
+
 # quickshell
 caelestia shell -d &
 # $quickshell_scripts/tools/dynamic &

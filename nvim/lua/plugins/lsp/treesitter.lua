@@ -4,34 +4,33 @@ local h_ts = helpers.treesitter
 local h_parsers = h_ts.parsers
 
 return {
+  ---@module "nvim-treesitter"
   {
     "nvim-treesitter/nvim-treesitter",
     branch = "main",
     lazy = false,
     build = ":TSUpdate",
     opts = function(_, opts)
-      -- New API: minimal setup options
-      local setup_opts = {
-        -- Directory to install parsers and queries to
-        install_dir = vim.fn.stdpath("data") .. "/site",
-      }
+      ---@type lazyvim.TSFeat
+      opts.indent = { enable = true }
+      ---@type lazyvim.TSFeat
+      opts.highlight = { enable = true }
+      ---@type lazyvim.TSFeat
+      opts.folds = { enable = true }
+      opts.auto_install = true
+      opts.ensure_installed = opts.ensure_installed or {}
 
-      -- Merge with LazyVim defaults
-      return vim.tbl_deep_extend("force", opts or {}, setup_opts)
-    end,
-    config = function(_, opts)
-      -- Setup nvim-treesitter with new API
-      require("nvim-treesitter").setup(opts)
-
-      -- Install parsers based on project context
-      local parsers_to_install = {
-        -- Core parsers that should always be available
+      local common_parsers = {
         "lua",
         "vim",
         "vimdoc",
         "query",
         "markdown",
         "markdown_inline",
+        "latex",
+        "norg",
+        "scss",
+        "typst",
         "bash",
         "regex",
         "json",
@@ -46,10 +45,16 @@ return {
         "gitcommit",
         "gitignore",
       }
+      vim.list_extend(opts.ensure_installed, common_parsers)
 
-      -- Add conditional parsers based on current working directory context
-      if vim.fn.glob("*.js") ~= "" or vim.fn.glob("*.ts") ~= "" or vim.fn.glob("package.json") ~= "" then
-        vim.list_extend(parsers_to_install, h_parsers.web)
+      -- conditional parsers based on cwd
+      if
+        vim.fn.glob("*.js") ~= ""
+        or vim.fn.glob("*.ts") ~= ""
+        or vim.fn.glob("package.json") ~= ""
+        or vim.fn.glob("tsconfig.json") ~= ""
+      then
+        vim.list_extend(opts.ensure_installed, h_parsers.web)
       end
 
       if
@@ -60,27 +65,27 @@ return {
         or vim.fn.glob("Makefile") ~= ""
         or vim.fn.glob("CMakeLists.txt") ~= ""
       then
-        vim.list_extend(parsers_to_install, h_parsers.systems)
+        vim.list_extend(opts.ensure_installed, h_parsers.systems)
       end
 
-      if vim.fn.glob("*.astro") ~= "" or vim.fn.glob("*.vue") ~= "" then
-        vim.list_extend(parsers_to_install, h_parsers.web_extra)
+      if vim.fn.glob("*.astro") ~= "" or vim.fn.glob("*.vue") ~= "" or vim.fn.glob("astro.config.mjs") ~= "" then
+        vim.list_extend(opts.ensure_installed, h_parsers.web_extra)
       end
 
-      if vim.fn.glob("*.fish") ~= "" or vim.fn.glob("*.conf") ~= "" then
-        vim.list_extend(parsers_to_install, h_parsers.shell)
+      if vim.fn.glob("*.fish") ~= "" or vim.fn.glob("hypr*.conf") ~= "" then
+        vim.list_extend(opts.ensure_installed, h_parsers.shell)
       end
 
-      if vim.fn.glob("*.xml") ~= "" or vim.fn.glob("*.toml") ~= "" then
-        vim.list_extend(parsers_to_install, h_parsers.markup)
+      if
+        vim.fn.glob("*.xml") ~= ""
+        or vim.fn.glob("*.toml") ~= ""
+        or vim.fn.glob("*.yaml") ~= ""
+        or vim.fn.glob("*.yml") ~= ""
+      then
+        vim.list_extend(opts.ensure_installed, h_parsers.markup)
       end
 
-      -- Install parsers asynchronously
-      vim.schedule(function()
-        require("nvim-treesitter").install(parsers_to_install)
-      end)
-
-      -- Helper function to check if buffer should be excluded from treesitter
+      -- if buffer should be excluded from treesitter
       local function should_exclude_buffer(buf)
         if not buf or not vim.api.nvim_buf_is_valid(buf) then
           return true
@@ -201,7 +206,8 @@ return {
 
         -- Exclude very large files (>1MB) to prevent performance issues
         local max_filesize = 1024 * 1024 -- 1MB
-        local ok, stats = pcall(vim.loop.fs_stat, bufname)
+        local uv = vim.uv or vim.loop
+        local ok, stats = pcall(uv.fs_stat, bufname)
         if ok and stats and stats.size > max_filesize then
           return true
         end
@@ -209,158 +215,9 @@ return {
         return false
       end
 
-      -- AUTOMATIC TREESITTER HIGHLIGHTING SETUP
-      -- Create autocmd to enable treesitter highlighting for ALL supported filetypes automatically
-      local treesitter_group = vim.api.nvim_create_augroup("AutoTreesitterHighlighting", { clear = true })
+      local treesitter_group = vim.api.nvim_create_augroup("TreesitterOpts", { clear = true })
 
-      -- Define comprehensive list of supported filetypes
-      local supported_filetypes = {
-        -- Core languages
-        "lua",
-        "vim",
-        "vimdoc",
-        "query",
-        "markdown",
-        -- Shell languages
-        "bash",
-        "sh",
-        "zsh",
-        "fish",
-        -- Web languages
-        "javascript",
-        "typescript",
-        "tsx",
-        "jsx",
-        "html",
-        "css",
-        "scss",
-        "sass",
-        -- Data formats
-        "json",
-        "jsonc",
-        "yaml",
-        "toml",
-        "xml",
-        "helm", -- added via autocmd
-        -- Programming languages
-        "python",
-        "rust",
-        "go",
-        "c",
-        "cpp",
-        "java",
-        "kotlin",
-        -- Modern web frameworks
-        "astro",
-        "vue",
-        "svelte",
-        "angular",
-        -- Other languages
-        "ruby",
-        "php",
-        "elixir",
-        "erlang",
-        "haskell",
-        "ocaml",
-        "clojure",
-        "scheme",
-        "lisp",
-        "racket",
-        "dart",
-        "swift",
-        "scala",
-        "groovy",
-        "r",
-        "julia",
-        "matlab",
-        -- Config and markup
-        "dockerfile",
-        "nginx",
-        "apache",
-        "gitconfig",
-        "diff",
-        "patch",
-        "ini",
-        "conf",
-        "config",
-        -- Documentation
-        "rst",
-        "org",
-        "tex",
-        "latex",
-        "bibtex",
-        -- Data and query languages
-        "sql",
-        "graphql",
-        "sparql",
-        "cypher",
-        -- Specialized
-        "regex",
-        "awk",
-        "sed",
-        "make",
-        "cmake",
-        "ninja",
-        "proto",
-        "thrift",
-        "capnp",
-        -- Nix and package managers
-        "nix",
-        "dhall",
-        "jsonnet",
-      }
-
-      -- Enable automatic treesitter highlighting for all supported filetypes
-      vim.api.nvim_create_autocmd("FileType", {
-        group = treesitter_group,
-        pattern = supported_filetypes,
-        callback = function(args)
-          local buf = args.buf
-          local filetype = vim.bo[buf].filetype
-
-          -- Skip excluded buffers
-          if should_exclude_buffer(buf) then
-            return
-          end
-
-          -- Check if treesitter parser is available for this filetype
-          local lang = vim.treesitter.language.get_lang(filetype) or filetype
-          local has_parser = pcall(vim.treesitter.language.add, lang)
-
-          if has_parser then
-            vim.treesitter.start(buf, lang)
-            if vim.lsp.semantic_tokens.is_enabled({ bufnr = buf }) == false then
-              vim.lsp.semantic_tokens.enable(true, {
-                bufnr = buf,
-              })
-            end
-          end
-        end,
-      })
-
-      -- Fallback: Enable treesitter for any buffer that gets a parser installed
-      -- BUT exclude UI buffers from TSUpdate operations
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "TSUpdate",
-        group = treesitter_group,
-        callback = function()
-          -- Re-enable treesitter for all open buffers after parser updates
-          -- but exclude UI and special buffers
-          for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-            if vim.api.nvim_buf_is_loaded(buf) and not should_exclude_buffer(buf) then
-              local filetype = vim.bo[buf].filetype
-              if filetype and filetype ~= "" then
-                local lang = vim.treesitter.language.get_lang(filetype) or filetype
-                if pcall(vim.treesitter.language.add, lang) then
-                  vim.treesitter.start(buf, lang)
-                end
-              end
-            end
-          end
-        end,
-      })
-
-      -- Enable treesitter-based folding for supported filetypes (exclude UI buffers)
+      -- treesitter-based folding
       vim.api.nvim_create_autocmd("FileType", {
         group = treesitter_group,
         pattern = {
@@ -394,7 +251,7 @@ return {
         end,
       })
 
-      -- Enable treesitter-based indentation for supported filetypes (experimental, exclude UI buffers)
+      -- treesitter-based indentation
       vim.api.nvim_create_autocmd("FileType", {
         group = treesitter_group,
         pattern = {
@@ -416,16 +273,18 @@ return {
             return
           end
 
-          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          -- Use the correct indentexpr for the new API
+          vim.bo[buf].indentexpr = "v:lua.vim.treesitter.indentexpr()"
         end,
       })
+      return opts
     end,
   },
 
-  -- nvim-treesitter-textobjects (still works with main branch)
+  ---@module "nvim-treesitter-textobjects"
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "main", -- Also use main branch
+    branch = "main",
     event = "VeryLazy",
     enabled = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
@@ -469,6 +328,8 @@ return {
       end
     end,
   },
+
+  -- Flash.nvim for enhanced navigation (updated configuration)
   {
     "folke/flash.nvim",
     event = "VeryLazy",

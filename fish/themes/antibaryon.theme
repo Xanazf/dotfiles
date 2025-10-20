@@ -1,0 +1,75 @@
+# name: Bongopunk Antibaryon (Dark Mode) for Fish Shell
+# Based on Fluoromachine by maxmx03
+
+bg 090318
+fg 8BA7A7
+bg_alt 070216
+fg_alt 495495
+cyan 61E2FF
+green 72F1B8
+orange FF8B39
+pink FC199A
+purple AF6DF9
+red FE4450
+yellow FFCC00
+cyan_bright 7AEBFF
+green_bright 8FFAC8
+orange_bright FF9D5C
+pink_bright FF4DB8
+purple_bright C49AFF
+red_bright FF6B7A
+yellow_bright FFD633
+comment 495495
+border 8C57C7
+
+fish_color_normal fg
+fish_color_command cyan
+fish_color_keyword pink
+fish_color_quote green
+fish_color_redirection orange
+fish_color_end purple
+fish_color_error red
+fish_color_param fg
+fish_color_comment comment
+fish_color_selection --background=border
+fish_color_search_match --background=yellow
+fish_color_operator fg_alt
+fish_color_escape orange
+fish_color_autosuggestion comment
+fish_color_cancel red
+fish_color_cwd cyan
+fish_color_user green
+fish_color_host purple
+fish_color_host_remote pink
+fish_color_status red
+
+fish_pager_color_progress comment
+fish_pager_color_background
+fish_pager_color_prefix cyan
+fish_pager_color_completion fg
+fish_pager_color_description comment
+fish_pager_color_selected_background --background=border
+fish_pager_color_selected_prefix cyan_bright
+fish_pager_color_selected_completion fg
+fish_pager_color_selected_description comment
+fish_pager_color_secondary_background
+fish_pager_color_secondary_prefix cyan
+fish_pager_color_secondary_completion fg
+fish_pager_color_secondary_description comment
+
+fish_color_valid_path --underline
+fish_color_history_current cyan_bright
+
+set -g __fish_git_prompt_color_branch purple
+set -g __fish_git_prompt_color_branch_detached red
+set -g __fish_git_prompt_color_upstream cyan
+set -g __fish_git_prompt_color_bare orange
+set -g __fish_git_prompt_color_merging red
+set -g __fish_git_prompt_color_cleanstate green
+set -g __fish_git_prompt_color_dirtystate yellow
+set -g __fish_git_prompt_color_invalidstate red
+set -g __fish_git_prompt_color_stagedstate green
+set -g __fish_git_prompt_color_stashstate cyan
+set -g __fish_git_prompt_color_untrackedfiles orange
+set -g __fish_git_prompt_color_flags purple
+

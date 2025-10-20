@@ -5,7 +5,6 @@ local h_servers = helpers.lsp.servers
 local executable = helpers.checkexec
 
 return {
-  -- Mason.nvim v2.x configuration for LazyVim 15.x
   {
     "mason-org/mason.nvim",
     opts = function(_, opts)
@@ -41,10 +40,10 @@ return {
         "yaml-language-server",
       }
 
-      -- Add custom tools to LazyVim's defaults
+      -- custom tools
       vim.list_extend(opts.ensure_installed, custom_tools)
 
-      -- Auto-detect and install based on available tools
+      -- auto-detect and install
       if executable("go") then
         vim.list_extend(opts.ensure_installed, h_tools.go)
       end
@@ -61,7 +60,7 @@ return {
         vim.list_extend(opts.ensure_installed, h_tools.cpp)
       end
 
-      -- Check for specific project types in current directory
+      -- check for specific project types in cwd
       if vim.fn.glob("package.json") ~= "" or vim.fn.glob("*.vue") ~= "" then
         vim.list_extend(opts.ensure_installed, h_tools.web_extended)
       end
@@ -69,17 +68,6 @@ return {
       if vim.fn.glob("*.tex") ~= "" then
         vim.list_extend(opts.ensure_installed, h_tools.latex)
       end
-
-      -- Remove duplicates
-      local seen = {}
-      local unique_tools = {}
-      for _, tool in ipairs(opts.ensure_installed) do
-        if not seen[tool] then
-          seen[tool] = true
-          table.insert(unique_tools, tool)
-        end
-      end
-      opts.ensure_installed = unique_tools
 
       return opts
     end,
@@ -118,92 +106,107 @@ return {
           },
         },
 
-        -- Handler configuration for automatic setup
         handlers = {
           -- Default handler for all servers
           function(server_name)
             local server_config = h_servers[server_name]
             if server_config then
-              require("lspconfig")[server_name].setup(server_config)
-            else
-              -- Fallback to default setup for servers not in our config
-              require("lspconfig")[server_name].setup({})
+              vim.lsp.config(server_name, server_config)
+              vim.lsp.enable(server_name)
             end
           end,
 
-          -- Custom handlers for specific servers
           ["lua_ls"] = function()
             local server_config = h_servers.lua_ls or {}
-            require("lspconfig").lua_ls.setup(server_config)
+            vim.lsp.config("lua_ls", server_config)
+            vim.lsp.enable("lua_ls")
           end,
 
           ["vtsls"] = function()
             local server_config = h_servers.vtsls or {}
-            require("lspconfig").vtsls.setup(server_config)
+            vim.lsp.config("vtsls", server_config)
+            vim.lsp.enable("vtsls")
           end,
 
           ["clangd"] = function()
             local server_config = h_servers.clangd
             if server_config then
-              require("lspconfig").clangd.setup(server_config)
+              vim.lsp.config("clangd", server_config)
+              vim.lsp.enable("clangd")
             end
           end,
 
           ["gopls"] = function()
             local server_config = h_servers.gopls
             if server_config then
-              require("lspconfig").gopls.setup(server_config)
+              vim.lsp.config("gopls", server_config)
+              vim.lsp.enable("gopls")
             end
           end,
 
           ["jsonls"] = function()
             local server_config = h_servers.jsonls or {}
-            require("lspconfig").jsonls.setup(server_config)
+            vim.lsp.config("jsonls", server_config)
+            vim.lsp.enable("jsonls")
           end,
 
           ["yamlls"] = function()
             local server_config = h_servers.yamlls or {}
-            require("lspconfig").yamlls.setup(server_config)
+            vim.lsp.config("yamlls", server_config)
+            vim.lsp.enable("yamlls")
           end,
 
           ["bashls"] = function()
             local server_config = h_servers.bashls or {}
-            require("lspconfig").bashls.setup(server_config)
+            vim.lsp.config("bashls", server_config)
+            vim.lsp.enable("bashls")
           end,
 
           ["marksman"] = function()
             local server_config = h_servers.marksman or {}
-            require("lspconfig").marksman.setup(server_config)
+            vim.lsp.config("marksman", server_config)
+            vim.lsp.enable("marksman")
           end,
 
           ["html"] = function()
             local server_config = h_servers.html or {}
-            require("lspconfig").html.setup(server_config)
+            vim.lsp.config("html", server_config)
+            vim.lsp.enable("html")
           end,
 
           ["cssls"] = function()
             local server_config = h_servers.cssls or {}
-            require("lspconfig").cssls.setup(server_config)
+            vim.lsp.config("cssls", server_config)
+            vim.lsp.enable("cssls")
           end,
 
           ["tailwindcss"] = function()
             local server_config = h_servers.tailwindcss or {}
-            require("lspconfig").tailwindcss.setup(server_config)
+            vim.lsp.config("tailwindcss", server_config)
+            vim.lsp.enable("tailwindcss")
           end,
 
           ["astro"] = function()
             local server_config = h_servers.astro or {}
-            require("lspconfig").astro.setup(server_config)
+            vim.lsp.config("astro", server_config)
+            vim.lsp.enable("astro")
           end,
 
           ["qmlls"] = function()
             local server_config = h_servers.qmlls or {}
-            require("lspconfig").qmlls.setup(server_config)
+            vim.lsp.config("qmlls", server_config)
+            vim.lsp.enable("qmlls")
+          end,
+          ["qmljs"] = function()
+            local server_config = h_servers.qmlls or {}
+            vim.lsp.config("qmljs", server_config)
+            vim.lsp.enable("qmljs")
           end,
 
           ["texlab"] = function()
             local server_config = h_servers.texlab or {}
-            require("lspconfig").texlab.setup(server_config)
+            vim.lsp.config("texlab", server_config)
+            vim.lsp.enable("taxlab")
           end,
 
           -- Explicitly disable servers we don't want

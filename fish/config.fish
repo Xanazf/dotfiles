@@ -46,9 +46,11 @@ function fish_greeting
     set -f catgun "$fish_path/catgun.txt"
     set -f separator '─────────'
     cat $bongocat
-    echo $separator$separator
+    echo $separator$separator$separator$separator$separator$separator
+    uwufetch
+    echo $separator$separator$separator$separator$separator$separator
     check_node_version
-    echo [(date +%x_%H:%M\(%Z\))]
+    echo "[$(date +%x_%H:%M\(%Z\))]"
 end
 
 set -g fish_greeting
@@ -62,12 +64,8 @@ function blur_terminal_background
         end
     end
 end
-# set -x PATH /path/to/tree-sitter $PATH
-blur_terminal_background
 
-# Created by `pipx` on 2024-06-30 20:00:14
-set PATH $PATH /home/xnzf/.local/bin
-#set -
+blur_terminal_background
 
 set -Ux EMAIL hotdamnsucka@gmail.com
 set -Ux GIT_AUTHOR_NAME Oleksandr
@@ -78,4 +76,23 @@ set -Ux GIT_COMMITTER_EMAIL hotdamnsucka@gmail.com
 set -Ux GIT_COMMITTER_DATE [(date +%x_%H:%M\(%Z\))]
 set -Ux GIT_CURL_VERBOSE true
 
+# Go
+
+set -Ux GOPATH $HOME/go
+fish_add_path $GOPATH/bin
+
+# Vulkan
+set -f vulkan_bin $VULKAN_SDK/bin
+set -Ux VULKAN_BIN $vulkan_bin
+fish_add_path $vulkan_bin
+
+set -Ux LD_LIBRARY_PATH $VULKAN_SDK/lib
+set -Ux VK_LAYER_PATH $VULKAN_SDK/share/vulkan/explicit_layer.d
+set -Ux VK_ADD_LAYER_PATH $VULKAN_SDK/share/vulkan/explicit_layer.d
+set -Ux PKG_CONFIG_PATH $VULKAN_SDK/lib/pkgconfig/
+
+# steam
 fish_add_path /home/xnzf/.millennium/ext/bin
+
+# pip
+fish_add_path /home/xnzf/.local/bin
