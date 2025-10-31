@@ -17,7 +17,7 @@ return {
         jsx = { "biome" },
         ts = { "biome" },
         tsx = { "biome" },
-        astro = { "astro", lsp_format = "prefer" },
+        astro = { "prettier", lsp_format = "prefer" },
         css = { "biome", lsp_format = "prefer" },
         html = { "biome", lsp_format = "prefer" },
         qml = { "qmlformat" },
@@ -28,6 +28,7 @@ return {
         caddyfile = { "caddyfile" },
         go = { "gofmt" },
         rust = { "rustfmt", lsp_format = "fallback" },
+        py = { "black", lsp_format = "fallback" },
         -- ["*"] = { "codespell" },
         -- ["_"] = { "trim_whitespace" },
       },
@@ -42,6 +43,7 @@ return {
               fish = "fish",
               lua = "lua",
               markdown = { "md", "mdx" },
+              python = "py",
             },
             lang_to_ext = {
               fish = "fish",
@@ -75,6 +77,7 @@ return {
               rs = { "rustfmt" },
               cpp = { "clang-format" },
               markdown = { "markdownfmt", "markdown-toc" },
+              py = { "black" },
             },
           },
         },
@@ -86,10 +89,6 @@ return {
           cwd = require("conform.util").root_file({ "biome.jsonc" }),
           require_cwd = false,
         },
-        astro = {
-          "prettier",
-          lsp_format = "prefer",
-        },
         prettier = {
           condition = function(_, ctx)
             local util = require("conform.util")
@@ -99,7 +98,6 @@ return {
           end,
         },
         qmlformat = {
-          enable = true,
           command = "/usr/lib/qt6/bin/qmlformat",
           stdin = false,
           args = { "$FILENAME", "-w", "2", "-i" },
@@ -130,13 +128,26 @@ return {
         },
         markdownfmt = {},
         ["clang-format"] = {
-          enable = true,
           command = "clang-format",
           stdin = true,
           -- tmpfile_format = ".conform.$RANDOM.$FILENAME",
           -- "$FILENAME"
           args = { "--style=Google", "--fail-on-incomplete-format" },
           inherit = true,
+        },
+        black = {
+          command = "/usr/bin/black",
+          stdin = true,
+          args = {
+            "-l",
+            "66",
+            "-t",
+            "py310,py311,py312,py313,py314",
+            "--stdin-filename",
+            "$FILENAME",
+          },
+          cwd = require("conform.util").root_file({ "pyproject.toml" }),
+          require_cwd = false,
         },
       },
     },

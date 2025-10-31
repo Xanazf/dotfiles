@@ -42,45 +42,45 @@ return {
         exclude = { "vue" }, -- exclude vue due to performance issues
       })
 
-      opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, {
-        workspace = {
-          checkThirdParty = false,
-          didChangeWatchedFiles = { dynamicRegistration = true },
-          library = {
-            vim.env.VIMRUNTIME,
-            vim.fn.stdpath("data") .. "/lazy/fluoromachine.nvim",
-          },
-        },
-        inlay_hints = {
-          enabled = true,
-        },
-        textDocument = {
-          foldingRange = {
-            dynamicRegistration = false,
-            lineFoldingOnly = true,
-          },
-          completion = {
-            callSnippet = "Replace",
-            completionItem = {
-              documentationFormat = { "markdown", "plaintext" },
-              snippetSupport = true,
-              preselectSupport = true,
-              insertReplaceSupport = true,
-              labelDetailsSupport = true,
-              deprecatedSupport = true,
-              commitCharactersSupport = true,
-              tagSupport = { valueSet = { 1 } },
-              resolveSupport = {
-                properties = {
-                  "documentation",
-                  "detail",
-                  "additionalTextEdits",
-                },
-              },
-            },
-          },
-        },
-      })
+      -- opts.capabilities = vim.tbl_deep_extend("force", opts.capabilities or {}, {
+      --   workspace = {
+      --     checkThirdParty = false,
+      --     didChangeWatchedFiles = { dynamicRegistration = true },
+      --     library = {
+      --       vim.env.VIMRUNTIME,
+      --       vim.fn.stdpath("data") .. "/lazy/fluoromachine.nvim",
+      --     },
+      --   },
+      --   inlay_hints = {
+      --     enabled = true,
+      --   },
+      --   textDocument = {
+      --     foldingRange = {
+      --       dynamicRegistration = false,
+      --       lineFoldingOnly = true,
+      --     },
+      --     completion = {
+      --       callSnippet = "Replace",
+      --       completionItem = {
+      --         documentationFormat = { "markdown", "plaintext" },
+      --         snippetSupport = true,
+      --         preselectSupport = true,
+      --         insertReplaceSupport = true,
+      --         labelDetailsSupport = true,
+      --         deprecatedSupport = true,
+      --         commitCharactersSupport = true,
+      --         tagSupport = { valueSet = { 1 } },
+      --         resolveSupport = {
+      --           properties = {
+      --             "documentation",
+      --             "detail",
+      --             "additionalTextEdits",
+      --           },
+      --         },
+      --       },
+      --     },
+      --   },
+      -- })
 
       -- Merge servers with LazyVim defaults
       opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, h_servers)

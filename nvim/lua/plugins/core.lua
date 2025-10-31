@@ -80,7 +80,6 @@ return {
   ---@module "fluoromachine"
   {
     "maxmx03/fluoromachine.nvim",
-    branch = "update-2025",
     priority = 1000,
     config = function()
       local fm = require("fluoromachine")
