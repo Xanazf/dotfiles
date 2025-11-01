@@ -3,9 +3,9 @@ return {
   {
     "nvim-mini/mini.move",
     version = false,
-    config = function()
+    opts = function()
       local mmove = require("mini.move")
-      mmove.setup()
+      -- mmove.setup()
     end,
   },
   {
@@ -51,14 +51,14 @@ return {
         },
       }
     end,
-    config = function(_, opts)
-      require("mini.ai").setup(opts)
-      LazyVim.on_load("which-key.nvim", function()
-        vim.schedule(function()
-          LazyVim.mini.ai_whichkey(opts)
-        end)
-      end)
-    end,
+    -- config = function(_, opts)
+    --   require("mini.ai").setup(opts)
+    --   LazyVim.on_load("which-key.nvim", function()
+    --     vim.schedule(function()
+    --       LazyVim.mini.ai_whichkey(opts)
+    --     end)
+    --   end)
+    -- end,
   },
   {
     "nvim-mini/mini.comment",

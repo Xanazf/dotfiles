@@ -10,3 +10,6 @@ vim.g.lazyvim_cmp = "blink.cmp"
 vim.g.lazyvim_blink_main = true
 
 vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
+vim.opt.autoindent = true
+vim.opt.smarttab = true
+vim.opt.smartindent = true

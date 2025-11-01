@@ -359,9 +359,9 @@ return {
           gitcommit = { "git", "conventional_commits", "buffer", "spell", "emoji" },
           gitrebase = { "git", "buffer" },
           gitconfig = { "git", "buffer" },
-          markdown = { "lsp", "path", "buffer", "snippets", "spell", "latex", "emoji" },
+          markdown = { "lsp", "path", "buffer", "spell", "latex", "emoji" },
           text = { "buffer", "spell", "emoji" },
-          tex = { "lsp", "path", "snippets", "buffer", "latex", "spell" },
+          tex = { "lsp", "path", "snippets", "buffer", "latex" },
           rst = { "lsp", "path", "buffer", "spell", "snippets" },
           org = { "lsp", "path", "buffer", "spell" },
           javascript = { "lsp", "path", "buffer", "npm", "snippets" },
@@ -379,6 +379,9 @@ return {
           plsql = { "lsp", "dadbod", "buffer" },
           sshconfig = { "sshconfig", "buffer" },
           ssh_config = { "sshconfig", "buffer" },
+          -- cmdline = { "buffer", "cmdline", "register", "env" },
+          sh = { "buffer", "cmdline", "register", "env" },
+          fish = { "fish_lsp", "buffer", "cmdline", "register", "env" },
         },
 
         transform_items = function(_, items)
@@ -389,9 +392,8 @@ return {
           end
           return items
         end,
-
+        ---@type table<string, blink.cmp.SourceProviderConfigPartial>
         providers = {
-          ---@type blink.cmp.SourceProviderConfigPartial
           lsp = {
             name = "lsp",
             module = "blink.cmp.sources.lsp",
@@ -400,7 +402,7 @@ return {
             deduplicate = {},
             max_items = nil,
             fallbacks = {},
-            score_offset = 9,
+            score_offset = 66,
             override = {
               get_trigger_characters = function(self)
                 local trigger_characters = self:get_trigger_characters()
@@ -409,7 +411,6 @@ return {
               end,
             },
           },
-          ---@type blink.cmp.SourceProviderConfigPartial
           path = {
             name = "Path",
             module = "blink.cmp.sources.path",
@@ -424,7 +425,6 @@ return {
             },
             score_offset = 3,
           },
-          ---@type blink.cmp.SourceProviderConfigPartial
           snippets = {
             name = "Snippets",
             module = "blink.cmp.sources.snippets",
@@ -441,8 +441,6 @@ return {
               ignored_filetypes = {},
             },
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           buffer = {
             name = "Buffer",
             module = "blink.cmp.sources.buffer",
@@ -456,16 +454,13 @@ return {
                 end, vim.api.nvim_list_bufs())
               end,
             },
-            score_offset = 6,
+            score_offset = 12,
           },
-          ---@type blink.cmp.SourceProviderConfigPartial
           lazydev = {
             name = "LazyDev",
             module = "lazydev.integrations.blink",
             score_offset = 100, -- show at a higher priority than lsp
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           cmdline = {
             name = "Cmdline",
             module = "blink.cmp.sources.cmdline",
@@ -473,33 +468,23 @@ return {
             should_show_items = true,
             max_items = nil,
             min_keyword_length = 2,
-            fallbacks = {},
+            fallbacks = { "buffer", "env", "register" },
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           git = {
             name = "Git",
             module = "blink-cmp-git",
             score_offset = 2,
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           conventional_commits = {
             name = "Conventional Commits",
             module = "blink-cmp-conventional-commits",
             score_offset = 0,
           },
-
-          -- Environment and system sources
-          ---@type blink.cmp.SourceProviderConfigPartial
           env = {
             name = "Environment",
             module = "blink-cmp-env",
             score_offset = -2,
           },
-
-          -- Text enhancement sources
-          ---@type blink.cmp.SourceProviderConfigPartial
           emoji = {
             name = "Emoji",
             module = "blink-emoji",
@@ -508,29 +493,22 @@ return {
               insert = true,
             },
           },
-          ---@type blink.cmp.SourceProviderConfigPartial
           nerdfont = {
             name = "Nerd Font",
             module = "blink-nerdfont",
             score_offset = 1,
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           spell = {
             name = "Spell",
             module = "blink-cmp-spell",
             score_offset = -6,
           },
-
-          -- Development sources
-          ---@type blink.cmp.SourceProviderConfigPartial
           npm = {
             name = "NPM",
             module = "blink-cmp-npm",
             score_offset = 3,
+            min_keyword_length = 5,
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           css_vars = {
             name = "css-vars",
             module = "css-vars.blink",
@@ -539,29 +517,22 @@ return {
               search_extensions = { ".js", ".ts", ".jsx", ".tsx" },
             },
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           latex = {
             name = "LaTeX",
             module = "blink-cmp-latex",
             score_offset = 1,
           },
-
-          ---@type blink.cmp.SourceProviderConfigPartial
           dadbod = {
             name = "Database",
             module = "vim_dadbod_completion.blink",
             score_offset = 6,
           },
-
-          -- Search and navigation sources
-          ---@type blink.cmp.SourceProviderConfigPartial
           ripgrep = {
             name = "Ripgrep",
             module = "blink-ripgrep",
             score_offset = 0,
             opts = {
-              -- prefix_min_len = 3,
+              prefix_min_len = 3,
               get_command = function(_, prefix)
                 return {
                   "rg",
@@ -574,7 +545,6 @@ return {
               end,
             },
           },
-
           -- Terminal and system sources
           tmux = {
             name = "Tmux",
@@ -584,14 +554,12 @@ return {
               return vim.env.TMUX ~= nil
             end,
           },
-
           -- SSH configuration
           sshconfig = {
             name = "SSH Config",
             module = "blink-cmp-sshconfig",
             score_offset = -1,
           },
-
           -- Vim registers
           register = {
             name = "Register",
