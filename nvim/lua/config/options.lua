@@ -13,3 +13,4 @@ vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 vim.opt.autoindent = true
 vim.opt.smarttab = true
 vim.opt.smartindent = true
+vim.g.astro_typescript = "enable"

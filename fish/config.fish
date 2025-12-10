@@ -4,38 +4,83 @@ if status is-interactive
     # fastfetch
 end
 
-set -g fish_path "/home/xnzf/.config/fish"
+if test -n $XDG_CONFIG_HOME
+    set -g fish_path "$XDG_CONFIG_HOME/fish"
+else if test -n $XDG_DATA_HOME
+    set -g fish_path "$XDG_DATA_HOME/.config/fish"
+else
+    set -g fish_path "/home/xnzf/.config/fish"
+end
 
 function ec
-    set_color $argv[1]
-    echo $argv[2..-1]
-    set_color normal
+    if test "$argv[1]" -a "$argv[2]"
+        set -f coloring "$(set_color $argv[1])"
+        set -f text_passed "$argv[2..-1]"
+        set -f norm "$(set_color normal)"
+
+        echo -n "$coloring$text_passed$norm"
+    else
+        echo -ne "\n"
+        #
+    end
+    return 0
+end
+
+set -g node_symbol "$(ec green '󰎙')"
+
+function lock_node_version
+    set -f node_version_lockfile "$fish_path/node_version.lock"
+    if not test -e $node_version_lockfile
+        echo "node version lockfile $(ec brred 'doesn\'t exist'), creating..."
+        touch $node_version_lockfile
+    end
+
+    set -f node_locked (cat $node_version_lockfile)
+    if test -n $node_locked
+        echo "lockfile is empty"
+        #
+    end
+
+    if test -n "$argv[1]"
+        set -Ux nvm_default_version "$argv[1]"
+        set -Ux nvm_default_packages "corepack typescript tsx"
+        echo -n "$argv[1]" >$node_version_lockfile
+        nvm use "$argv[1]" -s
+        printf '%s%s %s\n' node $node_symbol "version $(ec bryellow locked) at $argv[1]"
+    else
+        echo "no version provided, exiting..."
+    end
+    return 0
 end
 
 function check_node_version
-    printf '%s %s%s %s %s%s\n' checking node (set_color green)"󰎙"(set_color normal) version (set_color cyan)''(set_color normal)' '
-    nvm use latest -s
+    printf '%s %s%s %s %s\n' checking node $node_symbol version $(ec cyan ' ')
 
-    set -f curr_node_version_file "$fish_path/curr_node_version.txt"
     set -f latest_node_version_file "$fish_path/latest_node_version.txt"
+    set -f node_version_lockfile "$fish_path/node_version.lock"
 
-    nvm list | grep ▶ | grep -o 'v[[:digit:]]\{1,\}.[[:digit:]]\{1,\}.[[:digit:]]\{1,\}' >$curr_node_version_file
-    nvm list-remote | grep latest | grep -o 'v[[:digit:]]\{1,\}.[[:digit:]]\{1,\}.[[:digit:]]\{1,\}' >$latest_node_version_file
+    nvm list-remote latest | grep -o 'v[[:digit:]]\{1,\}.[[:digit:]]\{1,\}.[[:digit:]]\{1,\}' >$latest_node_version_file
 
-    set -f curr_node_version (cat $curr_node_version_file)
+    set -f curr_node_version (node -v)
     set -f latest_node_version (cat $latest_node_version_file)
+    set -f node_locked (cat $node_version_lockfile)
 
-    printf '%s: %s%s\n' current (set_color green)"󰎙"(set_color normal) $curr_node_version
-    printf '%s: %s%s\n' latest (set_color green)"󰎙"(set_color normal) $latest_node_version
+    printf '%s: %s%s\n' current $node_symbol $curr_node_version
+    printf '%s: %s%s\n' latest $node_symbol $latest_node_version
 
     if test $curr_node_version = $latest_node_version
-        printf '%s %s\n' "current version is" (set_color green)latest(set_color normal)
+        printf '%s %s\n' "current version is" (ec green "latest")
+        #
+    else if test $node_locked -a $node_locked = $curr_node_version
+        printf '%s %s %s\n' "current version is" (ec bryellow "locked") "at $nvm_default_version"
         #
     else
-        printf '%s %s, %s\n' 'current version is' (set_color brred)'not latest'(set_color normal) (set_color bryellow)'installing...'(set_color normal)
+        printf '%s %s, %s\n' "current version is" (ec brred "not latest") (ec bryellow "installing...")
         nvm install latest -s
+        nvm use latest -s
         check_node_version
     end
+    return 0
 end
 
 function fish_greeting
@@ -51,6 +96,7 @@ function fish_greeting
     echo $separator$separator$separator$separator$separator$separator
     check_node_version
     echo "[$(date +%x_%H:%M\(%Z\))]"
+    return 0
 end
 
 set -g fish_greeting
@@ -63,6 +109,7 @@ function blur_terminal_background
             end
         end
     end
+    return 0
 end
 
 blur_terminal_background

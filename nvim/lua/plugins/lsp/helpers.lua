@@ -1,3 +1,17 @@
+local lspconfig = require("lspconfig")
+local projectcwd = vim.fn.getcwd()
+local pnp_env = function()
+  local env = {}
+  local env_output = vim.fn.system(projectcwd .. "/get-pnp-env.sh")
+  for line in string.gmatch(env_output, "[^\r\n]+") do
+    local key, value = line:match('([^=]+)="([^"]*)"')
+    if key and value then
+      env[key] = value
+    end
+  end
+  return env
+end
+
 -- helper functions for LSP, Mason, and Treesitter
 ---@class LSPHelpers
 ---@field checkexec function<boolean>
@@ -115,8 +129,48 @@ M.lsp.servers = {
           propertyDeclarationTypes = { enabled = true },
           variableTypes = { enabled = false },
         },
+        -- yarn sdk
+        tsdk = projectcwd .. "/.yarn/sdks/typescript/lib",
       },
     },
+  },
+  astro = {
+    -- root_dir = lspconfig.util.root_pattern("astro.config.mjs", "astro.config.js", "package.json", ".git"),
+    root_markers = { "astro.config.mjs", "astro.config.js", "package.json", ".git" },
+    -- cmd = { "yarn", "exec", "astro-ls", "--stdio" },
+    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    -- cmd_env = pnp_env(),
+    settings = {
+      typescript = {
+        updateImportsOnFileMove = { enabled = "always" },
+        suggest = {
+          completeFunctionCalls = true,
+        },
+        inlayHints = {
+          enumMemberValues = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          parameterNames = { enabled = "literals" },
+          parameterTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          variableTypes = { enabled = false },
+        },
+        -- yarn sdk
+        tsdk = vim.fs.joinpath(projectcwd, ".yarn/sdks/typescript/lib"),
+      },
+      astro = {
+        cssls = { enabled = true },
+        html = { enabled = true },
+        diagnostics = { enabled = true },
+        format = {
+          enabled = true,
+        },
+      },
+    },
+    on_attach = function(client, bufnr)
+      if client.server_capabilities.inlayHintProvider then
+        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+      end
+    end,
   },
 
   -- C/C++
@@ -354,7 +408,6 @@ M.lsp.servers = {
   },
 
   -- web_extra
-  astro = { settings = {} },
   tailwindcss = {
     filetypes_exclude = { "markdown" },
     filetypes_include = {
@@ -395,9 +448,9 @@ M.lsp.servers = {
             snippetSupport = true,
           },
         },
-        colorProvider = {
-          dynamicRegistration = true,
-        },
+        --colorProvider = {
+        --  dynamicRegistration = true,
+        --},
       },
     },
   },

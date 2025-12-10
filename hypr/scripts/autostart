@@ -14,7 +14,7 @@ caelestia shell -d &
 # other
 # hyprpaper &
 zen-twilight &
-steam &
+steam -console &
 
 # for XDPH
 dbus-update-activation-environment --systemd --all &

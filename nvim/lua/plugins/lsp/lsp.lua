@@ -48,4 +48,5 @@ return {
       return opts
     end,
   },
+  { "wuelnerdotexe/vim-astro" },
 }

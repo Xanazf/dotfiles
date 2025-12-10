@@ -85,9 +85,9 @@ return {
         biome = {
           command = "/usr/bin/biome",
           stdin = true,
-          args = { "format", "--stdin-file-path", "$FILENAME" },
+          args = { "format", "--stdin-file-path=$FILENAME" },
           cwd = require("conform.util").root_file({ "biome.jsonc" }),
-          require_cwd = false,
+          require_cwd = true,
         },
         prettier = {
           condition = function(_, ctx)

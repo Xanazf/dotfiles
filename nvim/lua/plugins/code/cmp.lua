@@ -62,11 +62,15 @@ return {
         lazy = true,
         ft = { "markdown", "text", "tex", "rst", "org" },
         dependencies = { "nvim-lua/plenary.nvim" },
-        opts = {
-          dictionaries = {
+        config = function()
+          local blink_dict = require("blink-cmp-dictionary")
+          local dictionaries = {
             ["en"] = "/usr/share/dict/words",
-          },
-        },
+          }
+          blink_dict.new(dictionaries, {
+            module = "blink-cmp-dictionary",
+          })
+        end,
       },
       { "ribru17/blink-cmp-spell", lazy = true },
       {
@@ -502,6 +506,11 @@ return {
             name = "Spell",
             module = "blink-cmp-spell",
             score_offset = -6,
+          },
+          dictionary = {
+            name = "Dictionary",
+            module = "blink-cmp-dictionary",
+            score_offset = -10,
           },
           npm = {
             name = "NPM",

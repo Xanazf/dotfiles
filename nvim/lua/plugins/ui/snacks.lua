@@ -26,7 +26,11 @@ return {
         map = LazyVim.safe_keymap_set,
       },
       words = { enabled = true },
-      bigfile = { enabled = true },
+      ---@type snacks.bigfile.Config
+      bigfile = {
+        enabled = false,
+        size = 1572864,
+      },
       debug = { enabled = true },
       picker = {
         enabled = true,
