@@ -12,25 +12,22 @@ return {
       formatters_by_ft = {
         lua = { "stylua" },
         fish = { "fish_indent" },
-        js = { "biome" },
-        mjs = { "biome" },
-        jsx = { "biome" },
-        ts = { "biome" },
-        tsx = { "biome" },
-        astro = { "prettier", lsp_format = "prefer" },
-        css = { "biome", lsp_format = "prefer" },
-        html = { "biome", lsp_format = "prefer" },
+        javascript = { "biome" },
+        javascriptreact = { "biome" },
+        typescript = { "biome" },
+        typescriptreact = { "biome" },
+        astro = { "prettier", lsp_format = "fallback" },
+        css = { "biome" },
+        html = { "biome" },
         qml = { "qmlformat" },
-        cpp = { "clang-format", lsp_format = "last", timeout_ms = 500 },
-        hpp = { "clang-format", lsp_format = "last", timeout_ms = 500 },
+        cpp = { "clang-format" },
+        hpp = { "clang-format" },
         markdown = { "markdownfmt", "markdown-toc" },
         ["markdown.mdx"] = { "markdownfmt", "markdown-toc" },
         caddyfile = { "caddyfile" },
         go = { "gofmt" },
-        rust = { "rustfmt", lsp_format = "fallback" },
-        py = { "black", lsp_format = "fallback" },
-        -- ["*"] = { "codespell" },
-        -- ["_"] = { "trim_whitespace" },
+        rust = { "rustfmt" },
+        python = { "black" },
       },
       -- You can also define any custom formatters here.
       ---@type table<string, conform.FormatterConfigOverride|fun(bufnr: integer): nil|conform.FormatterConfigOverride>
@@ -70,7 +67,7 @@ return {
               jsx = { "biome" },
               ts = { "biome" },
               tsx = { "biome" },
-              astro = { "biome" },
+              astro = { "prettier" },
               css = { "csslsp" },
               html = { "biome" },
               qml = { "qmlformat" },
@@ -90,6 +87,7 @@ return {
           require_cwd = true,
         },
         prettier = {
+          prepend_args = { "--plugin", "prettier-plugin-astro" },
           condition = function(_, ctx)
             local util = require("conform.util")
             local resolvedcwd = util.root_file({ ".prettierrc" }) or util.root_file({ "prettier.json" })

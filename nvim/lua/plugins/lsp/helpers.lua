@@ -1,15 +1,16 @@
-local lspconfig = require("lspconfig")
-local projectcwd = vim.fn.getcwd()
-local pnp_env = function()
-  local env = {}
-  local env_output = vim.fn.system(projectcwd .. "/get-pnp-env.sh")
-  for line in string.gmatch(env_output, "[^\r\n]+") do
-    local key, value = line:match('([^=]+)="([^"]*)"')
-    if key and value then
-      env[key] = value
-    end
+local function get_typescript_server_path(root_dir)
+  local project_root = root_dir or vim.fn.getcwd()
+  local yarn_sdk = vim.fs.joinpath(project_root, ".yarn/sdks/typescript/lib")
+  if vim.uv.fs_stat(yarn_sdk) then
+    return yarn_sdk
   end
-  return env
+
+  -- Fallback to mason installed version if available
+  local mason_path = vim.fn.stdpath("data") .. "/mason/packages/vtsls/node_modules/typescript/lib"
+  if vim.uv.fs_stat(mason_path) then
+    return mason_path
+  end
+  return nil
 end
 
 -- helper functions for LSP, Mason, and Treesitter
@@ -48,6 +49,7 @@ end
 M.lsp.servers = {
   bashls = {
     enabled = true,
+    filetypes = { "sh", "bash" },
   },
   -- Explicitly disable tsserver and ts_ls
   tsserver = {
@@ -115,6 +117,15 @@ M.lsp.servers = {
             enableServerSideFuzzyMatch = true,
           },
         },
+        tsserver = {
+          globalPlugins = {
+            {
+              name = "@astrojs/ts-plugin",
+              location = vim.fn.stdpath("data") .. "/mason/packages/astro-language-server/node_modules/@astrojs/ts-plugin",
+              enableForWorkspaceTypeScriptVersions = true,
+            },
+          },
+        },
       },
       typescript = {
         updateImportsOnFileMove = { enabled = "always" },
@@ -124,46 +135,43 @@ M.lsp.servers = {
         inlayHints = {
           enumMemberValues = { enabled = true },
           functionLikeReturnTypes = { enabled = true },
-          parameterNames = { enabled = "literals" },
+          parameterNames = { enabled = "all" },
           parameterTypes = { enabled = true },
           propertyDeclarationTypes = { enabled = true },
-          variableTypes = { enabled = false },
+          variableTypes = { enabled = true },
         },
         -- yarn sdk
-        tsdk = projectcwd .. "/.yarn/sdks/typescript/lib",
+        tsdk = get_typescript_server_path(),
       },
     },
   },
   astro = {
-    -- root_dir = lspconfig.util.root_pattern("astro.config.mjs", "astro.config.js", "package.json", ".git"),
+    filetypes = { "astro" },
     root_markers = { "astro.config.mjs", "astro.config.js", "package.json", ".git" },
-    -- cmd = { "yarn", "exec", "astro-ls", "--stdio" },
     capabilities = vim.lsp.protocol.make_client_capabilities(),
-    -- cmd_env = pnp_env(),
-    settings = {
-      typescript = {
-        updateImportsOnFileMove = { enabled = "always" },
-        suggest = {
-          completeFunctionCalls = true,
+    init_options = {
+      typescript = {}, -- Will be populated on_new_config
+      configuration = {
+        astro = {
+          typescript = {
+            plugin = {
+              enabled = true,
+            },
+          },
         },
-        inlayHints = {
-          enumMemberValues = { enabled = true },
-          functionLikeReturnTypes = { enabled = true },
-          parameterNames = { enabled = "literals" },
-          parameterTypes = { enabled = true },
-          propertyDeclarationTypes = { enabled = true },
-          variableTypes = { enabled = false },
-        },
-        -- yarn sdk
-        tsdk = vim.fs.joinpath(projectcwd, ".yarn/sdks/typescript/lib"),
       },
+    },
+    on_new_config = function(new_config, new_root_dir)
+      if new_config.init_options and new_config.init_options.typescript then
+        new_config.init_options.typescript.tsdk = get_typescript_server_path(new_root_dir)
+      end
+    end,
+    settings = {
       astro = {
         cssls = { enabled = true },
         html = { enabled = true },
         diagnostics = { enabled = true },
-        format = {
-          enabled = true,
-        },
+        format = { enabled = true },
       },
     },
     on_attach = function(client, bufnr)
@@ -342,19 +350,26 @@ M.lsp.servers = {
         doc = {
           privateName = { "^_" },
         },
+        hover = {
+          expandAlias = true,
+          previewSnippet = true,
+          viewString = true,
+          viewStringMax = 50,
+          viewNumber = true,
+        },
         hint = {
           enable = true,
-          setType = false,
+          setType = true,
           paramType = true,
-          paramName = "Disable",
+          paramName = "All",
           semicolon = "Disable",
-          arrayIndex = "Disable",
+          arrayIndex = "Enable",
         },
       },
     },
   },
 
-  -- json
+  -- JSON
   jsonls = {
     -- lazy-load schemastore when needed
     on_new_config = function(new_config)
@@ -378,9 +393,39 @@ M.lsp.servers = {
     end,
   },
 
+  -- Biome
+  biome = {
+    filetypes = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "json",
+      "jsonc",
+      "css",
+    },
+    root_dir = function(fname)
+      return require("lspconfig.util").root_pattern("biome.json", "biome.jsonc")(fname)
+    end,
+    -- Explicitly exclude astro if it somehow gets included
+    on_attach = function(client, bufnr)
+      if vim.bo[bufnr].filetype == "astro" then
+        client.stop()
+      end
+    end,
+  },
+
   -- Web servers
   html = { settings = {} },
   cssls = { settings = {} },
+  css_variables = {
+    settings = {
+      cssVariables = {
+        lookupInFiles = { "**/*.css", "**/*.scss", "**/*.sass", "**/*.less", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx" },
+      },
+    },
+  },
+  cssmodules_ls = { settings = {} },
 
   -- YAML
   yamlls = {

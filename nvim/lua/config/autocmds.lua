@@ -1,5 +1,28 @@
 -- Autocmds are automatically loaded on the VeryLazy event
+vim.filetype.add({ extension = { mdx = "mdx" } })
 
+-- disable spell for markdown and mdx
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "markdown", "mdx" },
+  callback = function(_)
+    vim.wo.spell = false
+  end,
+  group = vim.api.nvim_create_augroup("MarkdownGlobalNoSpell", { clear = true }),
+})
+
+-- go templates
+vim.filetype.add({
+  extension = {
+    gotmpl = "gotmpl",
+  },
+  pattern = {
+    [".*/templates/.*%.tpl"] = "helm",
+    [".*/templates/.*%.ya?ml"] = "helm",
+    ["helmfile.*%.ya?ml"] = "helm",
+  },
+})
+
+-- color scheme util
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("transparent_fixes", { clear = true }),
   ---@param args {buf: number, event: string, file: string, group: number, id: number, match: string}
@@ -23,6 +46,7 @@ vim.api.nvim_create_autocmd("ColorScheme", {
       orange = "#ff8b39",
       orange_bg = "#473336",
       gray = "#5c6370",
+      dark = "#090639",
       light = "#8ba7a7",
     }
     -- e.g.: cterm=bold gui=bold,nocombine guifg=#ffcc00 guibg=#262335
@@ -45,11 +69,11 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     -- vim.api.nvim_set_hl(0, "MiniIconsRed", { fg = colors.red, bg = colors.bg })
 
     -- mini.hipatterns
-    vim.api.nvim_set_hl(0, "MiniHipatternsNote", { fg = colors.fg, bg = colors.blue })
-    vim.api.nvim_set_hl(0, "MiniHipatternsTodo", { fg = colors.fg, bg = colors.cyan })
-    vim.api.nvim_set_hl(0, "MiniHipatternsHack", { fg = colors.fg, bg = colors.orange })
-    vim.api.nvim_set_hl(0, "MiniHipatternsFixme", { fg = colors.fg, bg = colors.l_red })
-    vim.api.nvim_set_hl(0, "MiniHipatternsBug", { fg = colors.fg, bg = colors.red })
+    vim.api.nvim_set_hl(0, "MiniHipatternsNote", { fg = colors.dark, bg = colors.blue, bold = true })
+    vim.api.nvim_set_hl(0, "MiniHipatternsTodo", { fg = colors.dark, bg = colors.cyan, bold = true })
+    vim.api.nvim_set_hl(0, "MiniHipatternsHack", { fg = colors.dark, bg = colors.orange, bold = true })
+    vim.api.nvim_set_hl(0, "MiniHipatternsFixme", { fg = colors.dark, bg = colors.l_red, bold = true })
+    vim.api.nvim_set_hl(0, "MiniHipatternsBug", { fg = colors.dark, bg = colors.red, bold = true })
 
     -- render-mark
     vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { link = "DiagnosticVirtualTextOk", default = false })
@@ -57,27 +81,4 @@ vim.api.nvim_create_autocmd("ColorScheme", {
     -- symbolsline
     -- vim.api.nvim_set_hl(0, "NavicText", { link = "String" })
   end,
-})
-
-vim.filetype.add({
-  extension = {
-    gotmpl = "gotmpl",
-  },
-  pattern = {
-    [".*/templates/.*%.tpl"] = "helm",
-    [".*/templates/.*%.ya?ml"] = "helm",
-    ["helmfile.*%.ya?ml"] = "helm",
-  },
-})
-
-vim.filetype.add({ extension = { mdx = "mdx" } })
-vim.treesitter.language.register("markdown", { "md", "mdx" })
-
--- disable spell for markdown and mdx at a global level (redundant safeguard)
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "markdown", "mdx" },
-  callback = function(_)
-    vim.wo.spell = false
-  end,
-  group = vim.api.nvim_create_augroup("MarkdownGlobalNoSpell", { clear = true }),
 })

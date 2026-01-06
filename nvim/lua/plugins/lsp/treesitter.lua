@@ -32,7 +32,7 @@ return {
         "bash",
         "regex",
         "json",
-        "jsonc",
+        -- "jsonc",
         "gotmpl",
         "yaml",
         "toml",

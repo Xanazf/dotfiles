@@ -29,6 +29,9 @@ return {
         -- },
         biome = {
           condition = function(ctx)
+            if vim.bo.filetype == "astro" then
+              return false
+            end
             return vim.fs.find({ "biome.jsonc" }, { path = ctx.filename, upward = true })[1]
           end,
         },

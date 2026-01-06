@@ -2,15 +2,16 @@ return {
   ---@module "mini.hipatterns"
   {
     "nvim-mini/mini.hipatterns",
+    event = "VeryLazy",
     cmd = { "MiniHipatterns" },
     opts = function(_, opts)
       local mhipatterns = require("mini.hipatterns")
       opts.highlighters = {
-        bug = { pattern = " BUG", group = "MiniHipatternsBug" },
-        fixme = { pattern = " FIXME", group = "MiniHipatternsFixme" },
-        hack = { pattern = " HACK", group = "MiniHipatternsHack" },
-        todo = { pattern = " TODO", group = "MiniHipatternsTodo" },
-        note = { pattern = " NOTE", group = "MiniHipatternsNote" },
+        -- bug = { pattern = "%f[%w]BUG:.*", group = "MiniHipatternsBug" },
+        -- fixme = { pattern = "%f[%w]FIXME:.*", group = "MiniHipatternsFixme" },
+        -- hack = { pattern = "%f[%w]HACK:.*", group = "MiniHipatternsHack" },
+        -- todo = { pattern = "%f[%w]TODO:.*", group = "MiniHipatternsTodo" },
+        -- note = { pattern = "%f[%w]NOTE:.*", group = "MiniHipatternsNote" },
         hex_color = mhipatterns.gen_highlighter.hex_color(),
         trailspace = { pattern = "%f[%s]%s*$", group = "Error" },
       }

@@ -16,6 +16,7 @@ return {
   -- Extend LazyVim's VimTeX configuration
   {
     "lervag/vimtex",
+    enabled = false,
     lazy = false, -- lazy-loading will disable inverse search
     ft = { "tex", "plaintex", "bib" },
     config = function()
@@ -78,13 +79,17 @@ return {
       local custom_sources = {
         nls.builtins.code_actions.gomodifytags,
         nls.builtins.code_actions.impl,
-        nls.builtins.diagnostics.biome,
+        nls.builtins.diagnostics.biome.with({
+          disabled_filetypes = { "astro" },
+        }),
         -- clang diagnostics are provided by clangd LSP, not null-ls
         nls.builtins.diagnostics.fish,
         nls.builtins.diagnostics.dotenv_linter,
         nls.builtins.diagnostics.qmllint,
         nls.builtins.diagnostics.todo_comments,
-        nls.builtins.formatting.biome,
+        nls.builtins.formatting.biome.with({
+          disabled_filetypes = { "astro" },
+        }),
         nls.builtins.formatting.clang_format,
         nls.builtins.formatting.fish_indent,
         nls.builtins.formatting.gofmt,
@@ -122,4 +127,3 @@ return {
     end,
   },
 }
-

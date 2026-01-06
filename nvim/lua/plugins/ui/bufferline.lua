@@ -1,3 +1,4 @@
+local bl = require("bufferline")
 return {
   ---@module "bufferline"
   {
@@ -20,7 +21,9 @@ return {
     opts = {
       ---@type bufferline.Options
       options = {
-        numbers = "buffer_id",
+        -- numbers = "buffer_id",
+        style_preset = bl.style_preset.default, -- or bufferline.style_preset.minimal,
+        themable = true,
         close_command = function(n)
           Snacks.bufdelete.delete(n)
         end,
@@ -35,36 +38,44 @@ return {
             .. (diag.warning and icons.Warn .. diag.warning or "")
           return vim.trim(ret)
         end,
+        diagnostics_update_on_event = true,
         offsets = {
           {
-            filetype = "snacks_explorer",
-            text = "Explorer",
-            highlight = "NormalFloat",
-            text_align = "left",
+            filetype = "snacks_layout_box",
+            text = "",
+            separator = true,
           },
         },
         get_element_icon = function(opts)
           return LazyVim.config.icons.ft[opts.filetype]
         end,
         -- Transparency-friendly settings
-        separator_style = "thin",
+        separator_style = "thick",
         indicator = {
-          -- icon = "▎",
-          style = "underline",
+          icon = " @",
+          style = "icon",
+        },
+        hover = {
+          enabled = true,
+          delay = 200,
+          reveal = { "close" },
         },
         buffer_close_icon = "󰅖",
+        close_icon = " ",
         modified_icon = LazyVim.config.icons.git.added,
-        -- close_icon = "",
-        -- left_trunc_marker = "",
-        -- right_trunc_marker = "",
-        show_buffer_icons = true,
-        -- show_buffer_close_icons = false,
+        left_trunc_marker = " ",
+        right_trunc_marker = " ",
+        show_buffer_close_icons = false,
         -- show_close_icon = false,
-        show_tab_indicators = true,
         persist_buffer_sort = true,
         -- enforce_regular_tabs = false,
         always_show_bufferline = false,
-        sort_by = "directory",
+        sort_by = "insert_after_current",
+        truncate_names = true,
+
+        show_tab_indicators = true,
+        show_buffer_icons = true,
+        color_icons = true,
       },
     },
   },

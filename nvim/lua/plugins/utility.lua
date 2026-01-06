@@ -2,6 +2,7 @@
 return {
   {
     "nvim-mini/mini.move",
+    enabled = false,
     version = false,
     opts = function()
       local mmove = require("mini.move")
@@ -63,6 +64,7 @@ return {
   {
     "nvim-mini/mini.comment",
     version = false,
+    enabled = false,
     config = function()
       local mcomment = require("mini.comment")
       mcomment.setup()
@@ -166,4 +168,65 @@ return {
     },
   },
   { "roobert/tailwindcss-colorizer-cmp.nvim", opts = {} },
+  -- {
+  --   "azratul/live-share.nvim",
+  --   dependencies = {
+  --     "jbyuki/instant.nvim",
+  --   },
+  --   config = function()
+  --     vim.g.instant_username = "xnzf"
+  --     require("live-share").setup({
+  --       port_internal = 9876,
+  --       max_attempts = 20,
+  --       service_url = "/tmp/service.url", -- Path to the file where the URL from serveo.net will be stored
+  --       service = "nokey@localhost.run", -- Service to use, options are serveo.net or localhost.run
+  --     })
+  --   end,
+  -- },
+  {
+    "folke/todo-comments.nvim",
+    enabled = true,
+    opts = {
+      multiline = true,
+      multiline_pattern = "^.", -- Default pattern matches any character at start of line
+      multiline_context = 10,
+      highlight = {
+        before = "",
+        keyword = "wide", -- Highlights keyword and colon
+        after = "fg", -- Highlights rest of the line
+        pattern = [[.*<(KEYWORDS)\s*:]], -- Pattern to match
+        comments_only = true,
+        max_line_len = 400,
+        exclude = {},
+      },
+      keywords = {
+        FIX = { icon = " ", color = "error", alt = { "FIXME", "BUG", "FIXIT", "ISSUE" } },
+        TODO = { icon = " ", color = "info" },
+        HACK = { icon = " ", color = "warning" },
+        WARN = { icon = " ", color = "warning", alt = { "WARNING", "XXX" } },
+        PERF = { icon = " ", color = "default", alt = { "OPTIM", "PERFORMANCE", "OPTIMIZE" } },
+        NOTE = { icon = " ", color = "hint", alt = { "INFO" } },
+        TEST = { icon = "⏲ ", color = "test", alt = { "TESTING", "PASSED", "FAILED" } },
+      },
+      colors = {
+        error = { "DiagnosticError", "ErrorMsg", "#fe4450" },
+        warning = { "DiagnosticWarn", "WarningMsg", "#ff8b39" },
+        info = { "DiagnosticInfo", "#61e2ff" },
+        hint = { "DiagnosticHint", "#61afef" },
+        default = { "Identifier", "#61e2ff" },
+        test = { "Identifier", "#61e2ff" },
+      },
+    },
+  },
+  {
+    "nomad/nomad",
+    version = "*",
+    build = function()
+      ---@type nomad.neovim.build
+      local build = require("nomad.neovim.build")
+
+      build.builders.download_prebuilt():build(build.contexts.lazy())
+    end,
+    opts = {},
+  },
 }

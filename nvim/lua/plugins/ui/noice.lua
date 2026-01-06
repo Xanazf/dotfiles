@@ -42,7 +42,7 @@ return {
       lsp = {
         hover = {
           enabled = true,
-          silent = false, -- set to true to not show a message if hover is not available
+          silent = true, -- set to true to not show a message if hover is not available
           ---@type NoiceView
           view = nil,
           ---@type NoiceViewOptions

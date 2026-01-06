@@ -10,7 +10,9 @@ return {
           require("nvim-navic").attach(client, buffer)
         end
       end)
-      local micons = MiniIcons.list("lsp")
+      local micons_mod = MiniIcons or require("mini.icons")
+      local micons = micons_mod.list("lsp")
+
       opts = vim.tbl_deep_extend("force", opts, {
         separator = ": ",
         highlight = true,

@@ -25,6 +25,8 @@ return {
     ---@param opts LazyVimOptions
     opts = function(_, opts)
       local miniIcons = MiniIcons or require("mini.icons")
+      miniIcons.mock_nvim_web_devicons()
+
       local micons_lsp = miniIcons.list("lsp")
       local micons_ft = miniIcons.list("filetype")
       local micons_file = miniIcons.list("file")
@@ -64,6 +66,7 @@ return {
     event = "InsertEnter",
     opts = function(_, opts)
       local msnippets = require("mini.snippets")
+      msnippets.setup()
       return opts
     end,
   },
@@ -74,6 +77,7 @@ return {
     enabled = false,
     opts = function(_, opts)
       local mdoc = require("mini.doc")
+      mdoc.setup()
       return opts
     end,
   },
@@ -135,10 +139,34 @@ return {
     ---@type render.md.UserConfig
     opts = {
       enabled = true,
-      render_modes = { "n", "c", "t" },
+      completions = {
+        lsp = { enabled = true },
+      },
+      render_modes = { "n" },
       file_types = { "markdown", "mdx" },
       preset = "lazy",
       restart_highlighter = false,
+      markdown = {
+        disable = true,
+        directives = {
+          { id = 17, name = "conceal_lines" },
+          { id = 18, name = "conceal_lines" },
+        },
+      },
+      quote = {
+        enabled = true,
+        render_modes = { "n" },
+        icon = "▋",
+        repeat_linebreak = false,
+        highlight = {
+          "RenderMarkdownQuote1",
+          "RenderMarkdownQuote2",
+          "RenderMarkdownQuote3",
+          "RenderMarkdownQuote4",
+          "RenderMarkdownQuote5",
+          "RenderMarkdownQuote6",
+        },
+      },
       anti_conceal = {
         -- This enables hiding added text on the line the cursor is on.
         enabled = true,
@@ -167,7 +195,7 @@ return {
           code_background = true,
           indent = true,
           sign = true,
-          virtual_lines = true,
+          -- virtual_lines = true,
         },
       },
       padding = {
@@ -178,7 +206,7 @@ return {
         -- Turn on / off latex rendering.
         enabled = true,
         -- Additional modes to render latex.
-        render_modes = false,
+        render_modes = { "n" },
         -- Executable used to convert latex formula to rendered unicode.
         -- If a list is provided the first command available on the system is used.
         converter = { "utftex", "latex2text" },
@@ -188,15 +216,11 @@ return {
         -- | above  | above latex block                               |
         -- | below  | below latex block                               |
         -- | center | centered with latex block (must be single line) |
-        position = "center",
+        position = "above",
         -- Number of empty lines above latex blocks.
-        top_pad = 0,
+        top_pad = 1,
         -- Number of empty lines below latex blocks.
         bottom_pad = 0,
-      },
-      completions = {
-        blink = { enabled = true },
-        lsp = { enabled = true },
       },
       inline_highlight = {
         enabled = true,

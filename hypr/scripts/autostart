@@ -8,11 +8,9 @@ quickshell_scripts=$quickshell_config/scripts
 /usr/lib/hyprpolkitagent &
 
 # quickshell
-caelestia shell -d &
-# $quickshell_scripts/tools/dynamic &
 /usr/lib/xdg-desktop-portal-hyprland &
+caelestia shell -d &
 # other
-# hyprpaper &
 zen-twilight &
 steam -console &
 

@@ -11,12 +11,9 @@ return {
     ---@param opts PluginLspOpts
     opts = function(_, opts)
       opts.diagnostics = vim.tbl_deep_extend("force", opts.diagnostics or {}, {
-        underline = true,
         update_in_insert = true,
         virtual_text = {
           spacing = 2,
-          prefix = "●",
-          source = "if_many",
         },
         float = {
           focusable = false,
@@ -25,15 +22,6 @@ return {
           source = "always",
           header = "",
           prefix = "",
-        },
-        severity_sort = true,
-        signs = {
-          text = {
-            [vim.diagnostic.severity.ERROR] = LazyVim.config.icons.diagnostics.Error,
-            [vim.diagnostic.severity.WARN] = LazyVim.config.icons.diagnostics.Warn,
-            [vim.diagnostic.severity.HINT] = LazyVim.config.icons.diagnostics.Hint,
-            [vim.diagnostic.severity.INFO] = LazyVim.config.icons.diagnostics.Info,
-          },
         },
       })
 

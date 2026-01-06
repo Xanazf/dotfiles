@@ -234,13 +234,23 @@ return {
               kind_icon = {
                 ellipsis = false,
                 text = function(ctx)
+                  if ctx.source_name == "Path" then
+                    local is_unknown_type =
+                      vim.tbl_contains({ "link", "socket", "fifo", "char", "block", "unknown" }, ctx.item.data.type)
+                    local mini_icon, _ = require("mini.icons").get(
+                      is_unknown_type and "os" or ctx.item.data.type,
+                      is_unknown_type and "" or ctx.label
+                    )
+                    return (mini_icon or ctx.kind_icon) .. ctx.icon_gap
+                  end
+
                   local micon, _, _ = require("mini.icons").get("lsp", ctx.kind)
                   if micon then
                     return micon .. ctx.icon_gap
                   end
 
                   local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
-                  return icon .. ctx.icon_gap
+                  return (icon or ctx.kind_icon) .. ctx.icon_gap
                 end,
                 highlight = function(ctx)
                   local micon, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
@@ -359,33 +369,33 @@ return {
         default = { "lsp", "path", "buffer", "snippets" },
         min_keyword_length = 0,
         per_filetype = {
-          lua = { "lazydev", "lsp", "path", "buffer", "snippets" },
-          gitcommit = { "git", "conventional_commits", "buffer", "spell", "emoji" },
-          gitrebase = { "git", "buffer" },
-          gitconfig = { "git", "buffer" },
-          markdown = { "lsp", "path", "buffer", "spell", "latex", "emoji" },
-          text = { "buffer", "spell", "emoji" },
-          tex = { "lsp", "path", "snippets", "buffer", "latex" },
-          rst = { "lsp", "path", "buffer", "spell", "snippets" },
-          org = { "lsp", "path", "buffer", "spell" },
-          javascript = { "lsp", "path", "buffer", "npm", "snippets" },
-          typescript = { "lsp", "path", "buffer", "npm", "snippets" },
-          json = { "lsp", "path", "buffer", "npm" },
-          css = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          scss = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          sass = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          less = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          vue = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          svelte = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          html = { "lsp", "path", "snippets", "buffer", "css_vars" },
-          sql = { "lsp", "dadbod", "buffer" },
-          mysql = { "lsp", "dadbod", "buffer" },
-          plsql = { "lsp", "dadbod", "buffer" },
-          sshconfig = { "sshconfig", "buffer" },
-          ssh_config = { "sshconfig", "buffer" },
-          -- cmdline = { "buffer", "cmdline", "register", "env" },
-          sh = { "buffer", "cmdline", "register", "env" },
-          fish = { "fish_lsp", "buffer", "cmdline", "register", "env" },
+          lua = { "lazydev", inherit_defaults = true },
+          gitcommit = { "git", "conventional_commits", "spell", "emoji", inherit_defaults = true },
+          gitrebase = { "git", inherit_defaults = true },
+          gitconfig = { "git", inherit_defaults = true },
+          markdown = { "spell", "latex", "emoji", inherit_defaults = true },
+          text = { "spell", "emoji", inherit_defaults = true },
+          tex = { "latex", inherit_defaults = true },
+          rst = { "spell", inherit_defaults = true },
+          org = { "spell", inherit_defaults = true },
+          javascript = { "npm", inherit_defaults = true },
+          typescript = { "npm", inherit_defaults = true },
+          json = { "npm", inherit_defaults = true },
+          css = { "css_vars", inherit_defaults = true },
+          scss = { "css_vars", inherit_defaults = true },
+          sass = { "css_vars", inherit_defaults = true },
+          less = { "css_vars", inherit_defaults = true },
+          vue = { "css_vars", inherit_defaults = true },
+          svelte = { "css_vars", inherit_defaults = true },
+          html = { "css_vars", inherit_defaults = true },
+          sql = { "dadbod", inherit_defaults = true },
+          mysql = { "dadbod", inherit_defaults = true },
+          plsql = { "dadbod", inherit_defaults = true },
+          sshconfig = { "sshconfig", inherit_defaults = true },
+          ssh_config = { "sshconfig", inherit_defaults = true },
+          -- cmdline = { "cmdline", "register", "env", inherit_defaults = true },
+          sh = { "cmdline", "register", "env", inherit_defaults = true },
+          fish = { "fish_lsp", "cmdline", "register", "env", inherit_defaults = true },
         },
 
         transform_items = function(_, items)
