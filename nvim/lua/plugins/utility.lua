@@ -11,12 +11,19 @@ return {
   },
   {
     "Wansmer/treesj",
-    keys = { { "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" } },
+    keys = {
+      { "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
+      { "<leader>cj", "<cmd>TSJJoin<cr>", desc = "Join Node" },
+      { "<leader>cs", "<cmd>TSJSplit<cr>", desc = "Split Node" },
+    },
     config = function()
       local treesj = require("treesj")
       treesj.setup({
         use_default_keymaps = false,
         max_join_length = 150,
+        langs = {
+          astro = require("treesj.langs.html"),
+        },
       })
     end,
   },

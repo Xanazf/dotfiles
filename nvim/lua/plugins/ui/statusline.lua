@@ -44,14 +44,15 @@ return {
               color = { bg_statusline = nil, hl_group = "Normal" },
             },
             {
-              "filetype",
-              icon_only = true,
-              separator = " ",
+              function()
+                local icon, _ = require("mini.icons").get("file", vim.fn.expand("%:t"))
+                return icon
+              end,
               padding = { left = 1, right = 0 },
             },
             {
               LazyVim.lualine.pretty_path(),
-              padding = { left = 0, right = 0 },
+              padding = { left = 1, right = 0 },
             },
           },
           lualine_x = {

@@ -11,34 +11,6 @@ return {
       },
     },
   },
-  {
-    "garyhurtz/blink_cmp_kitty",
-    dependencies = { { "Saghen/blink.cmp" } },
-    lazy = true,
-    optional = true,
-    opts = {
-      enabled = true,
-
-      trigger_characters = {},
-
-      -- windows & tabs
-      include_os_window = function(ctx)
-        return true
-      end,
-
-      include_tab = function(ctx)
-        return true
-      end,
-
-      include_window = function(ctx)
-        return not ctx.is_self
-      end,
-
-      -- Timing configuration
-      completion_min_update_period = 5, -- in seconds
-      completion_item_lifetime = 60, -- in seconds
-    },
-  },
   { "nvim-lua/plenary.nvim" },
 
   ---@module 'blink.cmp'
@@ -49,6 +21,7 @@ return {
     event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
+      { "garyhurtz/blink_cmp_kitty", lazy = true },
       { "bydlw98/blink-cmp-env", lazy = true },
       { "moyiz/blink-emoji.nvim", lazy = true },
       "MahanRahmati/blink-nerdfont.nvim",
@@ -150,28 +123,28 @@ return {
           Text = "󰉿",
           Method = "󰆧",
           Function = "󰊕",
-          Constructor = "",
+          Constructor = "󰒓",
           Field = "󰜢",
           Variable = "󰀫",
           Class = "󰠱",
-          Interface = "",
-          Module = "",
+          Interface = "󰠱",
+          Module = "󰅩",
           Property = "󰜢",
           Unit = "󰑭",
           Value = "󰎠",
-          Enum = "",
+          Enum = "󰦨",
           Keyword = "󰌋",
-          Snippet = "",
+          Snippet = "󱄽",
           Color = "󰏘",
           File = "󰈙",
           Reference = "󰈇",
           Folder = "󰉋",
-          EnumMember = "",
+          EnumMember = "󰦨",
           Constant = "󰏿",
           Struct = "󰙅",
-          Event = "",
+          Event = "󱐋",
           Operator = "󰆕",
-          TypeParameter = "",
+          TypeParameter = "󰬛",
         },
       },
       ---@type blink.cmp.CompletionConfigPartial
@@ -216,14 +189,12 @@ return {
           scrolloff = 2,
           direction_priority = { "s", "n" },
           auto_show = true,
-          ---@type blink.cmp.CompletionMenuOrderConfigPartial
-          order = {},
           ---@type blink.cmp.Draw
           draw = {
             align_to = "label", -- or "none" to disable
             padding = 1,
             gap = 1,
-            treesitter = {},
+            treesitter = { "lsp" },
             columns = {
               { "kind_icon" },
               { "label", "label_description", gap = 1 },
@@ -253,11 +224,8 @@ return {
                   return (icon or ctx.kind_icon) .. ctx.icon_gap
                 end,
                 highlight = function(ctx)
-                  local micon, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
-                  if micon then
-                    return mhl
-                  end
-                  return ctx.kind_hl
+                  local _, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
+                  return { { group = mhl or ctx.kind_hl, priority = 20000 } }
                 end,
               },
               ---@type blink.cmp.DrawComponent
@@ -268,11 +236,8 @@ return {
                   return ctx.kind
                 end,
                 highlight = function(ctx)
-                  local mini_icon, mini_hl = require("mini.icons").get("lsp", ctx.kind)
-                  if mini_icon then
-                    return mini_hl
-                  end
-                  return ctx.kind_hl
+                  local _, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
+                  return { { group = mhl or ctx.kind_hl, priority = 20000 } }
                 end,
               },
               ---@type blink.cmp.DrawComponent
@@ -283,8 +248,19 @@ return {
                 end,
                 highlight = function(ctx)
                   local highlights = {
-                    BlinkCmpLabelMatch = { 1, #ctx.kind },
+                    { 0, #ctx.label, group = ctx.deprecated and "BlinkCmpLabelDeprecated" or "BlinkCmpLabel" },
                   }
+                  if ctx.label_detail then
+                    table.insert(
+                      highlights,
+                      { #ctx.label, #ctx.label + #ctx.label_detail, group = "BlinkCmpLabelDetail" }
+                    )
+                  end
+
+                  for _, idx in ipairs(ctx.label_matched_indices) do
+                    table.insert(highlights, { idx, idx + 1, group = "BlinkCmpLabelMatch" })
+                  end
+
                   return highlights
                 end,
               },
@@ -315,15 +291,15 @@ return {
           treesitter_highlighting = true,
           window = {
             min_width = 12,
-            max_width = 24,
+            max_width = 80,
             max_height = 21,
             border = "rounded",
             winblend = 0,
             winhighlight = "Normal:BlinkCmpDoc,FloatBorder:BlinkCmpDocBorder,CursorLine:Visual,Search:None",
             scrollbar = true,
             direction_priority = {
-              menu_south = { "e", "w", "n", "s" },
-              menu_north = { "w", "e", "s", "n" },
+              menu_south = { "e", "w", "s", "n" },
+              menu_north = { "w", "e", "n", "s" },
             },
           },
         },
@@ -355,9 +331,10 @@ return {
       },
       ---@type blink.cmp.FuzzyConfigPartial
       fuzzy = {
-        implementation = "rust",
+        implementation = "prefer_rust_with_warning",
         use_proximity = true,
-        sorts = { "exact", "score", "label", "kind" },
+        frecency = { enabled = true },
+        sorts = { "exact", "score", "sort_text" },
         prebuilt_binaries = {
           download = true,
           force_version = nil,
@@ -366,7 +343,7 @@ return {
 
       ---@type blink.cmp.SourceList
       sources = {
-        default = { "lsp", "path", "buffer", "snippets" },
+        default = { "lsp", "path", "buffer", "snippets", "kitty" },
         min_keyword_length = 0,
         per_filetype = {
           lua = { "lazydev", inherit_defaults = true },
@@ -398,14 +375,6 @@ return {
           fish = { "fish_lsp", "cmdline", "register", "env", inherit_defaults = true },
         },
 
-        transform_items = function(_, items)
-          for _, item in ipairs(items) do
-            if item.kind == require("blink.cmp.types").CompletionItemKind.Snippet then
-              item.score_offset = item.score_offset and item.score_offset - 3 or -3
-            end
-          end
-          return items
-        end,
         ---@type table<string, blink.cmp.SourceProviderConfigPartial>
         providers = {
           lsp = {
@@ -435,7 +404,7 @@ return {
               get_cwd = function(context)
                 return vim.fn.expand(("#%d:p:h"):format(context.bufnr))
               end,
-              show_hidden_files_by_default = false,
+              show_hidden_files_by_default = true,
             },
             score_offset = 3,
           },
@@ -443,7 +412,7 @@ return {
             name = "Snippets",
             module = "blink.cmp.sources.snippets",
             deduplicate = {},
-            score_offset = -3,
+            score_offset = 80,
             should_show_items = function(ctx)
               return ctx.trigger.initial_kind ~= "trigger_character"
             end,
@@ -451,8 +420,13 @@ return {
               friendly_snippets = true,
               search_paths = { vim.fn.stdpath("config") .. "/snippets" },
               global_snippets = { "all" },
-              extended_filetypes = {},
-              ignored_filetypes = {},
+              extended_filetypes = {
+                typescript = { "typescriptreact", "javascriptreact" },
+                javascript = { "javascriptreact" },
+                typescriptreact = { "react", "html" },
+                javascriptreact = { "react", "html" },
+              },
+              ignored_filetypes = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
             },
           },
           buffer = {
@@ -460,6 +434,8 @@ return {
             module = "blink.cmp.sources.buffer",
             deduplicate = {},
             fallbacks = {},
+            max_items = 8,
+            min_keyword_length = 3,
             opts = {
               get_bufnrs = function()
                 return vim.tbl_filter(function(buf)
@@ -475,13 +451,18 @@ return {
             module = "lazydev.integrations.blink",
             score_offset = 100, -- show at a higher priority than lsp
           },
+          kitty = {
+            name = "kitty",
+            module = "blink_cmp_kitty",
+            score_offset = 100,
+          },
           cmdline = {
             name = "Cmdline",
             module = "blink.cmp.sources.cmdline",
             enabled = true,
             should_show_items = true,
             max_items = nil,
-            min_keyword_length = 2,
+            min_keyword_length = 0,
             fallbacks = { "buffer", "env", "register" },
           },
           git = {
@@ -550,6 +531,8 @@ return {
             name = "Ripgrep",
             module = "blink-ripgrep",
             score_offset = 0,
+            max_items = 5,
+            min_keyword_length = 4,
             opts = {
               prefix_min_len = 3,
               get_command = function(_, prefix)
@@ -591,8 +574,23 @@ return {
       ---@type blink.cmp.CmdlineConfigPartial
       cmdline = {
         enabled = true,
-        keymap = { preset = "cmdline" },
-        sources = { "buffer", "cmdline" },
+        keymap = {
+          preset = "cmdline",
+          ["<Tab>"] = { "show", "select_next", "fallback" },
+          ["<S-Tab>"] = { "select_prev", "fallback" },
+        },
+        sources = function()
+          local type = vim.fn.getcmdtype()
+          -- Search forward and backward
+          if type == "/" or type == "?" then
+            return { "buffer" }
+          end
+          -- Commands
+          if type == ":" or type == "@" then
+            return { "cmdline", "buffer" }
+          end
+          return {}
+        end,
         completion = {
           list = { selection = { preselect = false } },
           menu = { auto_show = true },

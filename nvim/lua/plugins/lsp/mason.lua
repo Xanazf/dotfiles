@@ -112,67 +112,40 @@ return {
     end,
   },
 
-  -- Mason-Tool-Installer for additional tools (optional but recommended)
+  -- Mason-Tool-Installer for additional tools
   {
     "WhoIsSethDaniel/mason-tool-installer.nvim",
     dependencies = { "mason-org/mason.nvim" },
     opts = function(_, opts)
-      local tools_to_install = {}
+      local tools_to_install = {
+        -- Core
+        "stylua",
+        "shfmt",
+        "shellcheck",
+        -- Web
+        "prettier",
+        "biome",
+        -- Python
+        "black",
+        "isort",
+        -- Markdown
+        "markdownlint-cli2",
+        -- Debuggers
+        "codelldb",
+      }
 
-      -- Add all tools from our helpers configuration
-      for category, tools in pairs(h_tools) do
+      -- Add tools from helpers
+      for _, tools in pairs(h_tools) do
         if type(tools) == "table" then
           vim.list_extend(tools_to_install, tools)
         end
       end
 
-      -- Add formatters and linters
-      local additional_tools = {
-        -- Formatters
-        "prettier",
-        -- "prettierd",
-        -- "eslint_d",
-        "stylua",
-        "shfmt",
-        "black",
-        "isort",
-        "rustfmt",
-        "gofumpt",
-        "goimports",
-
-        -- Linters
-        "shellcheck",
-        "markdownlint",
-        "yamllint",
-        "jsonlint",
-
-        -- Debuggers
-        "codelldb",
-        "delve",
-        "debugpy",
-      }
-
-      vim.list_extend(tools_to_install, additional_tools)
-
-      -- Remove duplicates
-      local seen = {}
-      local unique_tools = {}
-      for _, tool in ipairs(tools_to_install) do
-        if not seen[tool] then
-          seen[tool] = true
-          table.insert(unique_tools, tool)
-        end
-      end
-
-      local mason_tool_installer_opts = {
-        ensure_installed = unique_tools,
-        auto_update = false,
+      return vim.tbl_deep_extend("force", opts or {}, {
+        ensure_installed = tools_to_install,
+        auto_update = true,
         run_on_start = true,
-        start_delay = 3000, -- 3 second delay
-        debounce_hours = 5, -- at least 5 hours between attempts
-      }
-
-      return vim.tbl_deep_extend("force", opts or {}, mason_tool_installer_opts)
+      })
     end,
   },
 }

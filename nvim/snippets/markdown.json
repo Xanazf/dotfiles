@@ -1,0 +1,32 @@
+{
+  "note": {
+    "prefix": "note",
+    "body": "> [!NOTE]
+> ${1:content}",
+    "description": "GitHub Note Callout"
+  },
+  "tip": {
+    "prefix": "tip",
+    "body": "> [!TIP]
+> ${1:content}",
+    "description": "GitHub Tip Callout"
+  },
+  "important": {
+    "prefix": "important",
+    "body": "> [!IMPORTANT]
+> ${1:content}",
+    "description": "GitHub Important Callout"
+  },
+  "warning": {
+    "prefix": "warning",
+    "body": "> [!WARNING]
+> ${1:content}",
+    "description": "GitHub Warning Callout"
+  },
+  "caution": {
+    "prefix": "caution",
+    "body": "> [!CAUTION]
+> ${1:content}",
+    "description": "GitHub Caution Callout"
+  }
+}

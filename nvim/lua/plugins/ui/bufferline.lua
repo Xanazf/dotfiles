@@ -1,4 +1,3 @@
-local bl = require("bufferline")
 return {
   ---@module "bufferline"
   {
@@ -18,13 +17,15 @@ return {
       { "[B", "<cmd>BufferLineMovePrev<cr>", desc = "Move buffer prev" },
       { "]B", "<cmd>BufferLineMoveNext<cr>", desc = "Move buffer next" },
     },
-    opts = {
-      ---@type bufferline.Options
-      options = {
-        -- numbers = "buffer_id",
-        style_preset = bl.style_preset.default, -- or bufferline.style_preset.minimal,
-        themable = true,
-        close_command = function(n)
+    opts = function()
+      local bl = require("bufferline")
+      return {
+        ---@type bufferline.Options
+        options = {
+          -- numbers = "buffer_id",
+          style_preset = bl.style_preset.default, -- or bufferline.style_preset.minimal,
+          themable = true,
+          close_command = function(n)
           Snacks.bufdelete.delete(n)
         end,
         right_mouse_command = function(n)
@@ -77,6 +78,7 @@ return {
         show_buffer_icons = true,
         color_icons = true,
       },
-    },
-  },
+    }
+  end,
+},
 }

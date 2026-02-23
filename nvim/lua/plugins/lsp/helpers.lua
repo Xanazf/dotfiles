@@ -121,7 +121,8 @@ M.lsp.servers = {
           globalPlugins = {
             {
               name = "@astrojs/ts-plugin",
-              location = vim.fn.stdpath("data") .. "/mason/packages/astro-language-server/node_modules/@astrojs/ts-plugin",
+              location = vim.fn.stdpath("data")
+                .. "/mason/packages/astro-language-server/node_modules/@astrojs/ts-plugin",
               enableForWorkspaceTypeScriptVersions = true,
             },
           },
@@ -174,9 +175,9 @@ M.lsp.servers = {
         format = { enabled = true },
       },
     },
-    on_attach = function(client, bufnr)
+    on_attach = function(client, buffer)
       if client.server_capabilities.inlayHintProvider then
-        vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+        vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
       end
     end,
   },
@@ -204,9 +205,9 @@ M.lsp.servers = {
         extensions = {
           autoSetHints = false,
         },
-        on_attach = function(client, bufnr)
+        on_attach = function(client, buffer)
           if client.server_capabilities.inlayHintProvider then
-            vim.lsp.inlay_hint.enable(true, { bufnr = bufnr })
+            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
           end
         end,
         init_options = {
@@ -283,10 +284,10 @@ M.lsp.servers = {
           },
         },
         ---@param client vim.lsp.Client
-        ---@param bufnr number
-        on_attach = function(client, bufnr)
+        ---@param buffer number
+        on_attach = function(client, buffer)
           if client.server_capabilities.semanticTokensProvider then
-            vim.lsp.semantic_tokens.start(bufnr, client.id)
+            vim.lsp.semantic_tokens.start(buffer, client.id)
           else
             local semantic = client.config.capabilities.textDocument.semanticTokens
             if semantic then
@@ -322,14 +323,14 @@ M.lsp.servers = {
       },
     },
     ---@param client vim.lsp.Client
-    ---@param bufnr number
-    on_attach = function(client, bufnr)
+    ---@param buffer number
+    on_attach = function(client, buffer)
       -- Disable formatting to avoid conflicts with conform.nvim
       client.server_capabilities.documentFormattingProvider = false
       client.server_capabilities.documentRangeFormattingProvider = false
 
       if client.server_capabilities.semanticTokensProvider then
-        vim.lsp.semantic_tokens.start(bufnr, client.id)
+        vim.lsp.semantic_tokens.start(buffer, client.id)
       end
     end,
   },
@@ -385,10 +386,10 @@ M.lsp.servers = {
       },
     },
     ---@param client vim.lsp.Client
-    ---@param bufnr number
-    on_attach = function(client, bufnr)
+    ---@param buffer number
+    on_attach = function(client, buffer)
       if client.server_capabilities.semanticTokensProvider then
-        vim.lsp.semantic_tokens.start(bufnr, client.id)
+        vim.lsp.semantic_tokens.start(buffer, client.id)
       end
     end,
   },
@@ -408,8 +409,8 @@ M.lsp.servers = {
       return require("lspconfig.util").root_pattern("biome.json", "biome.jsonc")(fname)
     end,
     -- Explicitly exclude astro if it somehow gets included
-    on_attach = function(client, bufnr)
-      if vim.bo[bufnr].filetype == "astro" then
+    on_attach = function(client, buffer)
+      if vim.bo[buffer].filetype == "astro" then
         client.stop()
       end
     end,
@@ -421,7 +422,16 @@ M.lsp.servers = {
   css_variables = {
     settings = {
       cssVariables = {
-        lookupInFiles = { "**/*.css", "**/*.scss", "**/*.sass", "**/*.less", "**/*.js", "**/*.ts", "**/*.jsx", "**/*.tsx" },
+        lookupInFiles = {
+          "**/*.css",
+          "**/*.scss",
+          "**/*.sass",
+          "**/*.less",
+          "**/*.js",
+          "**/*.ts",
+          "**/*.jsx",
+          "**/*.tsx",
+        },
       },
     },
   },
@@ -564,204 +574,7 @@ M.treesitter.opts.textobjects = {
   },
 }
 
-M.treesitter.functions = {
-  create_ts_group = function()
-    local treesitter_group = vim.api.nvim_create_augroup("TreesitterOpts", { clear = true })
-  end,
-  create_buffer_excluder = function()
-    return function(buf)
-      if not buf or not vim.api.nvim_buf_is_valid(buf) then
-        return true
-      end
-
-      local buftype = vim.bo[buf].buftype
-      local filetype = vim.bo[buf].filetype
-      local bufname = vim.api.nvim_buf_get_name(buf)
-
-      -- Exclude special buffer types
-      local excluded_buftypes = {
-        "nofile", -- Scratch buffers, help, etc.
-        "terminal", -- Terminal buffers
-        "prompt", -- Command prompt buffers
-        "quickfix", -- Quickfix and location lists
-        "help", -- Help buffers
-      }
-
-      if vim.tbl_contains(excluded_buftypes, buftype) then
-        return true
-      end
-
-      -- Exclude UI and special filetypes
-      local excluded_filetypes = {
-        -- LazyVim/Snacks UI
-        "snacks_dashboard",
-        "snacks_notif",
-        "snacks_terminal",
-        "snacks_win",
-        "snacks_input",
-        "snacks_picker",
-
-        -- Dashboard and startup screens
-        "dashboard",
-        "alpha",
-        "startify",
-        "startup",
-
-        -- Plugin UIs
-        "lazy",
-        "mason",
-        "lspinfo",
-        "checkhealth",
-        "TelescopePrompt",
-        "TelescopeResults",
-        "TelescopePreview",
-        "fzf",
-        "trouble",
-        "qf",
-        "help",
-        "man",
-
-        -- File managers and explorers
-        "neo-tree",
-        "NvimTree",
-        "oil",
-        "dirvish",
-        "netrw",
-
-        -- Git and diff UIs
-        "fugitive",
-        "fugitiveblame",
-        "gitcommit",
-        "gitrebase",
-        "DiffviewFiles",
-        "DiffviewFileHistory",
-
-        -- Terminal and REPL
-        "terminal",
-        "toggleterm",
-        "floaterm",
-
-        -- Other special buffers
-        "notify",
-        "noice",
-        "popup",
-        "scratch",
-        "undotree",
-        "outline",
-        "Outline",
-        "spectre_panel",
-        "tsplayground",
-        "dap-repl",
-        "dapui_console",
-        "dapui_watches",
-        "dapui_stacks",
-        "dapui_breakpoints",
-        "dapui_scopes",
-
-        -- Empty or unnamed buffers
-        "",
-      }
-
-      if vim.tbl_contains(excluded_filetypes, filetype) then
-        return true
-      end
-
-      -- Exclude buffers with special names/patterns
-      local excluded_patterns = {
-        "^$", -- Empty buffer name
-        "^%[.*%]$", -- Buffers with names like [No Name]
-        "^term://", -- Terminal buffers
-        "^fugitive://", -- Fugitive buffers
-        "^gitsigns://", -- Gitsigns buffers
-        "^oil://", -- Oil buffers
-        "^neo%-tree", -- Neo-tree buffers
-        "^diffview://", -- Diffview buffers
-        "^Trouble$", -- Trouble buffer
-        "^quickfix$", -- Quickfix buffer
-        "^loclist$", -- Location list buffer
-      }
-
-      for _, pattern in ipairs(excluded_patterns) do
-        if bufname:match(pattern) then
-          return true
-        end
-      end
-
-      -- Exclude very large files (>1MB) to prevent performance issues
-      local max_filesize = 1024 * 1024 -- 1MB
-      local uv = vim.uv or vim.loop
-      local ok, stats = pcall(uv.fs_stat, bufname)
-      if ok and stats and stats.size > max_filesize then
-        return true
-      end
-
-      return false
-    end
-  end,
-  create_indents = function(ts_group)
-    local should_exclude_buffer = M.treesitter.functions.create_buffer_excluder()
-    vim.api.nvim_create_autocmd("FileType", {
-      group = ts_group,
-      pattern = {
-        "lua",
-        "javascript",
-        "typescript",
-        "tsx",
-        "jsx",
-        "astro",
-        "html",
-        "css",
-        "json",
-        "yaml",
-        "python",
-      },
-      callback = function(args)
-        local buf = args.buf
-        if should_exclude_buffer(buf) then
-          return
-        end
-
-        -- Use the correct indentexpr for the new API
-        vim.bo[buf].indentexpr = "v:lua.vim.treesitter.indentexpr()"
-      end,
-    })
-  end,
-  create_folds = function(ts_group)
-    local should_exclude_buffer = M.treesitter.functions.create_buffer_excluder()
-    vim.api.nvim_create_autocmd("FileType", {
-      group = ts_group,
-      pattern = {
-        "lua",
-        "javascript",
-        "typescript",
-        "astro",
-        "tsx",
-        "jsx",
-        "python",
-        "rust",
-        "go",
-        "c",
-        "cpp",
-        "java",
-        "json",
-        "yaml",
-        "html",
-        "css",
-        "vue",
-        "svelte",
-      },
-      callback = function(args)
-        local buf = args.buf
-        if should_exclude_buffer(buf) then
-          return
-        end
-
-        vim.wo.foldmethod = "expr"
-        vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-      end,
-    })
-  end,
-}
+M.treesitter.functions = {}
 
 -- Conditional mason tools
 M.mason.tools = {

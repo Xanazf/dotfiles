@@ -1,0 +1,11 @@
+{
+  "plugins": [
+    "remark-gfm",
+    ["remark-toc", { "heading": "table of contents|toc", "tight": true }]
+  ],
+  "settings": {
+    "bullet": "*",
+    "emphasis": "_",
+    "strong": "*"
+  }
+}

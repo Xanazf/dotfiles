@@ -5,7 +5,7 @@ return {
     event = { "BufWritePre" },
     ---@type conform.setupOpts
     opts = {
-      log_level = vim.log.levels.ERROR,
+      log_level = vim.log.levels.DEBUG,
       default_format_opts = {
         lsp_format = "fallback",
       },
@@ -16,14 +16,16 @@ return {
         javascriptreact = { "biome" },
         typescript = { "biome" },
         typescriptreact = { "biome" },
-        astro = { "prettier", lsp_format = "fallback" },
+        json = { "biome" },
+        jsonc = { "biome" },
+        astro = { "biome", lsp_format = "fallback" },
         css = { "biome" },
         html = { "biome" },
         qml = { "qmlformat" },
         cpp = { "clang-format" },
         hpp = { "clang-format" },
-        markdown = { "markdownfmt", "markdown-toc" },
-        ["markdown.mdx"] = { "markdownfmt", "markdown-toc" },
+        markdown = { "remark" },
+        ["markdown.mdx"] = { "remark" },
         caddyfile = { "caddyfile" },
         go = { "gofmt" },
         rust = { "rustfmt" },
@@ -67,32 +69,69 @@ return {
               jsx = { "biome" },
               ts = { "biome" },
               tsx = { "biome" },
+              json = { "biome" },
+              jsonc = { "biome" },
               astro = { "prettier" },
               css = { "csslsp" },
               html = { "biome" },
               qml = { "qmlformat" },
               rs = { "rustfmt" },
               cpp = { "clang-format" },
-              markdown = { "markdownfmt", "markdown-toc" },
+              markdown = { "remark" },
               py = { "black" },
             },
           },
         },
         fish_indent = {},
         biome = {
-          command = "/usr/bin/biome",
+          command = "biome",
           stdin = true,
-          args = { "format", "--stdin-file-path=$FILENAME" },
-          cwd = require("conform.util").root_file({ "biome.jsonc" }),
-          require_cwd = true,
+          args = function(self, ctx)
+            local args = { "format", "--stdin-file-path", ctx.filename }
+            local util = require("conform.util")
+            local has_local_config = util.root_file({ "biome.json", "biome.jsonc" })(self, ctx)
+            if not has_local_config then
+              local default_config = vim.fn.stdpath("config") .. "/lua/plugins/code/biome.jsonc"
+              vim.list_extend(args, { "--config-path", default_config })
+            end
+            return args
+          end,
+          require_cwd = false,
         },
         prettier = {
-          prepend_args = { "--plugin", "prettier-plugin-astro" },
-          condition = function(_, ctx)
+          args = function(self, ctx)
+            local args = { "--stdin-filepath", ctx.filename }
             local util = require("conform.util")
-            local resolvedcwd = util.root_file({ ".prettierrc" }) or util.root_file({ "prettier.json" })
-            local is_astro = string.find(ctx.filename, ".astro")
-            return resolvedcwd ~= nil or is_astro ~= nil
+            local has_local_config = util.root_file({
+              ".prettierrc",
+              ".prettierrc.json",
+              ".prettierrc.yml",
+              ".prettierrc.yaml",
+              ".prettierrc.json5",
+              ".prettierrc.js",
+              ".prettierrc.cjs",
+              ".prettierrc.mjs",
+              ".prettierrc.toml",
+              "prettier.config.js",
+              "prettier.config.cjs",
+              "prettier.config.mjs",
+            })(self, ctx)
+
+            if not has_local_config then
+              local default_config = vim.fn.stdpath("config") .. "/lua/plugins/code/.prettierrc"
+              vim.list_extend(args, { "--config", default_config })
+            end
+
+            if ctx.filename:match("%.astro$") then
+              vim.list_extend(
+                args,
+                { "--plugin", "/home/xnzf/nvm/v25.6.1/lib/node_modules/prettier-plugin-astro/dist/index.js" }
+              )
+            end
+            return args
+          end,
+          condition = function(_, ctx)
+            return true
           end,
         },
         qmlformat = {
@@ -124,6 +163,33 @@ return {
             end
           end,
         },
+        remark = {
+          command = "bash",
+          args = function(self, ctx)
+            local remark_args = { "remark", "--file-path", ctx.filename, "--silent" }
+            local util = require("conform.util")
+            local has_local_config = util.root_file({
+              ".remarkrc",
+              ".remarkrc.json",
+              ".remarkrc.yaml",
+              ".remarkrc.yml",
+              ".remarkrc.js",
+              ".remarkrc.mjs",
+              ".remarkrc.cjs",
+            })(self, ctx)
+
+            if not has_local_config then
+              local default_config = vim.fn.stdpath("config") .. "/lua/plugins/code/remarkrc.json"
+              table.insert(remark_args, "--rc-path")
+              table.insert(remark_args, default_config)
+            end
+
+            -- Build the shell command string
+            local cmd = "npx " .. table.concat(remark_args, " ") .. " | sed 's/\\\\\\[!/[!/g'"
+            return { "-c", cmd }
+          end,
+          stdin = true,
+        },
         markdownfmt = {},
         ["clang-format"] = {
           command = "clang-format",
@@ -134,15 +200,16 @@ return {
           inherit = true,
         },
         black = {
-          command = "/usr/bin/black",
+          command = "black",
           stdin = true,
           args = {
             "-l",
-            "66",
+            "80",
             "-t",
-            "py310,py311,py312,py313,py314",
+            "py314",
             "--stdin-filename",
             "$FILENAME",
+            "-",
           },
           cwd = require("conform.util").root_file({ "pyproject.toml" }),
           require_cwd = false,

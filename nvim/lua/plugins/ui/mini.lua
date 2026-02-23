@@ -6,6 +6,24 @@ return {
     cmd = { "MiniHipatterns" },
     opts = function(_, opts)
       local mhipatterns = require("mini.hipatterns")
+      opts.tailwind = {
+        enabled = true,
+        ft = {
+          "astro",
+          "css",
+          "heex",
+          "html",
+          "html-eex",
+          "javascript",
+          "javascriptreact",
+          "rust",
+          "svelte",
+          "typescript",
+          "typescriptreact",
+          "vue",
+        },
+        style = "full",
+      }
       opts.highlighters = {
         -- bug = { pattern = "%f[%w]BUG:.*", group = "MiniHipatternsBug" },
         -- fixme = { pattern = "%f[%w]FIXME:.*", group = "MiniHipatternsFixme" },

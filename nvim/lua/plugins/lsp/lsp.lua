@@ -4,37 +4,30 @@ local h_lsp = helpers.lsp
 local h_servers = h_lsp.servers
 
 return {
-  ---@module "lspconfig"
   {
     "neovim/nvim-lspconfig",
-    version = false,
-    ---@param opts PluginLspOpts
-    opts = function(_, opts)
-      opts.diagnostics = vim.tbl_deep_extend("force", opts.diagnostics or {}, {
+    opts = {
+      diagnostics = {
+        underline = true,
         update_in_insert = true,
         virtual_text = {
-          spacing = 2,
+          spacing = 4,
+          source = "if_many",
+          prefix = "●",
         },
+        severity_sort = true,
         float = {
-          focusable = false,
-          style = "minimal",
           border = "rounded",
           source = "always",
-          header = "",
-          prefix = "",
         },
-      })
-
-      opts.inlay_hints = vim.tbl_deep_extend("force", opts.inlay_hints or {}, {
+      },
+      inlay_hints = {
         enabled = true,
-        exclude = { "vue" }, -- exclude vue due to performance issues
-      })
-
+      },
       -- Merge servers with LazyVim defaults
-      opts.servers = vim.tbl_deep_extend("force", opts.servers or {}, h_servers)
-
-      return opts
-    end,
+      opts_extend = { "servers" },
+      servers = h_servers,
+    },
   },
   { "wuelnerdotexe/vim-astro" },
 }

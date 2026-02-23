@@ -1,6 +1,17 @@
 ---@type LazySpec
 return {
-  { "folke/lazy.nvim" },
+  {
+    "folke/lazy.nvim",
+    opts = {},
+  },
+  {
+    "LazyVim/LazyVim",
+    opts = {
+      rocks = {
+        hererocks = false,
+      },
+    },
+  },
   { "nvim-tree/nvim-web-devicons", lazy = true },
   { "onsails/lspkind.nvim", lazy = true },
 
@@ -146,11 +157,13 @@ return {
       file_types = { "markdown", "mdx" },
       preset = "lazy",
       restart_highlighter = false,
-      markdown = {
-        disable = true,
-        directives = {
-          { id = 17, name = "conceal_lines" },
-          { id = 18, name = "conceal_lines" },
+      patterns = {
+        markdown = {
+          disable = true,
+          directives = {
+            { id = 17, name = "conceal_lines" },
+            { id = 18, name = "conceal_lines" },
+          },
         },
       },
       quote = {
@@ -195,7 +208,7 @@ return {
           code_background = true,
           indent = true,
           sign = true,
-          -- virtual_lines = true,
+          virtual_lines = true,
         },
       },
       padding = {

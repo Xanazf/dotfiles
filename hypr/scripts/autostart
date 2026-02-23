@@ -9,7 +9,7 @@ quickshell_scripts=$quickshell_config/scripts
 
 # quickshell
 /usr/lib/xdg-desktop-portal-hyprland &
-caelestia shell -d &
+qs -c caelestia &
 # other
 zen-twilight &
 steam -console &

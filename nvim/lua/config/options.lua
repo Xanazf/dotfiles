@@ -9,7 +9,14 @@ vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_cmp = "blink.cmp"
 vim.g.lazyvim_blink_main = true
 
-vim.o.winbar = " %{%v:lua.require'nvim-navic'.get_location()%}"
+-- _G.get_navic_location = function()
+--   local ok, navic = pcall(require, "nvim-navic")
+--   if ok and navic.is_available() then
+--     return navic.get_location()
+--   end
+--   return ""
+-- end
+-- vim.o.winbar = " %{%v:lua.get_navic_location()%}"
 vim.opt.autoindent = true
 vim.opt.smarttab = true
 vim.opt.smartindent = true

@@ -7,15 +7,14 @@ return {
   ---@module "nvim-treesitter"
   {
     "nvim-treesitter/nvim-treesitter",
-    branch = "main",
-    lazy = false,
+    version = false,
     build = ":TSUpdate",
+    lazy = false,
+    priority = 1000,
     ---@param opts lazyvim.TSConfig
     opts = function(_, opts)
-      opts.indent = { enable = true }
       opts.highlight = { enable = true }
-      opts.folds = { enable = true }
-      -- opts.auto_install = true
+      opts.indent = { enable = true }
       opts.ensure_installed = opts.ensure_installed or {}
 
       local common_parsers = {
@@ -25,18 +24,12 @@ return {
         "query",
         "markdown",
         "markdown_inline",
-        "latex",
-        "norg",
-        "scss",
-        "typst",
         "bash",
         "regex",
         "json",
-        -- "jsonc",
-        "gotmpl",
+        "jsonc",
         "yaml",
         "toml",
-        "helm",
         "diff",
         "git_config",
         "git_rebase",
@@ -46,23 +39,11 @@ return {
       vim.list_extend(opts.ensure_installed, common_parsers)
 
       -- conditional parsers based on cwd
-      if
-        vim.fn.glob("*.js") ~= ""
-        or vim.fn.glob("*.ts") ~= ""
-        or vim.fn.glob("package.json") ~= ""
-        or vim.fn.glob("tsconfig.json") ~= ""
-      then
+      if vim.fn.glob("package.json") ~= "" or vim.fn.glob("tsconfig.json") ~= "" then
         vim.list_extend(opts.ensure_installed, h_parsers.web)
       end
 
-      if
-        vim.fn.glob("*.c") ~= ""
-        or vim.fn.glob("*.cpp") ~= ""
-        or vim.fn.glob("*.rs") ~= ""
-        or vim.fn.glob("*.go") ~= ""
-        or vim.fn.glob("Makefile") ~= ""
-        or vim.fn.glob("CMakeLists.txt") ~= ""
-      then
+      if vim.fn.glob("Makefile") ~= "" or vim.fn.glob("CMakeLists.txt") ~= "" then
         vim.list_extend(opts.ensure_installed, h_parsers.systems)
       end
 
@@ -90,47 +71,36 @@ return {
   ---@module "nvim-treesitter-textobjects"
   {
     "nvim-treesitter/nvim-treesitter-textobjects",
-    branch = "main",
     event = "VeryLazy",
-    enabled = true,
     dependencies = { "nvim-treesitter/nvim-treesitter" },
-    config = function()
-      -- Manual textobjects setup since the old config system is gone
-      local textobjects = require("plugins.lsp.helpers").treesitter.opts.textobjects
-
-      -- Set up textobjects manually
-      if textobjects and textobjects.select then
-        for key, query in pairs(textobjects.select.keymaps or {}) do
-          vim.keymap.set({ "o", "x" }, key, function()
-            require("nvim-treesitter.textobjects.select").select_textobject(query, "textobjects")
-          end, { desc = "Select " .. query })
-        end
-      end
-
-      if textobjects and textobjects.move then
-        for key, query in pairs(textobjects.move.goto_next_start or {}) do
-          vim.keymap.set("n", key, function()
-            require("nvim-treesitter.textobjects.move").goto_next_start(query)
-          end, { desc = "Next " .. query })
-        end
-
-        for key, query in pairs(textobjects.move.goto_previous_start or {}) do
-          vim.keymap.set("n", key, function()
-            require("nvim-treesitter.textobjects.move").goto_previous_start(query)
-          end, { desc = "Previous " .. query })
-        end
-
-        for key, query in pairs(textobjects.move.goto_next_end or {}) do
-          vim.keymap.set("n", key, function()
-            require("nvim-treesitter.textobjects.move").goto_next_end(query)
-          end, { desc = "Next end " .. query })
-        end
-
-        for key, query in pairs(textobjects.move.goto_previous_end or {}) do
-          vim.keymap.set("n", key, function()
-            require("nvim-treesitter.textobjects.move").goto_previous_end(query)
-          end, { desc = "Previous end " .. query })
-        end
+    opts = {
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ["af"] = "@function.outer",
+            ["if"] = "@function.inner",
+            ["ac"] = "@class.outer",
+            ["ic"] = "@class.inner",
+            ["aa"] = "@parameter.outer",
+            ["ia"] = "@parameter.inner",
+          },
+        },
+        move = {
+          enable = true,
+          set_jumps = true,
+          goto_next_start = { ["]f"] = "@function.outer", ["]c"] = "@class.outer", ["]a"] = "@parameter.inner" },
+          goto_next_end = { ["]F"] = "@function.outer", ["]C"] = "@class.outer", ["]A"] = "@parameter.inner" },
+          goto_previous_start = { ["[f"] = "@function.outer", ["[c"] = "@class.outer", ["[a"] = "@parameter.inner" },
+          goto_previous_end = { ["[F"] = "@function.outer", ["[C"] = "@class.outer", ["[A"] = "@parameter.inner" },
+        },
+      },
+    },
+    config = function(_, opts)
+      local ok, configs = pcall(require, "nvim-treesitter.configs")
+      if ok then
+        configs.setup(opts)
       end
     end,
   },
@@ -168,9 +138,7 @@ return {
         -- Character mode for quick navigation
         char = {
           enabled = true,
-          config = function(charopts)
-            charopts.autohide = vim.fn.mode(true):find("no") and vim.v.operator == "y"
-          end,
+          autohide = true,
           keys = { "f", "F", "t", "T", ";", "," },
           ---@return Flash.CharActions
           char_actions = function(motion)

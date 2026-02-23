@@ -28,8 +28,8 @@ return {
       words = { enabled = true },
       ---@type snacks.bigfile.Config
       bigfile = {
-        enabled = false,
-        size = 1572864,
+        enabled = true,
+        size = 1.5 * 1024 * 1024, -- 1.5MB
       },
       debug = { enabled = true },
       picker = {
@@ -51,11 +51,9 @@ return {
           sort_empty = false, -- sort results when the search string is empty
           filename_bonus = true, -- give bonus for matching file names (last part of the path)
           file_pos = true, -- support patterns like `file:line:col` and `file:line`
-          -- the bonusses below, possibly require string concatenation and path normalization,
-          -- so this can have a performance impact for large lists and increase memory usage
-          cwd_bonus = false, -- give bonus for matching files in the cwd
-          frecency = false, -- frecency bonus
-          history_bonus = false, -- give more weight to chronological order
+          cwd_bonus = true,
+          frecency = true,
+          history_bonus = true,
         },
         -- finder = "explorer",
         formatters = {

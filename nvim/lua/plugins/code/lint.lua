@@ -27,14 +27,11 @@ return {
         --   stdin = true,
         --   condition = function(ctx) return vim.fs.find({ ".qmlls.ini" }, { path = ctx.filename, upward = true })[1] end,
         -- },
-        biome = {
-          condition = function(ctx)
-            if vim.bo.filetype == "astro" then
-              return false
-            end
-            return vim.fs.find({ "biome.jsonc" }, { path = ctx.filename, upward = true })[1]
-          end,
-        },
+        --biome = {
+        --  condition = function(ctx)
+        --    return vim.bo.filetype ~= "astro"
+        --  end,
+        --},
       },
     },
     config = function(_, opts)
