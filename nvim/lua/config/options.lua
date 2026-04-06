@@ -4,7 +4,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 vim.opt.termguicolors = true
 
-vim.g.snacks_animate = false
+vim.g.snacks_animate = true
 vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_cmp = "blink.cmp"
 vim.g.lazyvim_blink_main = true

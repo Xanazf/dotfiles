@@ -27,6 +27,7 @@ return {
         markdown = { "remark" },
         ["markdown.mdx"] = { "remark" },
         caddyfile = { "caddyfile" },
+        Caddyfile = { "caddyfile" },
         go = { "gofmt" },
         rust = { "rustfmt" },
         python = { "black" },

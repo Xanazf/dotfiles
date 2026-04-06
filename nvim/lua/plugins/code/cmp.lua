@@ -1,16 +1,4 @@
 return {
-  {
-    "folke/lazydev.nvim",
-    ft = "lua",
-    opts = {
-      library = {
-        { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-        { path = "LazyVim", words = { "LazyVim" } },
-        { path = "lazy.nvim", words = { "LazyVim" } },
-        { path = "snacks.nvim", words = { "Snacks" } },
-      },
-    },
-  },
   { "nvim-lua/plenary.nvim" },
 
   ---@module 'blink.cmp'
@@ -18,7 +6,6 @@ return {
     "saghen/blink.cmp",
     version = "1.*",
     build = "cargo build --release",
-    event = "InsertEnter",
     dependencies = {
       "rafamadriz/friendly-snippets",
       { "garyhurtz/blink_cmp_kitty", lazy = true },
@@ -205,6 +192,7 @@ return {
               kind_icon = {
                 ellipsis = false,
                 text = function(ctx)
+                  local icon_gap = ctx.icon_gap or " "
                   if ctx.source_name == "Path" then
                     local is_unknown_type =
                       vim.tbl_contains({ "link", "socket", "fifo", "char", "block", "unknown" }, ctx.item.data.type)
@@ -212,16 +200,16 @@ return {
                       is_unknown_type and "os" or ctx.item.data.type,
                       is_unknown_type and "" or ctx.label
                     )
-                    return (mini_icon or ctx.kind_icon) .. ctx.icon_gap
+                    return (mini_icon or ctx.kind_icon or "") .. icon_gap
                   end
 
                   local micon, _, _ = require("mini.icons").get("lsp", ctx.kind)
                   if micon then
-                    return micon .. ctx.icon_gap
+                    return micon .. icon_gap
                   end
 
                   local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
-                  return (icon or ctx.kind_icon) .. ctx.icon_gap
+                  return (icon or ctx.kind_icon or "") .. icon_gap
                 end,
                 highlight = function(ctx)
                   local _, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
@@ -233,7 +221,7 @@ return {
                 ellipsis = false,
                 width = { fill = true },
                 text = function(ctx)
-                  return ctx.kind
+                  return ctx.kind or ""
                 end,
                 highlight = function(ctx)
                   local _, mhl, _ = require("mini.icons").get("lsp", ctx.kind)
@@ -244,7 +232,7 @@ return {
               label = {
                 width = { fill = true, max = 60 },
                 text = function(ctx)
-                  return ctx.label .. ctx.label_detail
+                  return ctx.label .. (ctx.label_detail or "")
                 end,
                 highlight = function(ctx)
                   local highlights = {
@@ -320,7 +308,7 @@ return {
         },
         window = {
           min_width = 1,
-          max_width = 100,
+          max_width = 80,
           max_height = 10,
           border = "rounded",
           winblend = 0,
@@ -385,14 +373,7 @@ return {
             deduplicate = {},
             max_items = nil,
             fallbacks = {},
-            score_offset = 66,
-            override = {
-              get_trigger_characters = function(self)
-                local trigger_characters = self:get_trigger_characters()
-                vim.list_extend(trigger_characters, { "\n", "\t", " " })
-                return trigger_characters
-              end,
-            },
+            score_offset = 100,
           },
           path = {
             name = "Path",

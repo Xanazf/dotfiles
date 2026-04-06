@@ -80,35 +80,26 @@ return {
     "mason-org/mason-lspconfig.nvim",
     dependencies = { "mason-org/mason.nvim" },
     opts = function(_, opts)
-      -- Extract LSP server names from our custom server configurations
-      local function get_lsp_servers()
-        local servers = {}
-        for server_name, config in pairs(h_servers) do
-          -- Only include enabled servers
-          if config ~= nil and (config.enabled == nil or config.enabled ~= false) then
-            table.insert(servers, server_name)
+      opts.ensure_installed = opts.ensure_installed or {}
+      for server_name, config in pairs(h_servers) do
+        -- Only include enabled servers
+        if config ~= nil and (config.enabled == nil or config.enabled ~= false) then
+          if not vim.tbl_contains(opts.ensure_installed, server_name) then
+            table.insert(opts.ensure_installed, server_name)
           end
         end
-        return servers
       end
 
-      -- Mason-LSPConfig v2.x configuration
-      local mason_lspconfig_opts = {
-        -- Automatically install LSP servers configured in our helpers
-        ensure_installed = get_lsp_servers(),
+      -- Exclude servers that shouldn't be auto-installed
+      opts.automatic_installation = opts.automatic_installation or {}
+      if type(opts.automatic_installation) == "table" then
+        opts.automatic_installation.exclude = vim.list_extend(
+          opts.automatic_installation.exclude or {},
+          { "tsserver", "ts_ls" }
+        )
+      end
 
-        -- Automatically install servers when they're set up via lspconfig
-        automatic_installation = {
-          exclude = {
-            -- Exclude servers that shouldn't be auto-installed
-            "tsserver", -- We use vtsls instead
-            "ts_ls", -- We use vtsls instead
-          },
-        },
-      }
-
-      -- Merge with LazyVim's defaults
-      return vim.tbl_deep_extend("force", opts or {}, mason_lspconfig_opts)
+      return opts
     end,
   },
 

@@ -5,6 +5,15 @@ return {
     event = "VeryLazy",
     ---@type NoiceConfig
     opts = {
+      routes = {
+        {
+          filter = {
+            event = "notify",
+            find = "Request textDocument/inlayHint failed",
+          },
+          opts = { skip = true },
+        },
+      },
       views = {
         mini = {},
         cmdline_popup = {
@@ -47,8 +56,11 @@ return {
           view = nil,
           ---@type NoiceViewOptions
           opts = {
+            size = { max_width = 80 },
             border = "rounded",
             win_options = {
+              wrap = true,
+              breakindent = true,
               winhighlight = { Normal = "Normal", FloatBorder = "DiagnosticInfo" },
             },
           },

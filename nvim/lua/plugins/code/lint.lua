@@ -8,8 +8,8 @@ return {
       events = { "BufWritePost", "BufReadPost", "InsertLeave" },
       linters_by_ft = {
         fish = { "fish" },
-        c = { "clangd" },
-        cpp = { "clangd" },
+        c = { "cpplint" },
+        cpp = { "cpplint" },
         md = { "remark" },
         js = { "biome" },
         ts = { "biome" },

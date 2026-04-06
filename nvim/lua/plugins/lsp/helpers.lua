@@ -47,6 +47,9 @@ end
 -- Conditional server setup for lsp
 ---@type table <string, vim.lsp.Config>
 M.lsp.servers = {
+  glsl_analyzer = {
+    enabled = true,
+  },
   bashls = {
     enabled = true,
     filetypes = { "sh", "bash" },
@@ -144,12 +147,27 @@ M.lsp.servers = {
         -- yarn sdk
         tsdk = get_typescript_server_path(),
       },
+      javascript = {
+        updateImportsOnFileMove = { enabled = "always" },
+        suggest = {
+          completeFunctionCalls = true,
+        },
+        inlayHints = {
+          enumMemberValues = { enabled = true },
+          functionLikeReturnTypes = { enabled = true },
+          parameterNames = { enabled = "all" },
+          parameterTypes = { enabled = true },
+          propertyDeclarationTypes = { enabled = true },
+          variableTypes = { enabled = true },
+        },
+      },
     },
   },
   astro = {
     filetypes = { "astro" },
-    root_markers = { "astro.config.mjs", "astro.config.js", "package.json", ".git" },
-    capabilities = vim.lsp.protocol.make_client_capabilities(),
+    root_dir = function(fname)
+      return require("lspconfig.util").root_pattern("astro.config.mjs", "astro.config.js", "package.json", ".git")(fname)
+    end,
     init_options = {
       typescript = {}, -- Will be populated on_new_config
       configuration = {
@@ -175,135 +193,89 @@ M.lsp.servers = {
         format = { enabled = true },
       },
     },
-    on_attach = function(client, buffer)
-      if client.server_capabilities.inlayHintProvider then
-        vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
-      end
-    end,
   },
 
   -- C/C++
-  clangd = M.checkexec("clangd")
-      and {
-        cmd = {
-          "clangd",
-          "--background-index",
-          "--clang-tidy",
-          "--header-insertion=iwyu",
-          "--completion-style=detailed",
-          "--function-arg-placeholders",
-          "--fallback-style=llvm",
-        },
-        capabilities = {
-          offsetEncoding = { "utf-16" },
-          textDocument = {
-            completion = {
-              editsNearCursor = true,
-            },
-          },
-        },
-        extensions = {
-          autoSetHints = false,
-        },
-        on_attach = function(client, buffer)
-          if client.server_capabilities.inlayHintProvider then
-            vim.lsp.inlay_hint.enable(true, { bufnr = buffer })
-          end
-        end,
-        init_options = {
-          usePlaceholders = true,
-          completeUnimported = true,
-          clangdFileStatus = true,
-        },
-        keys = {
-          {
-            "<leader>ch",
-            "<cmd>ClangdSwitchSourceHeader<cr>",
-            desc = "Switch Source/Header (C/C++)",
-          },
-        },
-        root_dir = function(fname)
-          return require("lspconfig.util").root_pattern(
-            "Makefile",
-            "configure.ac",
-            "configure.in",
-            "config.h.in",
-            "meson.build",
-            "meson_options.txt",
-            "build.ninja"
-          )(fname) or require("lspconfig.util").root_pattern("compile_commands.json", "compile_flags.txt")(
-            fname
-          ) or vim.fs.dirname(vim.fs.find(".git", { upward = true })[1])
-        end,
-      }
-    or nil,
+  clangd = {
+    keys = {
+      {
+        "<leader>ch",
+        "<cmd>ClangdSwitchSourceHeader<cr>",
+        desc = "Switch Source/Header (C/C++)",
+      },
+    },
+    capabilities = {
+      offsetEncoding = { "utf-16" },
+    },
+    filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+    root_dir = function(fname)
+      return require("lspconfig.util").root_pattern(
+        "compile_commands.json",
+        "compile_flags.txt",
+        "configure.ac", -- AutoTools
+        "Makefile",
+        "configure.in",
+        "config.h.in",
+        "meson.build",
+        "meson_options.txt",
+        "build.ninja",
+        ".git"
+      )(fname)
+    end,
+    cmd = {
+      "clangd",
+      "--background-index",
+      "--clang-tidy",
+      "--header-insertion=iwyu",
+      "--completion-style=detailed",
+      "--function-arg-placeholders",
+      "--fallback-style=llvm",
+      "--log=verbose",
+      "--query-driver=/usr/bin/g++,/usr/bin/gcc,/usr/bin/clang++,/usr/bin/clang",
+    },
+    init_options = {
+      usePlaceholders = true,
+      completeUnimported = true,
+      clangdFileStatus = true,
+    },
+  },
 
   -- Go (only if gopls is available)
-  gopls = M.checkexec("gopls")
-      and {
-        settings = {
-          gofumpt = true,
-          codelenses = {
-            gc_details = false,
-            generate = true,
-            regenerate_cgo = true,
-            run_govulncheck = true,
-            test = true,
-            tidy = true,
-            upgrade_dependency = true,
-            vendor = true,
-          },
-          hints = {
-            assignVariableTypes = true,
-            compositeLiteralFields = true,
-            compositeLiteralTypes = true,
-            constantValues = true,
-            functionTypeParameters = true,
-            parameterNames = true,
-            rangeVariableTypes = true,
-          },
-          analyses = {
-            nilness = true,
-            unusedparams = true,
-            unusedwrite = true,
-            useany = true,
-          },
-          usePlaceholders = true,
-          completeUnimported = true,
-          staticcheck = true,
-          directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
-          semanticTokens = true,
-        },
-        capabilities = {
-          textDocument = {
-            completion = {
-              completionItem = {
-                snippetSupport = true,
-              },
-            },
-          },
-        },
-        ---@param client vim.lsp.Client
-        ---@param buffer number
-        on_attach = function(client, buffer)
-          if client.server_capabilities.semanticTokensProvider then
-            vim.lsp.semantic_tokens.start(buffer, client.id)
-          else
-            local semantic = client.config.capabilities.textDocument.semanticTokens
-            if semantic then
-              client.server_capabilities.semanticTokensProvider = {
-                full = true,
-                legend = {
-                  tokenTypes = semantic.tokenTypes,
-                  tokenModifiers = semantic.tokenModifiers,
-                },
-                range = true,
-              }
-            end
-          end
-        end,
-      }
-    or nil,
+  gopls = M.checkexec("gopls") and {
+    settings = {
+      gofumpt = true,
+      codelenses = {
+        gc_details = false,
+        generate = true,
+        regenerate_cgo = true,
+        run_govulncheck = true,
+        test = true,
+        tidy = true,
+        upgrade_dependency = true,
+        vendor = true,
+      },
+      hints = {
+        assignVariableTypes = true,
+        compositeLiteralFields = true,
+        compositeLiteralTypes = true,
+        constantValues = true,
+        functionTypeParameters = true,
+        parameterNames = true,
+        rangeVariableTypes = true,
+      },
+      analyses = {
+        nilness = true,
+        unusedparams = true,
+        unusedwrite = true,
+        useany = true,
+      },
+      usePlaceholders = true,
+      completeUnimported = true,
+      staticcheck = true,
+      directoryFilters = { "-.git", "-.vscode", "-.idea", "-.vscode-test", "-node_modules" },
+      semanticTokens = true,
+    },
+  } or nil,
 
   qmlls = {
     settings = {
@@ -314,59 +286,6 @@ M.lsp.servers = {
     init_options = {
       documentFormatting = false,
       documentLinting = false,
-    },
-    capabilities = {
-      textDocumentSync = {
-        change = 1,
-        openClose = true,
-        save = { includeText = true },
-      },
-    },
-    ---@param client vim.lsp.Client
-    ---@param buffer number
-    on_attach = function(client, buffer)
-      -- Disable formatting to avoid conflicts with conform.nvim
-      client.server_capabilities.documentFormattingProvider = false
-      client.server_capabilities.documentRangeFormattingProvider = false
-
-      if client.server_capabilities.semanticTokensProvider then
-        vim.lsp.semantic_tokens.start(buffer, client.id)
-      end
-    end,
-  },
-
-  -- Lua
-  lua_ls = {
-    settings = {
-      Lua = {
-        workspace = {
-          checkThirdParty = false,
-        },
-        codeLens = {
-          enabled = true,
-        },
-        completion = {
-          callSnippet = "Replace",
-        },
-        doc = {
-          privateName = { "^_" },
-        },
-        hover = {
-          expandAlias = true,
-          previewSnippet = true,
-          viewString = true,
-          viewStringMax = 50,
-          viewNumber = true,
-        },
-        hint = {
-          enable = true,
-          setType = true,
-          paramType = true,
-          paramName = "All",
-          semicolon = "Disable",
-          arrayIndex = "Enable",
-        },
-      },
     },
   },
 
@@ -385,13 +304,6 @@ M.lsp.servers = {
         validate = { enable = true },
       },
     },
-    ---@param client vim.lsp.Client
-    ---@param buffer number
-    on_attach = function(client, buffer)
-      if client.server_capabilities.semanticTokensProvider then
-        vim.lsp.semantic_tokens.start(buffer, client.id)
-      end
-    end,
   },
 
   -- Biome
@@ -407,12 +319,6 @@ M.lsp.servers = {
     },
     root_dir = function(fname)
       return require("lspconfig.util").root_pattern("biome.json", "biome.jsonc")(fname)
-    end,
-    -- Explicitly exclude astro if it somehow gets included
-    on_attach = function(client, buffer)
-      if vim.bo[buffer].filetype == "astro" then
-        client.stop()
-      end
     end,
   },
 
@@ -452,14 +358,6 @@ M.lsp.servers = {
         },
       },
     },
-    capabilities = {
-      textDocument = {
-        foldingRange = {
-          dynamicRegistration = false,
-          lineFoldingOnly = true,
-        },
-      },
-    },
   },
 
   -- web_extra
@@ -494,18 +392,6 @@ M.lsp.servers = {
         'tw={"([^"}]*)',
         "tw\\.\\w+`([^`]*)",
         "tw\\(.*?\\)`([^`]*)",
-      },
-    },
-    capabilities = {
-      textDocument = {
-        completion = {
-          completionItem = {
-            snippetSupport = true,
-          },
-        },
-        --colorProvider = {
-        --  dynamicRegistration = true,
-        --},
       },
     },
   },
@@ -583,6 +469,7 @@ M.mason.tools = {
     "clangd",
     "clang-format",
     "codelldb", -- debugger
+    "cpplint", -- linter
   },
 
   -- Go
@@ -605,7 +492,6 @@ M.mason.tools = {
   -- Rust
   rust = {
     "rust-analyzer",
-    "rustfmt",
   },
 
   -- Web tools
@@ -621,7 +507,7 @@ M.mason.tools = {
   -- System administration
   sysadmin = {
     "hyprls",
-    "systemd-language-server",
+    "systemd-lsp",
     "systemdlint",
   },
 
