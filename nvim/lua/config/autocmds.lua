@@ -1,6 +1,3 @@
--- Autocmds are automatically loaded on the VeryLazy event
-vim.filetype.add({ extension = { mdx = "mdx" } })
-
 -- disable spell for markdown and mdx
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "markdown", "mdx" },
@@ -10,15 +7,64 @@ vim.api.nvim_create_autocmd("FileType", {
   group = vim.api.nvim_create_augroup("MarkdownGlobalNoSpell", { clear = true }),
 })
 
--- go templates
 vim.filetype.add({
   extension = {
+    -- HLSL (High-Level Shader Language)
+    hlsl = "hlsl",
+    fx = "hlsl",
+    fxh = "hlsl",
+    hlsli = "hlsl",
+
+    -- GLSL (OpenGL Shading Language)
+    glsl = "glsl",
+    frag = "glsl",
+    vert = "glsl",
+    geom = "glsl",
+    comp = "glsl",
+    tesc = "glsl",
+    tese = "glsl",
+    mesh = "glsl",
+    task = "glsl",
+
+    -- Go Templates
     gotmpl = "gotmpl",
+    gohtml = "gotmpl",
+    tmpl = "gotmpl",
+
+    -- Other useful extensions
+    mdx = "markdown",
+    mjml = "xml",
   },
+
+  filename = {
+    -- Hyprland
+    ["hyprland.conf"] = "hyprlang",
+
+    -- JSON with Comments (JSONC) for TS/JS ecosystems
+    ["tsconfig.json"] = "jsonc",
+    [".eslintrc.json"] = "jsonc",
+    ["jsconfig.json"] = "jsonc",
+
+    -- Miscellaneous
+    ["Vagrantfile"] = "ruby",
+    ["Dockerhtml"] = "dockerfile",
+  },
+
   pattern = {
-    [".*/templates/.*%.tpl"] = "helm",
-    [".*/templates/.*%.ya?ml"] = "helm",
-    ["helmfile.*%.ya?ml"] = "helm",
+    -- match generic configuration files under hypr directory
+    [".*/hypr/.*%.conf"] = "hyprlang",
+
+    -- match dot files like .env.local, .env.development as sh/dotenv
+    ["%.env%.%.*"] = "sh",
+
+    -- distinguish Helm/Go templates from standard YAML
+    [".*/templates/.*%.yaml"] = function(path, bufnr)
+      local first_line = vim.api.nvim_buf_get_lines(bufnr, 0, 1, false)[1] or ""
+      if first_line:match("{{.*}}") or first_line:match("^#") then
+        return "gotmpl"
+      end
+      return "yaml"
+    end,
   },
 })
 

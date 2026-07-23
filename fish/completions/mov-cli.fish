@@ -1,0 +1,1 @@
+complete --command mov-cli --no-files --arguments "(env _MOV_CLI_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=get-args _TYPER_COMPLETE_ARGS=(commandline -cp) mov-cli)" --condition "env _MOV_CLI_COMPLETE=complete_fish _TYPER_COMPLETE_FISH_ACTION=is-args _TYPER_COMPLETE_ARGS=(commandline -cp) mov-cli"

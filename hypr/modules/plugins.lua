@@ -1,0 +1,32 @@
+hl.plugin.hy3({
+	no_gaps_when_only = 0,
+	node_collapse_policy = 2,
+	group_inset = 10,
+	tab_first_window = false,
+
+	tabs = {
+		height = 15,
+		padding = 6,
+		from_top = false,
+		rounding = 6,
+
+		text_center = true,
+		text_font = "Hack Nerd Font",
+		text_height = 9,
+
+		col = {
+			active = "rgba(1afcaaad)",
+			urgent = "rgba(f4af33df)",
+			inactive = "rgba(afafaf9a)",
+			text = {
+				active = "rgba(034401ff)",
+				urgent = "rgba(140400ff)",
+				inactive = "rgba(151515ff)",
+			},
+		},
+	},
+
+	autotile = {
+		enable = false,
+	},
+})

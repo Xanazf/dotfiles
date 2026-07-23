@@ -1,0 +1,5 @@
+hl.config({
+	screencopy = {
+		custom_picker_binary = "hyprland-share-picker",
+	},
+})

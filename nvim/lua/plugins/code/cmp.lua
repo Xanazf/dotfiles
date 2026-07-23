@@ -1,53 +1,52 @@
 return {
   { "nvim-lua/plenary.nvim" },
 
+  { "saghen/blink.lib" },
   ---@module 'blink.cmp'
   {
     "saghen/blink.cmp",
-    version = "1.*",
-    build = "cargo build --release",
+
     dependencies = {
+      "saghen/blink.lib",
       "rafamadriz/friendly-snippets",
       { "garyhurtz/blink_cmp_kitty", lazy = true },
       { "bydlw98/blink-cmp-env", lazy = true },
       { "moyiz/blink-emoji.nvim", lazy = true },
       "MahanRahmati/blink-nerdfont.nvim",
-      { "alexandre-abrioux/blink-cmp-npm.nvim", lazy = true },
-      { "phanen/blink-cmp-register", lazy = true },
+      -- { "alexandre-abrioux/blink-cmp-npm.nvim", lazy = true },
+      -- { "phanen/blink-cmp-register", lazy = true },
       { "Kaiser-Yang/blink-cmp-git", lazy = true },
-      { "disrupted/blink-cmp-conventional-commits", lazy = true },
+      -- { "disrupted/blink-cmp-conventional-commits", lazy = true },
       -- Dictionary completion for writing
-      {
-        "Kaiser-Yang/blink-cmp-dictionary",
-        lazy = true,
-        ft = { "markdown", "text", "tex", "rst", "org" },
-        dependencies = { "nvim-lua/plenary.nvim" },
-        config = function()
-          local blink_dict = require("blink-cmp-dictionary")
-          local dictionaries = {
-            ["en"] = "/usr/share/dict/words",
-          }
-          blink_dict.new(dictionaries, {
-            module = "blink-cmp-dictionary",
-          })
-        end,
-      },
-      { "ribru17/blink-cmp-spell", lazy = true },
-      {
-        "mgalliou/blink-cmp-tmux",
-        lazy = true,
-        cond = function()
-          return vim.env.TMUX ~= nil
-        end,
-      },
+      -- {
+      --   "Kaiser-Yang/blink-cmp-dictionary",
+      --   lazy = true,
+      --   ft = { "markdown", "text", "tex", "rst", "org" },
+      --   dependencies = { "nvim-lua/plenary.nvim" },
+      --   config = function()
+      --     local blink_dict = require("blink-cmp-dictionary")
+      --     local dictionaries = {
+      --       ["en"] = "/usr/share/dict/words",
+      --     }
+      --     blink_dict.new(dictionaries, {
+      --       module = "blink-cmp-dictionary",
+      --     })
+      --   end,
+      -- },
+      -- { "ribru17/blink-cmp-spell", lazy = true },
+      -- {
+      --   "mgalliou/blink-cmp-tmux",
+      --   lazy = true,
+      --   cond = function()
+      --     return vim.env.TMUX ~= nil
+      --   end,
+      -- },
       {
         "jdrupal-dev/css-vars.nvim",
         lazy = true,
         ft = { "css", "scss", "sass", "less", "stylus", "vue", "svelte", "html" },
       },
-      -- LaTeX symbols completion
       { "erooke/blink-cmp-latex", lazy = true, ft = { "tex", "latex", "markdown" } },
-      -- Ripgrep-based completion for project-wide search
       {
         "mikavilpas/blink-ripgrep.nvim",
         lazy = true,
@@ -66,26 +65,35 @@ return {
         },
       },
       -- SSH config completion
-      {
-        "bydlw98/blink-cmp-sshconfig",
-        lazy = true,
-        ft = { "sshconfig", "ssh_config" },
-      },
+      -- {
+      --   "bydlw98/blink-cmp-sshconfig",
+      --   lazy = true,
+      --   ft = { "sshconfig", "ssh_config" },
+      -- },
       -- Database completion (if using vim-dadbod)
-      {
-        "kristijanhusak/vim-dadbod-completion",
-        lazy = true,
-        ft = { "sql", "mysql", "plsql" },
-        dependencies = {
-          "tpope/vim-dadbod",
-        },
-      },
+      -- {
+      --   "kristijanhusak/vim-dadbod-completion",
+      --   lazy = true,
+      --   ft = { "sql", "mysql", "plsql" },
+      --   dependencies = {
+      --     "tpope/vim-dadbod",
+      --   },
+      -- },
     },
+    version = "1.*",
+    -- branch = "v2",
+    -- build = "cargo build --release",
+    -- build = function()
+    --   -- build the fuzzy matcher, wait up to 60 seconds
+    --   -- you can use `gb` in `:Lazy` to rebuild the plugin as needed
+    --   require("blink.cmp").build():wait(60000)
+    -- end,
     opts_extend = {
       "sources.default",
       "sources.per_filetype",
       "sources.compat",
     },
+    ---@module "blink-cmp"
     ---@type blink.cmp.Config
     opts = {
       -- keymap = { preset = "default" },
@@ -208,7 +216,7 @@ return {
                     return micon .. icon_gap
                   end
 
-                  local icon = require("lspkind").symbolic(ctx.kind, { mode = "symbol" })
+                  local icon = require("lspkind").symbolic(ctx.kind)
                   return (icon or ctx.kind_icon or "") .. icon_gap
                 end,
                 highlight = function(ctx)
@@ -321,7 +329,7 @@ return {
       fuzzy = {
         implementation = "prefer_rust_with_warning",
         use_proximity = true,
-        frecency = { enabled = true },
+        -- frecency = true,
         sorts = { "exact", "score", "sort_text" },
         prebuilt_binaries = {
           download = true,
@@ -329,38 +337,38 @@ return {
         },
       },
 
-      ---@type blink.cmp.SourceList
+      ---@type blink.cmp.SourceConfigPartial
       sources = {
-        default = { "lsp", "path", "buffer", "snippets", "kitty" },
+        default = { "lsp", "path", "buffer", "snippets", "kitty", "ripgrep" },
         min_keyword_length = 0,
         per_filetype = {
           lua = { "lazydev", inherit_defaults = true },
-          gitcommit = { "git", "conventional_commits", "spell", "emoji", inherit_defaults = true },
+          -- gitcommit = { "git", "conventional_commits", "spell", "emoji", inherit_defaults = true },
           gitrebase = { "git", inherit_defaults = true },
           gitconfig = { "git", inherit_defaults = true },
-          markdown = { "spell", "latex", "emoji", inherit_defaults = true },
+          markdown = { "lsp", "latex", "emoji", inherit_defaults = true },
           text = { "spell", "emoji", inherit_defaults = true },
           tex = { "latex", inherit_defaults = true },
           rst = { "spell", inherit_defaults = true },
           org = { "spell", inherit_defaults = true },
-          javascript = { "npm", inherit_defaults = true },
-          typescript = { "npm", inherit_defaults = true },
-          json = { "npm", inherit_defaults = true },
-          css = { "css_vars", inherit_defaults = true },
+          javascript = { "lsp", inherit_defaults = true },
+          typescript = { "lsp", inherit_defaults = true },
+          json = { "lsp", inherit_defaults = true },
+          css = { "lsp", "css_vars", inherit_defaults = true },
           scss = { "css_vars", inherit_defaults = true },
           sass = { "css_vars", inherit_defaults = true },
           less = { "css_vars", inherit_defaults = true },
           vue = { "css_vars", inherit_defaults = true },
-          svelte = { "css_vars", inherit_defaults = true },
-          html = { "css_vars", inherit_defaults = true },
-          sql = { "dadbod", inherit_defaults = true },
-          mysql = { "dadbod", inherit_defaults = true },
-          plsql = { "dadbod", inherit_defaults = true },
-          sshconfig = { "sshconfig", inherit_defaults = true },
-          ssh_config = { "sshconfig", inherit_defaults = true },
+          svelte = { "lsp", "css_vars", inherit_defaults = true },
+          html = { "lsp", "css_vars", inherit_defaults = true },
+          sql = { "lsp", "dadbod", inherit_defaults = true },
+          mysql = { "lsp", "dadbod", inherit_defaults = true },
+          plsql = { "lsp", "dadbod", inherit_defaults = true },
+          sshconfig = { "lsp", "sshconfig", inherit_defaults = true },
+          ssh_config = { "lsp", "sshconfig", inherit_defaults = true },
           -- cmdline = { "cmdline", "register", "env", inherit_defaults = true },
-          sh = { "cmdline", "register", "env", inherit_defaults = true },
-          fish = { "fish_lsp", "cmdline", "register", "env", inherit_defaults = true },
+          sh = { "lsp", "cmdline", "register", "env", inherit_defaults = true },
+          fish = { "lsp", "cmdline", "register", "env", inherit_defaults = true },
         },
 
         ---@type table<string, blink.cmp.SourceProviderConfigPartial>
@@ -446,21 +454,21 @@ return {
             min_keyword_length = 0,
             fallbacks = { "buffer", "env", "register" },
           },
-          git = {
-            name = "Git",
-            module = "blink-cmp-git",
-            score_offset = 2,
-          },
-          conventional_commits = {
-            name = "Conventional Commits",
-            module = "blink-cmp-conventional-commits",
-            score_offset = 0,
-          },
-          env = {
-            name = "Environment",
-            module = "blink-cmp-env",
-            score_offset = -2,
-          },
+          -- git = {
+          --   name = "Git",
+          --   module = "blink-cmp-git",
+          --   score_offset = 2,
+          -- },
+          -- conventional_commits = {
+          --   name = "Conventional Commits",
+          --   module = "blink-cmp-conventional-commits",
+          --   score_offset = 0,
+          -- },
+          -- env = {
+          --   name = "Environment",
+          --   module = "blink-cmp-env",
+          --   score_offset = -2,
+          -- },
           emoji = {
             name = "Emoji",
             module = "blink-emoji",
@@ -474,22 +482,6 @@ return {
             module = "blink-nerdfont",
             score_offset = 1,
           },
-          spell = {
-            name = "Spell",
-            module = "blink-cmp-spell",
-            score_offset = -6,
-          },
-          dictionary = {
-            name = "Dictionary",
-            module = "blink-cmp-dictionary",
-            score_offset = -10,
-          },
-          npm = {
-            name = "NPM",
-            module = "blink-cmp-npm",
-            score_offset = 3,
-            min_keyword_length = 5,
-          },
           css_vars = {
             name = "css-vars",
             module = "css-vars.blink",
@@ -502,11 +494,6 @@ return {
             name = "LaTeX",
             module = "blink-cmp-latex",
             score_offset = 1,
-          },
-          dadbod = {
-            name = "Database",
-            module = "vim_dadbod_completion.blink",
-            score_offset = 6,
           },
           ripgrep = {
             name = "Ripgrep",
@@ -528,27 +515,48 @@ return {
               end,
             },
           },
+          -- spell = {
+          --   name = "Spell",
+          --   module = "blink-cmp-spell",
+          --   score_offset = -6,
+          -- },
+          -- dictionary = {
+          --   name = "Dictionary",
+          --   module = "blink-cmp-dictionary",
+          --   score_offset = -10,
+          -- },
+          -- npm = {
+          --   name = "NPM",
+          --   module = "blink-cmp-npm",
+          --   score_offset = 3,
+          --   min_keyword_length = 5,
+          -- },
+          -- dadbod = {
+          --   name = "Database",
+          --   module = "vim_dadbod_completion.blink",
+          --   score_offset = 6,
+          -- },
           -- Terminal and system sources
-          tmux = {
-            name = "Tmux",
-            module = "blink-cmp-tmux",
-            score_offset = -1,
-            enabled = function()
-              return vim.env.TMUX ~= nil
-            end,
-          },
+          -- tmux = {
+          --   name = "Tmux",
+          --   module = "blink-cmp-tmux",
+          --   score_offset = -1,
+          --   enabled = function()
+          --     return vim.env.TMUX ~= nil
+          --   end,
+          -- },
           -- SSH configuration
-          sshconfig = {
-            name = "SSH Config",
-            module = "blink-cmp-sshconfig",
-            score_offset = -1,
-          },
+          -- sshconfig = {
+          --   name = "SSH Config",
+          --   module = "blink-cmp-sshconfig",
+          --   score_offset = -1,
+          -- },
           -- Vim registers
-          register = {
-            name = "Register",
-            module = "blink-cmp-register",
-            score_offset = 3,
-          },
+          -- register = {
+          --   name = "Register",
+          --   module = "blink-cmp-register",
+          --   score_offset = 3,
+          -- },
         },
       },
 

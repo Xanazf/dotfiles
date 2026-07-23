@@ -1,0 +1,11 @@
+hl.config({
+	theme = {
+		color_scheme = "/usr/share/qt6ct/colors/darker.conf",
+		icon_theme = "candy-icons",
+		style = "kvantum-dark",
+		font_fixed = "Hack Nerd Font Mono",
+		font_fixed_size = 12,
+		font = "Fixel Text",
+		font_size = 12,
+	},
+})

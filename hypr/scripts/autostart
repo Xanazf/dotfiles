@@ -5,22 +5,27 @@ hypr_config=$HOME/.config/hypr
 quickshell_config=$HOME/.config/quickshell
 hypr_scripts=$hypr_config/scripts
 quickshell_scripts=$quickshell_config/scripts
-/usr/lib/hyprpolkitagent &
 
-# quickshell
-/usr/lib/xdg-desktop-portal-hyprland &
-qs -c caelestia &
-# other
-zen-twilight &
-steam -console &
+/usr/lib/hyprpolkitagent &
 
 # for XDPH
 dbus-update-activation-environment --systemd --all &
+systemctl --user start hyprland-session.target &
 systemctl --user import-environment XDG_SESSION_TYPE WAYLAND_DISPLAY XDG_CURRENT_DESKTOP QT_QPA_PLATFORMTHEME &
+systemctl --user stop xdg-desktop-portal xdg-desktop-portal-hyprland &
+systemctl --user start xdg-desktop-portal-hyprland &
 
 wl-clip-persist --clipboard regular &
 wl-paste --type text -pw cliphist store &      # only text from primary
 wl-paste --type text --watch cliphist store &  # only text
 wl-paste --type image --watch cliphist store & # only image
 
-# notify-send -a aurora "hello $(whoami)" &
+# quickshell
+dms run &
+dcal &
+# /usr/lib/xdg-desktop-portal-hyprland &
+# qs -c caelestia &
+
+# other
+# zen-twilight &
+steam -console &
